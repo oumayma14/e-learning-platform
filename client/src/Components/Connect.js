@@ -1,13 +1,16 @@
 import { Container, Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Axios from "axios";
 
 export const Connect = () => {
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const navigateTo = useNavigate()
+  const [loginStatus, setLoginStatus]= useState('')
+  const [statusHolder, setStatusHolder]=useState("message")
+
 
    // onclick will get what the user entered
    const loginUser =(e) =>{
@@ -18,9 +21,9 @@ export const Connect = () => {
         LoginEmail: loginEmail,
         LoginPassword: loginPassword,
     }).then((response) =>{
-      if(response.data.message){
+      if(response.data.message || loginEmail == '' || loginPassword == ''){
         navigateTo('/')
-        console.log(response.data.message)
+       setLoginStatus(`les références ne sont pas disponibles`)
       }
       else{
         navigateTo('/dashboard')
@@ -28,13 +31,37 @@ export const Connect = () => {
     })
 }
 
+useEffect(()=> {
+  if(loginStatus !== ''){
+    setStatusHolder('showMessage') //sets message
+    setTimeout(()=> {
+      setStatusHolder('message') //hides it after 4s
+    }, 4000);
+  }
+}, [loginStatus])
+
+//clear inputs 
+
+const onSubmit = () =>{
+  setLoginEmail('')
+  setLoginPassword('')
+}
+
+
+
   return (
     <div className="main">
       <h1>Connecter</h1>
       <div className="bx">
         <div className="bx-cnt">
+          <form onSubmit={onSubmit}>
           <Container>
             {/* Email Input Row */}
+            <Row className="justify-content-md-center text-center">
+              <Col md={6}>
+              <span className={statusHolder}>{loginStatus}</span>
+              </Col>
+            </Row>
             <Row className="justify-content-md-center my-3">
               <Col md={6}>
                 <label className="form-label">Email</label>
@@ -81,6 +108,7 @@ export const Connect = () => {
               </Col>
             </Row>
           </Container>
+          </form>
         </div>
       </div>
     </div>

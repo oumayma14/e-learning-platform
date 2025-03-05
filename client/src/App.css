@@ -84,6 +84,17 @@ body {
   background-attachment: fixed;
 }
 
+.showMessage{
+  display: block;
+  color: white;
+  background: #ff0000;
+  border-radius: 3px;
+  text-align: center;
+}
+.message {
+  display: none;
+}
+
 /*Quiz*/
 .body {
   display: flex;

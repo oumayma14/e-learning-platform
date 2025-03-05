@@ -1,8 +1,10 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Container, Image, Row, Col, Button } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Avatar from 'react-avatar-edit';
+import { useNavigate } from 'react-router-dom';
 export const Apprenant=()=>{
+    const navigate = useNavigate();
     /**Upload Avatar */
     const [confirmedImage, setConfirmedImage] = useState(null);
     const [src, setSrc] = useState(null);
@@ -13,6 +15,11 @@ export const Apprenant=()=>{
         if (preview) {
           setConfirmedImage(preview);} 
       };
+    //logout
+    const logoutUser = () => {
+        sessionStorage.removeItem('user');
+        navigate("/");
+    }
     /*Styles */
     const sideBarStyle = {
         backgroundColor:"#42A5F5",
@@ -94,6 +101,7 @@ export const Apprenant=()=>{
                 </ul>
             </div>
             </div>
+            <Button onClick={logoutUser}>Se Déconnecter</Button>
             <div style={BgStyle} >
                 <div className='info-bx'>
                     <h1>Informations Personnelles</h1>
