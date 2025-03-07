@@ -4,13 +4,14 @@ import { Connect } from './Components/Connect';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
 import "./App.css"
 import { Inscrire } from './Components/Inscrire';
-import { Apprenant } from './Components/Apprenant';
-
+import { Apprenant } from './Components/Apprenant'; 
+import { Home } from './Components/Home';
 function App() {
   return(
     <Router>
       <Routes>
-        <Route path='/' element={<Connect />} />
+      <Route path='/' element={<Home />} />
+        <Route path='/connecter' element={<Connect />} />
         <Route path='/dashboard' element={<Apprenant />} />
         <Route path="/inscrire" element={<Inscrire />} />
       </Routes>
