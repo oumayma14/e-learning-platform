@@ -1,0 +1,150 @@
+/* Import slick-carousel styles */
+@import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
+@import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
+.topquiz {
+    width: 90%;
+    margin: auto;
+    position: relative;
+  }
+  
+  .quiz {
+    background-color: #fe6363;
+    height: 100vh;
+  }
+  
+  /* Grid for responsiveness */
+  .card-wrapper {
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 1.5rem;
+  }
+  
+  /* Card styles */
+  .card {
+    background-color: white;
+    height: auto;
+    color: black;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.03);
+  }
+  
+  /* Header */
+  .card-header {
+    height: 14rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    background-color: #6366f1; /* Indigo-500 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Image */
+  .card-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover !important;
+  }
+  
+  /* Body */
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  /* Title */
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  /* Button */
+  .card-button {
+    background-color: #6366f1; /* Indigo-500 */
+    color: white;
+    font-size: 1.125rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .card-button:hover {
+    background-color: #4f46e5; /* Darker Indigo */
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .container {
+      width: 95%;
+    }
+  
+    .card-wrapper {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+  
+    .card-header {
+      height: 12rem;
+    }
+  
+    .card-img {
+      height: 9rem;
+      width: 9rem;
+    }
+  
+    .card-body {
+      gap: 0.8rem;
+    }
+  
+    .card-title {
+      font-size: 1.1rem;
+    }
+  
+    .card-button {
+      font-size: 1rem;
+      padding: 0.4rem 1.2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .card {
+      width: 90%;
+    }
+  
+    .card-header {
+      height: 10rem;
+    }
+  
+    .card-img {
+      height: 8rem;
+      width: 8rem;
+    }
+  
+    .card-title {
+      font-size: 1rem;
+    }
+  
+    .card-button {
+      font-size: 0.9rem;
+      padding: 0.3rem 1rem;
+    }
+  }
+  

@@ -6,11 +6,12 @@ import "./App.css"
 import { Inscrire } from './Components/Inscrire';
 import { Apprenant } from './Components/Apprenant'; 
 import { Home } from './Components/Home';
+import { Container } from './Components/Container';
 function App() {
   return(
     <Router>
       <Routes>
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={<Container />} />
         <Route path='/connecter' element={<Connect />} />
         <Route path='/dashboard' element={<Apprenant />} />
         <Route path="/inscrire" element={<Inscrire />} />
@@ -18,5 +19,4 @@ function App() {
     </Router>
   )
 }
-
 export default App;

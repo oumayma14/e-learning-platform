@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import React, {useState} from "react";
 import Axios from 'axios';
-
+import "../Styles/Auth.css";
 export const Inscrire=()=>{
     //useState to hold our inputs
     const [username, setUsername]= useState('')

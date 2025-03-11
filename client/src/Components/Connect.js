@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import Axios from "axios";
-
+import "../Styles/Auth.css";
 export const Connect = () => {
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
