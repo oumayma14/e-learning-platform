@@ -1,13 +1,32 @@
-import React from "react";
+import {useState} from "react";
 import devops from '../assets/devops.png';
 import cloud from '../assets/cloud.png';
 import flutter from '../assets/flutter.jpg';
 import react from '../assets/react.jpg';
 import springboot from '../assets/springboot.png';
 import Slider from "react-slick";
-import "../Styles/Topquiz.css"
+import "../Styles/Topquiz.css";
+
 
 export const Topquiz = () => {
+    const ReadMore = ({ text, maxLength = 80 }) => {
+        const [isReadMore, setIsReadMore] = useState(true);
+    
+        const toggleReadMore = () => {
+            setIsReadMore(!isReadMore);
+        };
+    
+        return (
+            <p className="card-description">
+                {isReadMore ? text.slice(0, maxLength) + (text.length > maxLength ? "..." : "") : text}
+            {text.length > maxLength && (
+                <span onClick={toggleReadMore} className="read-more-btn" style={{ color: "rgb(67, 66, 66)", cursor: "pointer",fontWeight: "bold" }}>
+                    {isReadMore ? " Voir Plus" : " Voir Moins"}
+                </span>
+            )}
+            </p>
+        );
+    };
     const data = [
         {
             name: 'Devops Quiz',
@@ -22,7 +41,7 @@ export const Topquiz = () => {
         {
             name: 'Flutter Quiz',
             img: flutter,
-            description: 'Test your understanding of React, JSX, components, state management, hooks, and modern frontend development practices.'
+            description: 'Test your understanding of Dart, widgets, state management, and UI design in Flutter.'
         },
         {
             name: 'React Quiz',
@@ -41,11 +60,28 @@ export const Topquiz = () => {
         infinite: true,
         speed: 500,
         slidesToShow: 3,
-        slidesToScroll: 3
+        slidesToScroll: 3,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                },
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
+            },
+        ],
     };
 
     return (
         <section className="quiz">
+            <div className="cont">
             <div className="topquiz">
                 <Slider {...settings}>
                     {data.map((d, index) => (
@@ -55,12 +91,13 @@ export const Topquiz = () => {
                             </div>
                             <div className="card-body">
                                 <p className="card-title">{d.name}</p>
-                                <p className="card-description">{d.description}</p>
-                                <button className="card-button">Lire plus</button>
+                                <ReadMore text={d.description} maxLength={90} />
+                                
                             </div>
                         </div>
                     ))}
                 </Slider>
+            </div>
             </div>
         </section>
     );

@@ -7,6 +7,8 @@ header {
     padding: 0 2rem;
     background-color: #ffffff;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 960/300;
+    width: 100%;
 }
 .homeNav{
     display: flex;
@@ -89,16 +91,29 @@ header .nav-btn {
 }
 
 /* Home Section */
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
 .home {
+    min-height: 100vh;
+    width: 100%;
+    background: #000000;
+    position: relative;
     background-color: #f0f0f0;
-    height: 100vh;
+    height: 50vh;
     display: flex;
     align-items: center;
-    justify-content: center;
     text-align: left;
     padding: 20px;
     position: relative;
     flex-direction: column; /* Stack items vertically */
+}
+svg{
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
 
 .home p {
@@ -161,7 +176,7 @@ header .nav-btn {
     right: 0;
     margin: 1rem;
     position: absolute;
-    bottom: 100px;
+    bottom: 180px;
     right: 20px;
     padding: 10px 15px;
     font-size: 1rem;

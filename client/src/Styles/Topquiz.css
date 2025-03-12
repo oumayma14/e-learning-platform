@@ -2,33 +2,44 @@
 @import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
 @import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
 .topquiz {
-    width: 90%;
+    width: 80%;
     margin: auto;
     position: relative;
+    top: 15%;
   }
-  
-  .quiz {
+.quiz {
     background-color: #fe6363;
     height: 100vh;
-  }
-  
-  /* Grid for responsiveness */
-  .card-wrapper {
+    display: flex;
+    align-items: center; /* Centers vertically */
+}
+
+.cont {
+    background-color: #ffffff37;
+    width: 100%; /* Adjust width as needed */
+    height: 60vh;
+}
+.card-wrapper {
     margin-top: 5rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
     gap: 1.5rem;
-  }
+}
   
   /* Card styles */
   .card {
-    background-color: white;
-    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: center;
+    background-color: #f0f0f0;
     color: black;
     border-radius: 1rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
-  }
+    min-height: 350px;
+    height: 100%; 
+}
   
   .card:hover {
     transform: scale(1.03);
@@ -36,10 +47,10 @@
   
   /* Header */
   .card-header {
-    height: 14rem;
+    height: 180px;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
-    background-color: #6366f1; /* Indigo-500 */
+    background-color: #ffffff; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -65,7 +76,7 @@
   
   /* Title */
   .card-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 600;
   }
   
@@ -147,4 +158,11 @@
       padding: 0.3rem 1rem;
     }
   }
-  
+p.card-description{
+  color: #898989;
+  max-height: 80px;
+  font-size: 0.9rem;
+}
+.slick-slide {
+  padding: 0 10px;
+}
