@@ -38,11 +38,13 @@ header .nav-btn {
     visibility: hidden;
     opacity: 0;
     font-size: 1.8rem;
+    position: absolute; 
+    right: 50px;
 }
 
 @media only screen and (max-width: 1024px) {
     header .nav-btn {
-        visibility: visible;
+        visibility: visible  !important;
         opacity: 1;
     }
 
@@ -108,7 +110,9 @@ header .nav-btn {
     text-align: left;
     padding: 20px;
     position: relative;
-    flex-direction: column; /* Stack items vertically */
+    flex-direction: column; 
+    margin-bottom: 0;
+  padding-bottom: 0;
 }
 svg{
     position: absolute;
@@ -166,7 +170,7 @@ svg{
     border-radius: 62px;
 }
 .home .hm_btn{
-    width: 30%;
+    width: 40%;
     padding: 10px 15px;
 
 }
@@ -190,7 +194,7 @@ svg{
         text-align: center;
     }
     .home .hm_btn{
-        width: 50%;
+        width: 30%;
     }
 }
 @media (max-width: 480px) {

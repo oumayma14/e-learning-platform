@@ -1,4 +1,5 @@
 import { Home } from "./Home";
+import { Leaderboard } from "./Leaderboard";
 import { Navbar } from "./Navbar";
 import { Topquiz } from "./Topquiz";
 
@@ -14,6 +15,7 @@ export const Container = () =>{
         <Navbar />
         <Home />
         <Topquiz />
+        <Leaderboard />
         </div>
     );
 }

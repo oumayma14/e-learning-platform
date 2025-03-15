@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@react-oauth/google": "^0.12.1",
     "axios": "^1.8.1",
     "bootstrap": "^5.3.3",
@@ -24,6 +29,7 @@
     "reactjs-social-login": "^2.6.3",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.2.5",
+    "url": "^0.11.4",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
@@ -49,5 +55,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "browserify-zlib": "^0.2.0",
+    "crypto-browserify": "^3.12.1",
+    "path-browserify": "^1.0.1",
+    "querystring-es3": "^0.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0"
   }
 }

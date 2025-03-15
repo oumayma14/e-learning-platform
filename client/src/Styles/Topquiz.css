@@ -9,9 +9,11 @@
   }
 .quiz {
     background-color: #fe6363;
-    height: 100vh;
+    height: 80vh;
     display: flex;
     align-items: center; /* Centers vertically */
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .cont {
@@ -58,9 +60,11 @@
   
   /* Image */
   .card-img {
-    height: 100%;
     width: 100%;
-    object-fit: cover !important;
+    height: auto; /* Ajuste la hauteur en fonction de la largeur */
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
   }
   
   /* Body */
@@ -111,8 +115,12 @@
     }
   
     .card-img {
-      height: 9rem;
-      width: 9rem;
+      width: 100%; /* S'adapte au parent */
+      max-width: 30rem; /* Ne dépasse pas 9rem */
+      height: auto; /* Garde le ratio d'origine */
+      max-height: 9rem; /* Ne dépasse pas 9rem */
+      object-fit: cover;
+      border-radius: 8px;
     }
   
     .card-body {

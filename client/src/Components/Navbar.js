@@ -3,6 +3,8 @@ import { FaTimes, FaBars } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import "../Styles/HomeNav.css";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 export const Navbar = () =>{
     const navRef = useRef ();
@@ -27,7 +29,7 @@ export const Navbar = () =>{
                 </button>
                 </nav>
                 <button className="nav-btn" onClick={showNavbar}>
-                    <FaBars />
+                    <FaBars style={{zIndex:1, top:0}} />
                 </button>
             </header>
     );

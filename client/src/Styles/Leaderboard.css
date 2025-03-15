@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Center the leaderboard */
+.board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    padding: 1em;
+}
+
+/* Leaderboard Container */
+.leaderboard-container {
+    background-color: rgb(255, 255, 255);
+    padding: 3em;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    
+    width: 80vh;  /* Increased width */
+    max-width: 1000px; /* Ensures it doesn’t get too large */
+    min-width: 350px;  /* Ensures it remains readable on small screens */
+    
+    margin: 0 auto; /* Centers it horizontally */
+}
+
+/* Title */
+.leaderboard-title {
+    font-size: 2em;  /* Made it larger */
+    font-weight: bold;
+    color: #ff5c5c;
+    margin-bottom: 1.2em;
+}
+
+/* Table */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.leaderboard-table th, 
+.leaderboard-table td {
+    padding: 15px;  /* Increased padding */
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-size: 1.1em; /* Slightly larger text */
+}
+
+/* Header Styling */
+.leaderboard-table thead {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* Row Hover Effect */
+.leaderboard-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .leaderboard-container {
+        width: 85%; /* Adjusts on medium screens */
+        padding: 2.5em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .leaderboard-container {
+        width: 90%;
+        padding: 2em;
+    }
+    
+    .leaderboard-title {
+        font-size: 1.5em;
+    }
+
+    .leaderboard-table th, 
+    .leaderboard-table td {
+        padding: 12px;
+        font-size: 1em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .leaderboard-container {
+        width: 95%;
+        padding: 1.5em;
+    }
+
+    .leaderboard-title {
+        font-size: 1.3em;
+    }
+
+    .leaderboard-table th, 
+    .leaderboard-table td {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+}
