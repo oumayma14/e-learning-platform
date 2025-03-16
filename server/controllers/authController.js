@@ -7,16 +7,17 @@ const register = (req, res) => {
     const sentEmail = req.body.Email;
     const sentPassword = req.body.Password;
     const sentRole = req.body.Role;
+    const image = req.file ? req.file.filename : null;
 
-    const SQL = 'INSERT INTO user (username, name, email, password, role) VALUES (?,?,?,?,?)';
-    const Values = [sentUsername, sentName, sentEmail, sentPassword, sentRole];
+    const SQL = 'INSERT INTO user (username, name, email, password, role, image) VALUES (?,?,?,?,?,?)';
+    const Values = [sentUsername, sentName, sentEmail, sentPassword, sentRole, image];
 
     db.query(SQL, Values, (err, results) => {
         if (err) {
             res.send(err);
         } else {
             console.log('User inserted successfully!');
-            res.send({ message: 'User added!' });
+            res.send({ message: 'User added!', imageUrl: image });
         }
     });
 };
