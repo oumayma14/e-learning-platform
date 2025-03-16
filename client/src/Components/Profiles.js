@@ -33,7 +33,7 @@ function LeaderboardTable({ data }) {
       <table className="leaderboard-table">
         <thead>
           <tr>
-            <th>Position</th>
+            <th>Photo</th>
             <th>Nom</th>
             <th>Score</th>
           </tr>
@@ -42,8 +42,10 @@ function LeaderboardTable({ data }) {
           {data
             .sort((a, b) => b.score - a.score)
             .map((user, index) => (
-              <tr key={user.id}>
-                <td>{index + 1}</td>
+              <tr key={user.id || index}>
+                <td>
+                <img src={`http://localhost:3002/uploads/${user.image}?${new Date().getTime()}`} alt="Profil" className="profile-img" />
+                </td>
                 <td>{user.username}</td>
                 <td>{user.score}</td>
               </tr>
