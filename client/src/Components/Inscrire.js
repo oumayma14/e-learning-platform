@@ -19,11 +19,11 @@ export const Inscrire = () => {
         e.preventDefault(); // Prevent form from reloading the page
 
         const formData = new FormData();
-        formData.append("Username", username);
-        formData.append("Name", name);
-        formData.append("Email", email);
-        formData.append("Password", password);
-        formData.append("Role", role);
+        formData.append("username", username);
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("role", role);
         if (image) formData.append("image", image); // Attach the image file
 
         // axios to create API that connects to the server

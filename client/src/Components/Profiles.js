@@ -6,7 +6,7 @@ export const Profiles = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/api/users")
+      .get("http://localhost:3002/api/leaderboard")
       .then((response) => {
         if (Array.isArray(response.data)) {
           setUsers(response.data);

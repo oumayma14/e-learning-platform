@@ -1,44 +1,82 @@
 const db = require('../config/db');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+require('dotenv').config();
+const util = require('util');
+const saltRounds = 10;
+
+db.query = util.promisify(db.query);
+
+const SECRET_KEY = process.env.JWT_SECRET;
+const TOKEN_EXPIRATION = process.env.JWT_EXPIRES_IN || '30s';
 
 // Registration logic
-const register = (req, res) => {
-    const sentUsername = req.body.Username;
-    const sentName = req.body.Name;
-    const sentEmail = req.body.Email;
-    const sentPassword = req.body.Password;
-    const sentRole = req.body.Role;
-    const image = req.file ? req.file.filename : null;
+const register = async (req, res) => {
+    try {
+        const { username, name, email, password, role } = req.body;
 
-    const SQL = 'INSERT INTO user (username, name, email, password, role, image) VALUES (?,?,?,?,?,?)';
-    const Values = [sentUsername, sentName, sentEmail, sentPassword, sentRole, image];
-
-    db.query(SQL, Values, (err, results) => {
-        if (err) {
-            res.send(err);
-        } else {
-            console.log('User inserted successfully!');
-            res.send({ message: 'User added!', imageUrl: image });
+        if (!username || !name || !email || !password || !role) {
+            return res.status(400).json({ message: "Missing required fields!" });
         }
-    });
+
+        // Check if email or username exists
+        const checkQuery = "SELECT * FROM user WHERE username = ? OR email = ?";
+        db.query(checkQuery, [username, email], async (err, results) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+
+            if (results.length > 0) {
+                return res.status(400).json({ message: "Username or email already exists!" });
+            }
+
+            // **Hash the password only if it's not empty**
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+            const insertQuery = "INSERT INTO user (username, name, email, password, role) VALUES (?, ?, ?, ?, ?)";
+            db.query(insertQuery, [username, name, email, hashedPassword, role], (err, result) => {
+                if (err) return res.status(500).json({ error: "Server error", details: err });
+
+                res.status(201).json({ message: "User registered successfully" });
+            });
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: "Server error", details: error.message });
+    }
 };
 
-// Login logic
-const login = (req, res) => {
-    const sentloginEmail = req.body.LoginEmail;
-    const sentloginPassword = req.body.LoginPassword;
+// Login
+const login = async (req, res) => {
+    const { LoginEmail, LoginPassword } = req.body;
+    console.log("Received request: ", req.body);
 
-    const SQL = 'SELECT * FROM user WHERE email = ? && password = ?';
-    const Values = [sentloginEmail, sentloginPassword];
+    try {
+        const SQL = 'SELECT * FROM user WHERE email = ?';
+        const query = util.promisify(db.query).bind(db);
+        const results = await query(SQL, [LoginEmail]);
+        console.log("Query results: ", results);
 
-    db.query(SQL, Values, (err, results) => {
-        if (err) {
-            res.send({ error: err });
-        } else if (results.length > 0) {
-            res.send(results);
-        } else {
-            res.send({ message: "Credentials don't match!" });
+        if (results.length === 0) {
+            return res.status(401).json({ message: "Invalid email or password!" });
         }
-    });
+
+        const user = results[0];
+        console.log("Found user: ", user);
+
+        // Compare password
+        const passwordMatch = await bcrypt.compare(LoginPassword, user.password);
+        console.log("Password match: ", passwordMatch);
+        if (!passwordMatch) {
+            return res.status(401).json({ message: "Invalid email or password!" });
+        }
+
+        // Generate token
+        const token = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: TOKEN_EXPIRATION });
+
+        res.json({ message: "Login successful!", token, user: { username: user.username, email: user.email } });
+    } catch (error) {
+        res.status(500).json({ error: "Server error", details: error.message });
+    }
 };
+
 
 module.exports = { register, login };
