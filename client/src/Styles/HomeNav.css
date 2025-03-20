@@ -9,6 +9,8 @@ header {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     aspect-ratio: 960/300;
     width: 100%;
+    position: fixed;
+    z-index: 1000;
 }
 .homeNav{
     display: flex;
@@ -93,6 +95,9 @@ header .nav-btn {
 }
 
 /* Home Section */
+#content{
+    padding: 15%;
+}
 *{
     padding: 0;
     margin: 0;
@@ -103,7 +108,7 @@ header .nav-btn {
     width: 100%;
     background: #000000;
     position: relative;
-    background-color: #f0f0f0;
+    background:none;
     height: 50vh;
     display: flex;
     align-items: center;
@@ -172,6 +177,8 @@ svg{
 .home .hm_btn{
     width: 40%;
     padding: 10px 15px;
+    max-width: fit-content;
+    min-width: fit-content;
 
 }
 .home .hm_btn.cn {

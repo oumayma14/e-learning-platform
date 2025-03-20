@@ -1,18 +1,20 @@
-const mysql = require('mysql');
+const mysql = require("mysql");
 
-const db = mysql.createConnection({
-    user: 'root', 
-    host: 'localhost',
-    password: '',
-    database: 'elearn'
+const pool = mysql.createPool({
+  connectionLimit: 10, // Max simultaneous connections
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "elearn",
 });
 
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed:', err);
-    } else {
-        console.log('Connected to MySQL database.');
-    }
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error("Database connection error:", err.message);
+  } else {
+    console.log("**Connected to MySQL database.");
+    connection.release(); 
+  }
 });
 
-module.exports = db;
+module.exports = pool;
