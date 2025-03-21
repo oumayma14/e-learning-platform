@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "../Styles/Auth.css";
@@ -8,75 +8,79 @@ export const Connect = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
-  const [statusHolder, setStatusHolder] = useState("message");
   const navigateTo = useNavigate();
 
   // Gestion de la connexion
   const loginUser = async (e) => {
     e.preventDefault();
-    
-    if (!loginEmail || !loginPassword) {
+
+    if (!loginEmail.trim() || !loginPassword.trim()) {
       setLoginStatus("Veuillez remplir tous les champs !");
       return;
     }
 
     try {
       const response = await Axios.post("http://localhost:3002/login", {
-        LoginEmail: loginEmail,
-        LoginPassword: loginPassword,
+        LoginEmail: loginEmail.trim(),
+        LoginPassword: loginPassword.trim(),
       });
 
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token); // Stocker le token pour l'authentification
+        localStorage.setItem("token", response.data.token);
         setLoginEmail("");
         setLoginPassword("");
-        navigateTo("/dashboard"); // Redirection après connexion réussie
+        navigateTo("/dashboard");
       } else {
-        setLoginStatus("Email ou mot de passe incorrect !");
+        setLoginStatus(response.data.message || "Email ou mot de passe incorrect !");
       }
     } catch (error) {
-      console.error("Erreur de connexion:", error);
-      setLoginStatus("Erreur de connexion !");
+      setLoginStatus(error.response?.data?.message || "Erreur de connexion !");
     }
   };
-
-  useEffect(() => {
-    if (loginStatus !== "") {
-      setStatusHolder("showMessage"); // Afficher le message
-      setTimeout(() => {
-        setStatusHolder("message"); // Masquer après 4s
-      }, 4000);
-    }
-  }, [loginStatus]);
 
   return (
     <Container fluid className="vh-100 d-flex align-items-center justify-content-center">
       <Row className="connect-container">
-        {/* Partie gauche - Citation et fond */}
+        {/* Partie gauche - Citation */}
         <Col md={6} className="connect-left">
           <h2>Connecte-toi et prouve ton talent ! Apprends, teste tes compétences et grimpe dans le classement</h2>
         </Col>
 
-        {/* Partie droite - Formulaire de connexion */}
+        {/* Partie droite - Formulaire */}
         <Col md={6} className="connect-right">
           <h3 className="mb-3 text-center">Bienvenue</h3>
           <p className="text-muted text-center">Entrez votre email et mot de passe pour accéder à votre compte</p>
 
+          {loginStatus && (
+            <Alert variant="danger" onClose={() => setLoginStatus("")} dismissible>
+              {loginStatus}
+            </Alert>
+          )}
+
           <Form onSubmit={loginUser}>
-            <span className={statusHolder}>{loginStatus}</span>
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Entrez votre email" value={loginEmail} onChange={(event) => setLoginEmail(event.target.value)} />
+              <Form.Control
+                type="email"
+                placeholder="Entrez votre email"
+                value={loginEmail}
+                onChange={(event) => setLoginEmail(event.target.value)}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Mot de Passe</Form.Label>
-              <Form.Control type="password" placeholder="Entrez votre mot de passe" value={loginPassword} onChange={(event) => setLoginPassword(event.target.value)} />
+              <Form.Control
+                type="password"
+                placeholder="Entrez votre mot de passe"
+                value={loginPassword}
+                onChange={(event) => setLoginPassword(event.target.value)}
+              />
             </Form.Group>
 
             <Form.Group className="d-flex justify-content-between">
               <Form.Check type="checkbox" label="Se souvenir de moi" />
-              <a href="#" className="text-decoration-none">Mot de passe oublié ?</a>
+              <Link to="/reset-password" className="text-decoration-none">Mot de passe oublié ?</Link>
             </Form.Group>
 
             <Button variant="dark" className="w-100 mt-3" type="submit">Se Connecter</Button>

@@ -87,3 +87,12 @@
     padding: 10px;
   }
 }
+
+.connect-right button:hover {
+  background: #f0f0f0;
+}
+
+/* Make the alert more visible */
+.alert-dismissible {
+  font-size: 14px;
+}

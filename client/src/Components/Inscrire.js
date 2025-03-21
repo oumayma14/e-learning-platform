@@ -1,123 +1,163 @@
-import { Container, Row } from "react-bootstrap";
+import { Container, Row, Form, Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import Axios from "axios";
-import "../Styles/Auth.css";
+import "../Styles/Inscrire.css";
 
 export const Inscrire = () => {
-    // useState to hold our inputs
-    const [username, setUsername] = useState("");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [role, setRole] = useState("");
-    const [image, setImage] = useState(null);
+    const navigate = useNavigate();
+    
+    // Use a single state object for form fields
+    const [formData, setFormData] = useState({
+        username: "",
+        name: "",
+        email: "",
+        password: "",
+        role: "",
+        image: null,
+    });
 
-    // onClick will get what the user entered
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    // Handle input change
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Handle file upload
+    const handleFileChange = (e) => {
+        setFormData({ ...formData, image: e.target.files[0] });
+    };
+
+    // Handle form submission
     const createUser = (e) => {
-        e.preventDefault(); // Prevent form from reloading the page
+        e.preventDefault(); // Prevent page reload
+        setError(null);
+        setSuccess(null);
 
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("name", name);
-        formData.append("email", email);
-        formData.append("password", password);
-        formData.append("role", role);
-        if (image) formData.append("image", image); // Attach the image file
+        const data = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            if (value) data.append(key, value);
+        });
 
-        // axios to create API that connects to the server
-        Axios.post("http://localhost:3002/register", formData, {
-            headers: { "Content-Type": "multipart/form-data" }, // Important for file upload
+        Axios.post("http://localhost:3002/register", data, {
+            headers: { "Content-Type": "multipart/form-data" },
         })
             .then(() => {
-                console.log("User has been created");
+                setSuccess("Compte créé avec succès !");
+                setTimeout(() => navigate("/login"), 2000); // Redirect to login after success
             })
             .catch((error) => {
+                setError("Erreur lors de l'inscription. Veuillez réessayer.");
                 console.error("Error uploading user:", error);
             });
     };
 
     return (
-        <div className="main">
-            <h1>Inscription</h1>
-            <div className="bx">
-                <div className="bx-cnt">
-                    <form onSubmit={createUser}>
-                        <Container>
-                            <Row>
-                                <label>Nom d'utilisateur</label>
-                                <input
+        <div className="connect-container">
+            <div className="connect-left">
+                <h2>Bienvenue!</h2>
+                <p>Rejoignez-nous dès aujourd'hui.</p>
+            </div>
+
+            <div className="connect-right">
+                <h3>Inscription</h3>
+                {error && <Alert variant="danger" className="showMessage">{error}</Alert>}
+                {success && <Alert variant="success" className="showMessage">{success}</Alert>}
+                
+                <Form onSubmit={createUser}>
+                    <Container>
+                        <Row>
+                            <Form.Group>
+                                <Form.Label>Nom d'utilisateur</Form.Label>
+                                <Form.Control
                                     type="text"
-                                    className="form-control"
-                                    onChange={(event) => {
-                                        setUsername(event.target.value);
-                                    }}
+                                    name="username"
+                                    value={formData.username}
+                                    onChange={handleChange}
                                     required
                                 />
-                            </Row>
-                            <Row>
-                                <label>Nom</label>
-                                <input
+                            </Form.Group>
+                        </Row>
+
+                        <Row>
+                            <Form.Group>
+                                <Form.Label>Nom</Form.Label>
+                                <Form.Control
                                     type="text"
-                                    className="form-control"
-                                    onChange={(event) => {
-                                        setName(event.target.value);
-                                    }}
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
                                     required
                                 />
-                            </Row>
-                            <Row>
-                                <label>Email</label>
-                                <input
+                            </Form.Group>
+                        </Row>
+
+                        <Row>
+                            <Form.Group>
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control
                                     type="email"
-                                    className="form-control"
-                                    onChange={(event) => {
-                                        setEmail(event.target.value);
-                                    }}
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
                                     required
                                 />
-                            </Row>
-                            <Row>
-                                <label>Mot de Passe</label>
-                                <input
+                            </Form.Group>
+                        </Row>
+
+                        <Row>
+                            <Form.Group>
+                                <Form.Label>Mot de Passe</Form.Label>
+                                <Form.Control
                                     type="password"
-                                    className="form-control"
-                                    onChange={(event) => {
-                                        setPassword(event.target.value);
-                                    }}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
                                     required
                                 />
-                            </Row>
-                            <Row>
-                                <label>Rôle</label>
-                                <input
+                            </Form.Group>
+                        </Row>
+
+                        <Row>
+                            <Form.Group>
+                                <Form.Label>Rôle</Form.Label>
+                                <Form.Control
                                     type="text"
-                                    className="form-control"
-                                    onChange={(event) => {
-                                        setRole(event.target.value);
-                                    }}
+                                    name="role"
+                                    value={formData.role}
+                                    onChange={handleChange}
                                     required
                                 />
-                            </Row>
-                            <Row>
-                                <label>Photo de profil</label>
-                                <input
+                            </Form.Group>
+                        </Row>
+
+                        <Row>
+                            <Form.Group>
+                                <Form.Label>Photo de profil</Form.Label>
+                                <Form.Control
                                     type="file"
-                                    className="form-control"
                                     accept="image/*"
-                                    onChange={(event) => setImage(event.target.files[0])}
+                                    onChange={handleFileChange}
                                     required
                                 />
-                            </Row>
-                            <Row>
-                                <Button variant="primary" type="submit">
-                                    Créez Votre Compte
-                                </Button>
-                            </Row>
-                        </Container>
-                    </form>
-                </div>
+                            </Form.Group>
+                        </Row>
+
+                        <Row className="mt-3">
+                            <Button variant="primary" type="submit">
+                                Créez Votre Compte
+                            </Button>
+                        </Row>
+
+                        <Row className="mt-3">
+                            <p>Déjà un compte ? <Link to="/connecter">Connectez-vous</Link></p>
+                        </Row>
+                    </Container>
+                </Form>
             </div>
         </div>
     );
