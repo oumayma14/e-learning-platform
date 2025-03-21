@@ -34,7 +34,7 @@ export const Inscrire = () => {
 
     // Handle form submission
     const createUser = (e) => {
-        e.preventDefault(); // Prevent page reload
+        e.preventDefault(); 
         setError(null);
         setSuccess(null);
 
@@ -59,8 +59,8 @@ export const Inscrire = () => {
     return (
         <div className="connect-container">
             <div className="connect-left">
-                <h2>Bienvenue!</h2>
-                <p>Rejoignez-nous dès aujourd'hui.</p>
+                <h2>Ton parcours commence ici. Es-tu prêt à relever le défi ?</h2>
+                <p></p>
             </div>
 
             <div className="connect-right">
