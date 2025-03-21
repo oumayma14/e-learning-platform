@@ -10,10 +10,10 @@ db.query = util.promisify(db.query);
 const SECRET_KEY = process.env.JWT_SECRET;
 const TOKEN_EXPIRATION = process.env.JWT_EXPIRES_IN || '30s';
 
-// Registration logic
 const register = async (req, res) => {
     try {
         const { username, name, email, password, role } = req.body;
+        const image = req.file ? req.file.filename : null; // Get uploaded image filename
 
         if (!username || !name || !email || !password || !role) {
             return res.status(400).json({ message: "Missing required fields!" });
@@ -28,11 +28,12 @@ const register = async (req, res) => {
                 return res.status(400).json({ message: "Username or email already exists!" });
             }
 
-            // **Hash the password only if it's not empty**
+            // Hash the password
             const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-            const insertQuery = "INSERT INTO user (username, name, email, password, role) VALUES (?, ?, ?, ?, ?)";
-            db.query(insertQuery, [username, name, email, hashedPassword, role], (err, result) => {
+            // Insert user into database
+            const insertQuery = "INSERT INTO user (username, name, email, password, role, image) VALUES (?, ?, ?, ?, ?, ?)";
+            db.query(insertQuery, [username, name, email, hashedPassword, role, image], (err, result) => {
                 if (err) return res.status(500).json({ error: "Server error", details: err });
 
                 res.status(201).json({ message: "User registered successfully" });
