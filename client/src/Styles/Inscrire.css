@@ -1,4 +1,4 @@
-/* Global styles */
+/* Global styles - unchanged */
 body {
     display: flex;
     justify-content: center; 
@@ -6,11 +6,11 @@ body {
     min-height: 100vh;
     background-color: #f8f9fa;
     max-height: 100vh;
-    min-height: 100vh;
     margin: 0;
+    font-family: inherit; /* Ensures consistency */
 }
 
-/* Centering the container */
+/* Centering the container - unchanged but optimized */
 .connect-container {
     max-width: 900px;
     width: 100%;
@@ -20,10 +20,11 @@ body {
     display: flex;
     flex-direction: row;
     background: white;
-      margin: 10vh auto; 
+    margin: 10vh auto;
+    position: relative; /* For absolute positioning children */
 }
 
-/* Left section - Welcome message */
+/* Left section - unchanged with subtle enhancements */
 .connect-left {
     background: url("../assets/background.jpg") center/cover no-repeat;
     color: white;
@@ -35,9 +36,10 @@ body {
     justify-content: center;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    z-index: 1; /* Ensure proper stacking */
 }
 
-/* Right section - Registration form */
+/* Right section - unchanged with minor fixes */
 .connect-right {
     background: white;
     padding: 40px;
@@ -46,15 +48,16 @@ body {
     justify-content: center;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
+    box-sizing: border-box; /* Prevent padding from affecting width */
 }
 
-/* Form fields */
-.form-group {
+/* Form fields - unchanged but more specific */
+.connect-right .form-group {
     margin-bottom: 15px;
 }
 
-/* Registration button */
-button[type="submit"] {
+/* Registration button - unchanged with hover fix */
+.connect-right button[type="submit"] {
     width: 100%;
     background-color: black;
     color: white;
@@ -62,26 +65,51 @@ button[type="submit"] {
     border-radius: 10px;
     padding: 12px;
     font-size: 16px;
-    transition: 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    cursor: pointer; /* Better UX */
 }
 
-button[type="submit"]:hover {
+.connect-right button[type="submit"]:hover {
     background-color: #333;
     border-color: #333;
+    transform: none; /* Prevent accidental movement */
 }
 
-/* Responsive Styles */
+/* Responsive Styles - unchanged with overflow protection */
 @media (max-width: 768px) {
     .connect-container {
         flex-direction: column;
+        margin: 5vh auto; /* Smaller margin on mobile */
+        width: 95%; /* Better mobile fit */
     }
 
     .connect-left {
+        width: auto; /* Reset width */
         border-radius: 20px 20px 0 0;
         text-align: center;
+        padding: 30px 5%; /* Consistent padding */
     }
 
     .connect-right {
         border-radius: 0 0 20px 20px;
+        padding: 30px; /* Slightly reduced padding */
     }
+}
+
+/* Add these minimal enhancements without changing your structure */
+.showMessage {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.password-strength {
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.img-preview {
+    max-width: 100px;
+    margin-top: 10px;
+    border-radius: 50%;
 }
