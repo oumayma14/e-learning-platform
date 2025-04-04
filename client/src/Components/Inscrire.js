@@ -100,7 +100,8 @@ export const Inscrire = () => {
             });
 
             setSuccess(response.data.message || "Compte créé avec succès !");
-            setTimeout(() => navigate("/login"), 2000);
+            // Redirect to home page after 2 seconds
+            setTimeout(() => navigate("/"), 2000);
         } catch (error) {
             console.error("Registration error:", error);
             
