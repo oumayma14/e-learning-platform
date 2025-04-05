@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import Axios from "axios";
+import { loginUser } from "../../../server/services/apiService"; // Changed from registerUser to loginUser
 import "../Styles/Auth.css";
 
 export const Connect = () => {
@@ -11,7 +11,7 @@ export const Connect = () => {
   const navigateTo = useNavigate();
 
   // Gestion de la connexion
-  const loginUser = async (e) => {
+  const handleLogin = async (e) => { // Renamed from loginUser to avoid naming conflict
     e.preventDefault();
 
     if (!loginEmail.trim() || !loginPassword.trim()) {
@@ -20,18 +20,15 @@ export const Connect = () => {
     }
 
     try {
-      const response = await Axios.post("http://localhost:3002/login", {
-        LoginEmail: loginEmail.trim(),
-        LoginPassword: loginPassword.trim(),
-      });
-
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+      const response = await loginUser(loginEmail, loginPassword);
+      
+      if (response.token) { // Changed from response.data.token to response.token
+        localStorage.setItem("token", response.token);
         setLoginEmail("");
         setLoginPassword("");
         navigateTo("/dashboard");
       } else {
-        setLoginStatus(response.data.message || "Email ou mot de passe incorrect !");
+        setLoginStatus(response.message || "Email ou mot de passe incorrect !");
       }
     } catch (error) {
       setLoginStatus(error.response?.data?.message || "Erreur de connexion !");
@@ -57,7 +54,7 @@ export const Connect = () => {
             </Alert>
           )}
 
-          <Form onSubmit={loginUser}>
+          <Form onSubmit={handleLogin}> {/* Changed to handleLogin */}
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
               <Form.Control

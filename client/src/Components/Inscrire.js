@@ -2,7 +2,7 @@ import { Container, Row, Form, Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import Axios from "axios";
+import { registerUser } from "../../../server/services/apiService";
 import "../Styles/Inscrire.css";
 
 export const Inscrire = () => {
@@ -92,12 +92,10 @@ export const Inscrire = () => {
                 }
             });
 
-            const response = await Axios.post("http://localhost:3002/register", data, {
-                headers: { 
-                    "Content-Type": "multipart/form-data",
-                },
-                timeout: 10000 // 10 second timeout
-            });
+            try {
+                const response = await registerUser(data);
+            } catch (error) {
+            }
 
             setSuccess(response.data.message || "Compte créé avec succès !");
             // Redirect to home page after 2 seconds
