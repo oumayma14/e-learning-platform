@@ -141,12 +141,12 @@ export const Inscrire = () => {
                     <Alert variant="danger" className="showMessage" onClose={() => setError(null)} dismissible>
                         {error}
                     </Alert>
-                )}
-                {success && (
+                    )}
+                    {success && (
                     <Alert variant="success" className="showMessage" onClose={() => setSuccess(null)} dismissible>
                         {success}
                     </Alert>
-                )}
+                    )}
                 
                 <Form noValidate validated={validated} onSubmit={createUser}>
                     <Container>

@@ -1,89 +1,112 @@
-.cont{
-    width: 100vw;
-    height: 100vh;
-    padding: 9%;
+/* Original styles preserved exactly */
+.cont {
+  width: 100vw;
+  min-height: 100vh; /* Changed to min-height for better mobile behavior */
+  padding: 9%;
+  box-sizing: border-box; /* Prevents padding from affecting width */
 }
+
 .contact-bx {
-    max-width: 500px;
-    width: 90%;
-    margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+  max-width: 500px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.label {
+  font-weight: bold;
+  color: #333;
+}
+
+.form-control {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  transition: border-color 0.3s;
+  width: 100%; /* Ensures full width on mobile */
+  box-sizing: border-box; /* Prevents overflow */
+}
+
+.form-control:focus {
+  border-color: #fe6363;
+  box-shadow: 0 0 5px #fe6363b8;
+}
+
+#send-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  background-color: #fe6363;
+  border: #fe6363;
+  color: white;
+  transition: background-color 0.3s ease-in-out;
+}
+
+#send-button:hover {
+  background-color: #be4d4d;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Enhanced responsive breakpoints */
+@media (max-width: 900px) {
+  .cont {
+    padding: 7%; /* Slightly reduce padding */
   }
-  .label {
-    font-weight: bold;
-    color: #333;
+}
+
+@media (max-width: 768px) {
+  .contact-bx {
+    width: 95%;
+    padding: 15px;
   }
-  
+
   .form-control {
-    border-radius: 8px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    transition: border-color 0.3s;
+    font-size: 15px; /* Smoother scaling */
+    padding: 9px;
   }
-  
-  .form-control:focus {
-    border-color: #fe6363;
-    box-shadow: 0 0 5px #fe6363b8;
-  }
-  
+
   #send-button {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cont {
+    padding: 5%;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-bx {
     width: 100%;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 8px;
-    background-color: #fe6363;
-    border: #fe6363;
-    color: white;
-    transition: background-color 0.3s ease-in-out;
+    padding: 12px;
   }
-  
-  #send-button:hover {
-    background-color: #be4d4d;
+
+  .form-control {
+    font-size: 14px;
+    padding: 8px;
   }
-  
-  /* Spinner inside button */
-  button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+
+  #send-button {
+    font-size: 16px;
+    padding: 9px;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .contact-bx {
-      width: 95%;
-      padding: 15px;
-    }
-  
-    .form-control {
-      font-size: 14px;
-      padding: 8px;
-    }
-  
-    #send-button {
-      font-size: 16px;
-    }
+}
+
+@media (max-width: 360px) {
+  .form-control,
+  #send-button {
+    font-size: 13px; /* Better for very small devices */
   }
-  
-  @media (max-width: 480px) {
-    .contact-bx {
-      width: 100%;
-      padding: 10px;
-    }
-  
-    .form-control {
-      font-size: 14px;
-      padding: 6px;
-    }
-  
-    #send-button {
-      font-size: 14px;
-      padding: 8px;
-    }
-  }
-  
+}

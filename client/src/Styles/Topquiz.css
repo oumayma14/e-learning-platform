@@ -1,176 +1,240 @@
 /* Import slick-carousel styles */
 @import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
 @import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
-.topquiz {
-    width: 80%;
-    margin: auto;
-    position: relative;
-    top: 15%;
-  }
-.quiz {
-    background-color: #fe6363;
-    height: 80vh;
-    display: flex;
-    align-items: center; /* Centers vertically */
-    margin-top: 0;
-    padding-top: 0;
+
+/* Base styles */
+* {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+/* Centered carousel container */
+.quiz {
+    background-color: #fe6363;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    width: 100%;
+}
+
+/* Main container - responsive */
+.topquiz {
+    width: min(90%, 1200px);
+    margin: 0 auto;
+    position: relative;
+    padding: 0 clamp(1rem, 2vw, 2rem);
+}
+
+/* Content container - centered */
 .cont {
     background-color: #ffffff37;
-    width: 100%; /* Adjust width as needed */
-    height: 60vh;
-}
-.card-wrapper {
-    margin-top: 5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 1.5rem;
-}
-  
-  /* Card styles */
-  .card {
+    width: 100%;
+    min-height: 60vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; 
+    justify-content: center;
+    padding: clamp(1rem, 2vw, 2rem) 0;
+    border-radius: 12px;
+}
+
+/* Card grid - responsive */
+.card-wrapper {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    width: 95%;
+    max-width: 1200px;
+    padding: 0.5rem 0;
+}
+
+/* Card styles - unchanged but responsive */
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     background-color: #f0f0f0;
     color: black;
     border-radius: 1rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
-    min-height: 350px;
-    height: 100%; 
+    min-height: clamp(300px, 35vw, 350px);
+    height: 100%;
 }
-  
-  .card:hover {
+
+.card:hover {
     transform: scale(1.03);
-  }
-  
-  /* Header */
-  .card-header {
-    height: 180px;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    background-color: #ffffff; 
+}
+
+.card-header {
+    height: clamp(10rem, 25vw, 180px);
+    border-radius: 1rem 1rem 0 0;
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  /* Image */
-  .card-img {
+    padding: 0.5rem;
     width: 100%;
-    height: auto; /* Ajuste la hauteur en fonction de la largeur */
-    max-width: 100%;
-    object-fit: cover;
+}
+
+.card-img {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
     border-radius: 8px;
-  }
-  
-  /* Body */
-  .card-body {
+    padding: 0.5rem;
+}
+
+.card-body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    gap: clamp(0.8rem, 1.5vw, 1rem);
+    padding: clamp(0.8rem, 1.5vw, 1rem);
     text-align: center;
-  }
-  
-  /* Title */
-  .card-title {
-    font-size: 1.2rem;
+    width: 100%;
+}
+
+.card-title {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
     font-weight: 600;
-  }
-  
-  /* Button */
-  .card-button {
-    background-color: #6366f1; /* Indigo-500 */
+}
+
+.card-button {
+    background-color: #6366f1;
     color: white;
-    font-size: 1.125rem;
-    padding: 0.5rem 1.5rem;
+    font-size: clamp(0.9rem, 1.3vw, 1.125rem);
+    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(1rem, 1.5vw, 1.5rem);
     border-radius: 1rem;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
-  }
-  
-  .card-button:hover {
-    background-color: #4f46e5; /* Darker Indigo */
-  }
-  
-  /* Media Queries */
-  @media (max-width: 768px) {
-    .container {
-      width: 95%;
-    }
-  
-    .card-wrapper {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-  
-    .card-header {
-      height: 12rem;
-    }
-  
-    .card-img {
-      width: 100%; /* S'adapte au parent */
-      max-width: 30rem; /* Ne dépasse pas 9rem */
-      height: auto; /* Garde le ratio d'origine */
-      max-height: 9rem; /* Ne dépasse pas 9rem */
-      object-fit: cover;
-      border-radius: 8px;
-    }
-  
-    .card-body {
-      gap: 0.8rem;
-    }
-  
-    .card-title {
-      font-size: 1.1rem;
-    }
-  
-    .card-button {
-      font-size: 1rem;
-      padding: 0.4rem 1.2rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .card-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .card {
-      width: 90%;
-    }
-  
-    .card-header {
-      height: 10rem;
-    }
-  
-    .card-img {
-      height: 8rem;
-      width: 8rem;
-    }
-  
-    .card-title {
-      font-size: 1rem;
-    }
-  
-    .card-button {
-      font-size: 0.9rem;
-      padding: 0.3rem 1rem;
-    }
-  }
-p.card-description{
-  color: #898989;
-  max-height: 80px;
-  font-size: 0.9rem;
+    width: 90%;
+    max-width: 200px;
+    margin-top: auto;
+    margin-bottom: 1rem;
 }
+
+.card-button:hover {
+    background-color: #4f46e5;
+}
+
+p.card-description {
+    color: #898989;
+    max-height: 80px;
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* Slick carousel responsive adjustments */
 .slick-slide {
-  padding: 0 10px;
+    padding: 0 clamp(5px, 1vw, 10px);
+}
+
+.slick-list {
+    margin: 0 clamp(-5px, -1vw, -10px);
+}
+
+.slick-track {
+    display: flex;
+    align-items: center; /* Vertical centering for slides */
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1024px) {
+    .cont {
+        min-height: 55vh;
+    }
+    
+    .card-wrapper {
+        width: 98%;
+    }
+}
+
+@media (max-width: 768px) {
+    .quiz {
+        min-height: 75vh;
+    }
+    
+    .cont {
+        min-height: 50vh;
+    }
+    
+    .card-wrapper {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .card-header {
+        height: 12rem;
+    }
+    
+    .card-img {
+        max-height: 11rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz {
+        min-height: 70vh;
+        padding: 1rem 0;
+    }
+    
+    .cont {
+        min-height: 45vh;
+        padding: 0.5rem 0;
+    }
+    
+    .card-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+    }
+    
+    .card {
+        width: 90%;
+        min-height: 300px;
+    }
+    
+    .card-header {
+        height: 10rem;
+    }
+    
+    .card-img {
+        max-height: 8rem;
+    }
+    
+    .card-button {
+        width: 80%;
+    }
+}
+
+@media (max-width: 360px) {
+    .card {
+        min-height: 280px;
+    }
+    
+    .card-header {
+        height: 8rem;
+    }
+    
+    .card-title {
+        font-size: 0.95rem;
+    }
+    
+    .card-button {
+        font-size: 0.85rem;
+    }
 }

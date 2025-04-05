@@ -7,40 +7,38 @@
     box-sizing: border-box;
 }
 
-/* Center the leaderboard */
+/* Center the leaderboard - unchanged */
 .board {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* Changed to min-height */
     background-color: #f4f4f4;
     padding: 1em;
 }
 
-/* Leaderboard Container */
+/* Leaderboard Container - unchanged */
 .leaderboard-container {
     background-color: rgb(255, 255, 255);
     padding: 3em;
     border-radius: 12px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
     text-align: center;
-    
-    width: 80vh;  /* Increased width */
-    max-width: 1000px; /* Ensures it doesn’t get too large */
-    min-width: 350px;  /* Ensures it remains readable on small screens */
-    
-    margin: 0 auto; /* Centers it horizontally */
+    width: 80vh;
+    max-width: 1000px;
+    min-width: 350px;
+    margin: 0 auto;
 }
 
-/* Title */
+/* Title - unchanged */
 .leaderboard-title {
-    font-size: 2em;  /* Made it larger */
+    font-size: 2em;
     font-weight: bold;
     color: #ff5c5c;
     margin-bottom: 1.2em;
 }
 
-/* Table */
+/* Table - unchanged */
 .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
@@ -49,27 +47,40 @@
 
 .leaderboard-table th, 
 .leaderboard-table td {
-    padding: 15px;  /* Increased padding */
+    padding: 15px;
     text-align: center;
     border-bottom: 1px solid #ddd;
-    font-size: 1.1em; /* Slightly larger text */
+    font-size: 1.1em;
 }
 
-/* Header Styling */
+/* Header Styling - unchanged */
 .leaderboard-table thead {
     background-color: #f4f4f4;
     font-weight: bold;
 }
 
-/* Row Hover Effect */
+/* Row Hover Effect - unchanged */
 .leaderboard-table tbody tr:hover {
     background-color: #f9f9f9;
 }
 
-/* Responsive Design */
+.profile-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Enhanced Responsive Breakpoints */
+@media screen and (max-width: 1200px) {
+    .leaderboard-container {
+        width: 70vh;
+    }
+}
+
 @media screen and (max-width: 1024px) {
     .leaderboard-container {
-        width: 85%; /* Adjusts on medium screens */
+        width: 85%;
         padding: 2.5em;
     }
 }
@@ -89,28 +100,56 @@
         padding: 12px;
         font-size: 1em;
     }
+
+    .profile-img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .leaderboard-container {
+        padding: 1.5em;
+    }
+
+    .leaderboard-table th, 
+    .leaderboard-table td {
+        padding: 10px 8px;
+    }
 }
 
 @media screen and (max-width: 480px) {
     .leaderboard-container {
         width: 95%;
-        padding: 1.5em;
+        padding: 1.2em;
+        min-width: unset; /* Allows shrinking below 350px when needed */
     }
 
     .leaderboard-title {
         font-size: 1.3em;
+        margin-bottom: 0.8em;
     }
 
     .leaderboard-table th, 
     .leaderboard-table td {
-        padding: 10px;
+        padding: 8px 5px;
         font-size: 0.9em;
     }
+
+    .profile-img {
+        width: 30px;
+        height: 30px;
+    }
 }
-.profile-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-  
+
+@media screen and (max-width: 360px) {
+    .leaderboard-table th, 
+    .leaderboard-table td {
+        font-size: 0.8em;
+        padding: 6px 4px;
+    }
+    
+    .leaderboard-title {
+        font-size: 1.1em;
+    }
+}

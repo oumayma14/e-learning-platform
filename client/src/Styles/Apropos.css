@@ -1,43 +1,94 @@
 @import url('https://fonts.googleapis.com/css2?family=Average+Sans&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap');
-.aboutus{
-    width: 100vw;
-    background-color: #fe6363;
-    text-align: center;
-    color: white;
-    height: 100vh;
-    max-height: 100vh;
-    padding: 15%;
+
+:root {
+  --primary-color: #fe6363;
+  --secondary-color: #fceaea;
+  --text-color: #333;
+  --counter-bg: white;
+  --base-font-size: clamp(1rem, 2vw, 1.5rem); /* Responsive font scaling */
 }
-.counter-container{
-    display: flex;
+
+/* Base styles (mobile-first) */
+.aboutus {
+  width: 100%;
+  background-color: var(--primary-color);
+  text-align: center;
+  color: white;
+  min-height: 100vh;
+  padding: 5%;
+  box-sizing: border-box;
+}
+
+.counter-container {
+  display: flex;
+  flex-direction: column; /* Stack vertically on mobile */
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.counter {
+  background-color: var(--counter-bg);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 270px;
+  min-height: 150px;
+  color: var(--primary-color);
+  padding: 1.5rem;
+  margin: 0.5rem 0;
+  box-sizing: border-box;
+}
+
+p {
+  font-size: var(--base-font-size);
+  padding: 0.5rem;
+  color: var(--text-color);
+  font-weight: 700;
+  font-family: "Winky Sans", sans-serif;
+  margin: 0 auto;
+  max-width: 90%; /* More breathing room on mobile */
+  line-height: 1.4;
+}
+
+p strong {
+  color: var(--secondary-color);
+}
+
+/* Tablet (768px and up) */
+@media (min-width: 768px) {
+  .aboutus {
+    padding: 10%;
+  }
+
+  .counter-container {
+    flex-direction: row; /* Horizontal layout */
+    flex-wrap: wrap; /* Allow wrapping */
     justify-content: center;
-    align-items: center;
-    gap: 8%;
-    padding: 4%;
-    flex-wrap: nowrap;
-}
-.counter{
-    background-color:white;
-    border-radius: 12px;
+    gap: 1.5rem;
+  }
+
+  .counter {
+    flex: 1 1 40%; /* Two columns */
     min-width: 200px;
-    min-height: 150px;
-    max-width: 270px;
-    color: #fe6363;
+  }
+
+  p {
+    max-width: 70vw;
+  }
+}
+
+/* Desktop (992px and up) */
+@media (min-width: 992px) {
+  .counter-container {
+    flex-wrap: nowrap; /* Single row */
+    gap: 8%;
+  }
+
+  .counter {
     flex: 1;
-    padding: 20px;
-    text-align: center;
-}
-p{
-    font-size: 1.5rem;
-    padding: 1%;
-    color: #333;
-    font-weight: 700;
-    font-family: "Winky Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    margin: 0 auto;
+  }
+
+  p {
     max-width: 60vw;
-}
-p strong{
-    color: #fceaea;
+  }
 }
