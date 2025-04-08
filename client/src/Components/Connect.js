@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../services/apiService";
+import { useAuth } from '../context/AuthContext';
 import "../Styles/Auth.css";
 
 export const Connect = () => {
+  const { login } = useAuth();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
@@ -18,7 +20,6 @@ export const Connect = () => {
       navigate("/connecter");
     }
   }, [navigate]);
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -31,22 +32,14 @@ export const Connect = () => {
     }
 
     try {
-      const response = await authService.loginUser({
+      await login({
         LoginEmail: loginEmail.trim(),
         LoginPassword: loginPassword.trim()
       });
       
-      console.log("Login response:", response); // Debug log
-
-      if (response.token) {
-        localStorage.setItem("token", response.token);
-        localStorage.setItem("user", JSON.stringify(response.user));
-        setLoginEmail("");
-        setLoginPassword("");
-        navigate("/dashboard");
-      } else {
-        setLoginStatus(response.message || "Email ou mot de passe incorrect !");
-      }
+      setLoginEmail("");
+      setLoginPassword("");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       setLoginStatus(

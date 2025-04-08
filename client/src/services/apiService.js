@@ -11,7 +11,7 @@ const apiClient = Axios.create({
   },
 });
 
-// Enhanced request interceptor
+// Enhanced request interceptor to include token
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -20,16 +20,12 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Enhanced response interceptor
 apiClient.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
+  (response) => response.data,
   (error) => {
     if (error.response) {
       // Handle HTML error responses (like 404 pages)
@@ -37,10 +33,10 @@ apiClient.interceptors.response.use(
         return Promise.reject({
           message: 'Endpoint not found',
           status: error.response.status,
-          response: 'The requested API endpoint does not exist'
+          response: 'The requested API endpoint does not exist',
         });
       }
-      
+
       return Promise.reject({
         message: error.response.data?.message || 'Request failed',
         response: error.response.data,
@@ -58,11 +54,12 @@ apiClient.interceptors.response.use(
   }
 );
 
+// Authentication service
 export const authService = {
   registerUser: async (formData) => {
     try {
       return await apiClient.post('/register', formData, {
-        headers: { 
+        headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -71,14 +68,14 @@ export const authService = {
       throw error;
     }
   },
-  
+
   loginUser: async (credentials) => {
     try {
       const response = await apiClient.post('/login', credentials);
       if (response.token) {
         localStorage.setItem('token', response.token);
         if (response.user) {
-          localStorage.setItem('user', JSON.stringify(response.user));
+          localStorage.setItem('user', JSON.stringify(response.user)); // Save user info
         }
       }
       return response;
@@ -87,28 +84,30 @@ export const authService = {
       throw error;
     }
   },
-  
+
+  // Fetches the currently logged-in user
   getCurrentUser: async () => {
     try {
-      // Try multiple common endpoint patterns
       const endpoints = ['/api/user/me', '/user/me', '/users/me'];
       
       for (const endpoint of endpoints) {
         try {
           const response = await apiClient.get(endpoint);
-          return response;
+          return response;  // Return the first successful response
         } catch (err) {
-          if (err.status !== 404) throw err;
+          if (err.response?.status !== 404) {
+            throw err; // If it's not a 404 error, rethrow
+          }
         }
       }
-      
+
       throw new Error('User endpoint not found');
     } catch (error) {
       console.error('Error fetching user data:', error);
       throw {
         message: error.message || 'Failed to fetch user data',
         status: error.status || 500,
-        response: error.response
+        response: error.response,
       };
     }
   },
@@ -116,9 +115,15 @@ export const authService = {
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+  },
+
+  // Check if user data is available in localStorage
+  getStoredUser: () => {
+    return JSON.parse(localStorage.getItem('user'));
   }
 };
 
+// Leaderboard service
 export const leaderboardService = {
   getLeaderboard: async () => {
     try {
@@ -127,10 +132,10 @@ export const leaderboardService = {
       console.error('Error fetching leaderboard:', error);
       throw error;
     }
-  }
+  },
 };
 
-// Utility function to check API connectivity
+// Utility function to check API health
 export const checkApiHealth = async () => {
   try {
     await apiClient.get('/health');
@@ -139,6 +144,5 @@ export const checkApiHealth = async () => {
     return false;
   }
 };
-
 
 export default apiClient;
