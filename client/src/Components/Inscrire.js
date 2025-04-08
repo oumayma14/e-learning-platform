@@ -2,7 +2,7 @@ import { Container, Row, Form, Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { registerUser } from "../../../server/services/apiService";
+import { authService } from "../services/apiService";
 import "../Styles/Inscrire.css";
 
 export const Inscrire = () => {
@@ -92,12 +92,22 @@ export const Inscrire = () => {
                 }
             });
 
-            try {
-                const response = await registerUser(data);
-            } catch (error) {
-            }
+            const response = await authService.registerUser(data);
+            setSuccess(response.message || "Compte créé avec succès !");
+            
+            // Reset form after successful registration
+            setFormData({
+                username: "",
+                name: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                role: "",
+                image: null,
+            });
+            setPreview(null);
+            setValidated(false);
 
-            setSuccess(response.data.message || "Compte créé avec succès !");
             // Redirect to home page after 2 seconds
             setTimeout(() => navigate("/"), 2000);
         } catch (error) {
@@ -139,12 +149,12 @@ export const Inscrire = () => {
                     <Alert variant="danger" className="showMessage" onClose={() => setError(null)} dismissible>
                         {error}
                     </Alert>
-                    )}
-                    {success && (
+                )}
+                {success && (
                     <Alert variant="success" className="showMessage" onClose={() => setSuccess(null)} dismissible>
                         {success}
                     </Alert>
-                    )}
+                )}
                 
                 <Form noValidate validated={validated} onSubmit={createUser}>
                     <Container>

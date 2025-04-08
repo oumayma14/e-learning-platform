@@ -25,7 +25,7 @@ export const Footer = () => {
 
                     {/* Navigation Links */}
                     <Col md={6} className="footer-links d-flex justify-content-center">
-                        <a href="/#acceuil">Accueil</a>
+                        <a href="/">Accueil</a>
                         <a href="/#a-propos-de-nous">À propos de nous</a>
                         <a href="/#FAQ">FAQ</a>
                         <a href="/contact">Contact</a>

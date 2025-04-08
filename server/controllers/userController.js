@@ -1,49 +1,78 @@
-const userModel = require('../models/userModel'); // NEW
+const db =require('../config/db'); //db importation
 
-// NEW: Simplified getAllUsers
-const getUsers = async (req, res) => {
-  try {
-    const users = await userModel.getAllUsers();
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
-// NEW: Leaderboard uses model
-const getAllUsers = async (req, res) => {
-  try {
-    const leaderboard = await userModel.getLeaderboard();
-    res.json(leaderboard);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// NEW: Cleaner updateUser
-const updateUser = async (req, res) => {
-  try {
-    const updatedUser = await userModel.updateUser(
-      req.params.username,
-      req.body
-    );
-    res.json({ 
-      message: 'User updated',
-      user: updatedUser 
+// (leaderboard users)
+const getAllUsers = (req, res) => {
+    const query = 'SELECT username, score, image FROM user  ORDER BY score DESC LIMIT 10';
+    db.query(query, (err,results) => {
+        if(err) {
+            return res.status(500).json({error: 'DB query failed'});
+        }
+        res.json(results);
     });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
 };
 
-// NEW: Simplified deleteUser
-const deleteUser = async (req, res) => {
-  try {
-    await userModel.deleteUser(req.params.username);
-    res.json({ message: 'User deleted' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+//CRUD OPERATIONS
+
+//Read
+const getUsers = (req,res) =>{
+    const SQL = "SELECT username, name, email, role , score FROM user";
+    db.query(SQL,(err,results)=>{
+        if(err) return res.status(500).json({error:err});
+        res.status(200).json(results);
+    });
+};
+//update
+const bcrypt = require('bcrypt');
+
+const updateUser = async (req, res) => {
+    const { username } = req.params;
+    const { name, email, role, score, password } = req.body; 
+
+    try {
+        const getUserSQL = "SELECT * FROM user WHERE username = ?";
+        const userResults = await db.query(getUserSQL, [username]);
+
+        if (userResults.length === 0) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        const existingUser = userResults[0];
+        const updatedName = name || existingUser.name;
+        const updatedEmail = email || existingUser.email;
+        const updatedRole = role || existingUser.role;
+        const updatedScore = score !== undefined ? parseInt(score, 10) : existingUser.score;
+
+        let updateSQL = "UPDATE user SET name = ?, email = ?, role = ?, score = ? WHERE username = ?";
+        let queryParams = [updatedName, updatedEmail, updatedRole, updatedScore, username];
+
+        if (password) { 
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updateSQL = "UPDATE user SET name = ?, email = ?, password = ?, role = ?, score = ? WHERE username = ?";
+            queryParams = [updatedName, updatedEmail, hashedPassword, updatedRole, updatedScore, username];
+        }
+
+        await db.query(updateSQL, queryParams);
+        res.status(200).json({ message: `User '${username}' updated successfully` });
+
+    } catch (error) {
+        res.status(500).json({ error: "Server error", details: error.message });
+    }
 };
 
-module.exports = { getUsers, getAllUsers, updateUser, deleteUser };
+//Delete
+
+const deleteUser = (req,res) =>{
+    const { username } = req.params;
+    const SQL = "DELETE FROM user WHERE username = ?";
+
+    db.query(SQL, [username], (err,result) =>{
+        if(err) return res.status(500).json({error: err});
+        if(result.affectedRows === 0) {
+            return res.status(404).json({message: "user not found !"});
+        }
+        res.status(200).json({message: `User' ${username}'deleted successfully`});
+    });
+};
+
+module.exports = {getAllUsers, getUsers, deleteUser, updateUser};

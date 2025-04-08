@@ -4,7 +4,7 @@ import { Leaderboard } from "./Leaderboard";
 import { Navbar } from "./Navbar";
 import { Topquiz } from "./Topquiz";
 import { Faq } from "./Faq";
-import { Contact } from "./Contact";
+
 
 export const Container = () =>{
     const container={

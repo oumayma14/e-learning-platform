@@ -1,53 +1,100 @@
-const userModel = require('../models/userModel'); // NEW
+const db = require('../config/db');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
-const bcrypt = require('bcrypt'); 
+const util = require('util');
+const saltRounds = 10;
 
-// Register - Now uses userModel.registerUser()
+db.query = util.promisify(db.query);
+
+const SECRET_KEY = process.env.JWT_SECRET;
+const TOKEN_EXPIRATION = process.env.JWT_EXPIRES_IN || '1h';
+
+// Register a new user
 const register = async (req, res) => {
-  try {
-    const { username, name, email, password, role } = req.body;
-    const image = req.file?.filename; // NEW: Optional chaining
+    try {
+        const { username, name, email, password, role } = req.body;
+        const image = req.file ? req.file.filename : null;
 
-    // NEW: Delegate to model
-    const user = await userModel.registerUser({ 
-      username, name, email, password, role, image 
-    });
+        if (!username || !name || !email || !password || !role) {
+            return res.status(400).json({ message: "All fields are required!" });
+        }
 
-    res.status(201).json({ 
-      message: "User registered successfully",
-      user // NEW: Cleaner response
-    });
-  } catch (error) {
-    res.status(400).json({ 
-      error: error.message // NEW: Direct error from model
-    });
-  }
+        const checkQuery = "SELECT * FROM user WHERE username = ? OR email = ?";
+        const existingUsers = await db.query(checkQuery, [username, email]);
+
+        if (existingUsers.length > 0) {
+            return res.status(400).json({ message: "Username or email already exists!" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const insertQuery = `
+            INSERT INTO user (username, name, email, password, role, image) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        
+        await db.query(insertQuery, [username, name, email, hashedPassword, role, image]);
+        
+        res.status(201).json({ 
+            message: "User registered successfully",
+            user: { username, email, role } 
+        });
+
+    } catch (error) {
+        res.status(500).json({ 
+            error: "Server error", 
+            details: error.message 
+        });
+    }
 };
 
-// Login - Simplified with model
+// User login
 const login = async (req, res) => {
-  try {
     const { LoginEmail, LoginPassword } = req.body;
-    
-    // NEW: Model handles DB query
-    const user = await userModel.findUserByEmail(LoginEmail);
-    if (!user) throw new Error("Invalid credentials");
 
-    const validPassword = await bcrypt.compare(LoginPassword, user.password);
-    if (!validPassword) throw new Error("Invalid credentials");
+    try {
+        const SQL = 'SELECT * FROM user WHERE email = ?';
+        const results = await db.query(SQL, [LoginEmail]);
 
-    // Rest remains the same
-    const token = jwt.sign(
-      { userId: user.username, email: user.email, role: user.role }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: '1h' }
-    );
+        if (results.length === 0) {
+            return res.status(401).json({ message: "Invalid email or password!" });
+        }
 
-    res.json({ token, user: { ...user, password: undefined } });
-  } catch (error) {
-    res.status(401).json({ error: error.message });
-  }
+        const user = results[0];
+        const passwordMatch = await bcrypt.compare(LoginPassword, user.password);
+        
+        if (!passwordMatch) {
+            return res.status(401).json({ message: "Invalid email or password!" });
+        }
+
+        const token = jwt.sign(
+            { 
+                userId: user.id, 
+                email: user.email,
+                role: user.role 
+            }, 
+            SECRET_KEY, 
+            { expiresIn: TOKEN_EXPIRATION }
+        );
+
+        res.json({ 
+            message: "Login successful!", 
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                image: user.image
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ 
+            error: "Server error", 
+            details: error.message 
+        });
+    }
 };
 
 module.exports = { register, login };
