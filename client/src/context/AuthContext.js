@@ -8,7 +8,6 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Initialize auth state from localStorage
     useEffect(() => {
         const initializeAuth = async () => {
             const token = localStorage.getItem('token');
@@ -16,8 +15,6 @@ export const AuthProvider = ({ children }) => {
             
             if (token && userData) {
                 try {
-                    // Verify token is still valid
-                    // You might want to add an API endpoint to validate tokens
                     setUser(JSON.parse(userData));
                 } catch (error) {
                     console.error('Auth initialization error', error);
