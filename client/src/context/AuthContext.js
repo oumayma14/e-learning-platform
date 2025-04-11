@@ -5,7 +5,7 @@ import { authService } from '../services/apiService';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUserState] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -15,17 +15,35 @@ export const AuthProvider = ({ children }) => {
             
             if (token && userData) {
                 try {
-                    setUser(JSON.parse(userData));
+                    // Check if userData is not "undefined" or empty before parsing
+                    if (userData !== "undefined" && userData !== null) {
+                        setUserState(JSON.parse(userData));
+                    } else {
+                        setUserState(null); // Ensure we set userState to null if data is invalid
+                    }
                 } catch (error) {
                     console.error('Auth initialization error', error);
+                    setUserState(null); // Ensure we set userState to null if there's a parsing error
                     logout();
                 }
+            } else {
+                setUserState(null); // Ensure we set userState to null if token or userData is missing
             }
             setLoading(false);
         };
         
         initializeAuth();
     }, []);
+
+    // 🔁 Custom setter that updates both state and localStorage
+    const setUser = (userData) => {
+        setUserState(userData);
+        if (userData) {
+            localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+            localStorage.removeItem('user');
+        }
+    };
 
     const login = async (credentials) => {
         const response = await authService.loginUser(credentials);
@@ -36,14 +54,14 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        setUser(null);
+        setUserState(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, setUser, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext); 
+export const useAuth = () => useContext(AuthContext);
