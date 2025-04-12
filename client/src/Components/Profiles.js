@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { leaderboardService } from "../services/apiService";
-import defaultAvatar from "../assets/default-avatar.png"; // Make sure this path is correct
+import defaultAvatar from "../assets/default-avatar.png"; 
 
 export const Profiles = () => {
   const [users, setUsers] = useState([]);

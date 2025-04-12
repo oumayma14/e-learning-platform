@@ -1,238 +1,181 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
-import defaultAvatar from "../assets/default-avatar.png";
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import apiService from '../services/apiService';
 import "../Styles/MyProfile.css";
 
-export default function MyProfile() {
-  const { user, logout, setUser } = useAuth();
-  const [profile, setProfile] = useState({
-    username: "",
-    name: "",
-    email: "",
-    role: "",
-    image: null,
-    score: 0,
-    password: "",
-  });
-  const [message, setMessage] = useState("");
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+const MyProfile = () => {
+  const { user, setUser, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-
-  const apiUrl = process.env.REACT_APP_API_URL;
-  const uploadsPath = process.env.REACT_APP_UPLOADS_PATH;
-  const imageUrl = profile?.image
-    ? `${apiUrl}${uploadsPath}/${profile.image}`
-    : defaultAvatar;
-
-  useEffect(() => {
-    if (user) {
-      setProfile({
-        username: user.username || "",
-        name: user.name || "",
-        email: user.email || "",
-        role: user.role || "",
-        image: user.image || null,
-        score: user.score || 0,
-        password: "",
-      });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage("");
-      }, 3000); // message disappears after 4 seconds
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    password: '',
+    score: user?.score || 0
+  });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     try {
-      const res = await fetch(`${apiUrl}/api/update/${user.username}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setMessage("Profil mis à jour avec succès !");
-        const updatedUser = data.updatedUser || data.user;
-
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-
-        setProfile({
-          ...profile,
-          ...updatedUser,
-          password: "",
-        });
-        setIsEditing(false);
-      } else {
-        setMessage(data.error || "Erreur lors de la mise à jour.");
-      }
+      const response = await apiService.updateUser(user.username, formData);
+      setUser(response.data);
+      setIsEditing(false);
+      setError('');
     } catch (err) {
-      setMessage("Erreur réseau.");
+      setError('Échec de la mise à jour du profil. Veuillez réessayer.');
     }
   };
 
-  const confirmDelete = async () => {
-    try {
-      const res = await fetch(`${apiUrl}/api/users/${profile.username}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        alert("Compte supprimé avec succès.");
+  const handleDelete = async () => {
+    const confirmDialog = document.createElement('div');
+    confirmDialog.className = 'fullscreen-dialog';
+    
+    confirmDialog.innerHTML = `
+      <div class="dialog-content">
+        <div class="dialog-header">
+          <h3>Confirmation requise</h3>
+        </div>
+        <div class="dialog-body">
+          <p>Êtes-vous certain de vouloir supprimer définitivement votre compte ? Cette action est irréversible et toutes vos données seront perdues.</p>
+        </div>
+        <div class="dialog-footer">
+          <button class="cancel-btn">
+            Annuler
+          </button>
+          <button class="confirm-btn">
+            Confirmer
+          </button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(confirmDialog);
+    
+    const cancelBtn = confirmDialog.querySelector('.cancel-btn');
+    const confirmBtn = confirmDialog.querySelector('.confirm-btn');
+    
+    const closeDialog = () => {
+      confirmDialog.remove();
+    };
+    
+    cancelBtn.addEventListener('click', closeDialog);
+    
+    confirmBtn.addEventListener('click', async () => {
+      try {
+        await apiService.deleteUser(user.username);
+        closeDialog();
         logout();
-        window.location.href = "/";
-      } else {
-        const data = await res.json();
-        alert(data.error || "Erreur lors de la suppression.");
+      } catch (err) {
+        setError('Échec de la suppression du compte. Veuillez réessayer.');
+        closeDialog();
       }
-    } catch (err) {
-      alert("Erreur réseau.");
-    }
+    });
   };
+
+  if (!user) return <div className="profile-container">Veuillez vous connecter pour voir votre profil</div>;
 
   return (
     <div className="profile-container">
-      <div className="profile-header text-center mb-5">
-        <h2 className="profile-title">Mon Profil</h2>
-        <div className="profile-header-divider"></div>
+      <h2>Votre Profil</h2>
+      {error && <div className="error">{error}</div>}
+      
+      <div className="score-display">
+        Votre score actuel : <span className="score-value">{user.score} points</span>
       </div>
-
-      <div className="profile-card card shadow-lg">
-        <div className="card-body p-4 p-md-5">
-          <div className="row align-items-center">
-            <div className="col-md-8">
-              <h3 className="profile-subtitle">Modifier vos informations</h3>
-              <p className="text-muted">Mettez à jour votre profil</p>
-            </div>
-            <div className="col-md-4 text-md-right">
-              <img
-                src={imageUrl}
-                alt="Profil"
-                className="profile-image rounded-circle shadow"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = defaultAvatar;
-                }}
-              />
-            </div>
-          </div>
-
-          {message && <div className="alert alert-info mt-3">{message}</div>}
-
-          <div className="profile-details mt-4">
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label>Nom d'utilisateur</label>
-                <input
-                  type="text"
-                  name="username"
-                  className="form-control"
-                  value={profile.username}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label>Nom complet</label>
-                <input
-                  type="text"
-                  name="name"
-                  className="form-control"
-                  value={profile.name}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  value={profile.email}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label>Mot de passe (laisser vide si inchangé)</label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  value={profile.password}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label>Rôle</label>
-                <input
-                  type="text"
-                  name="role"
-                  className="form-control"
-                  value={profile.role}
-                  onChange={handleChange}
-                  disabled
-                />
-              </div>
-            </div>
-
-            <div className="d-flex justify-content-between mt-4">
-              {!isEditing ? (
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setIsEditing(true)}
-                >
-                  Modifier
-                </button>
-              ) : (
-                <button className="btn btn-success" onClick={handleUpdate}>
-                  Enregistrer
-                </button>
-              )}
-              <button
-                className="btn btn-danger"
-                onClick={() => setShowConfirmModal(true)}
-              >
-                Supprimer le compte
-              </button>
-            </div>
+      
+      {!isEditing ? (
+        <div className="profile-info">
+          <p><strong>Nom d'utilisateur :</strong> {user.username}</p>
+          <p><strong>Nom :</strong> {user.name}</p>
+          <p><strong>Email :</strong> {user.email}</p>
+          <p><strong>Rôle :</strong> {user.role}</p>
+          
+          <div className="profile-actions">
+            <button 
+              onClick={() => setIsEditing(true)} 
+              className="primary"
+            >
+              Modifier le profil
+            </button>
+            <button 
+              onClick={handleDelete} 
+              className="delete-btn"
+            >
+              Supprimer le compte
+            </button>
           </div>
         </div>
-      </div>
-
-      {showConfirmModal && (
-        <div className="modal-backdrop show d-flex justify-content-center align-items-center">
-          <div className="modal-dialog shadow">
-            <div className="modal-content p-3">
-              <h5 className="modal-title">Confirmation</h5>
-              <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
-              <div className="d-flex justify-content-end">
-                <button
-                  className="btn btn-secondary me-2"
-                  onClick={() => setShowConfirmModal(false)}
-                >
-                  Annuler
-                </button>
-                <button className="btn btn-danger" onClick={confirmDelete}>
-                  Confirmer
-                </button>
-              </div>
-            </div>
+      ) : (
+        <form onSubmit={handleUpdate} className="edit-form">
+          <label>
+            Nom :
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          
+          <label>
+            Email :
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          
+          <label>
+            Nouveau mot de passe (laisser vide pour ne pas changer) :
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              minLength="6"
+            />
+          </label>
+          
+          <label>
+            Score :
+            <input
+              type="number"
+              name="score"
+              value={formData.score}
+              onChange={handleChange}
+              min="0"
+            />
+          </label>
+          
+          <div className="form-actions">
+            <button type="submit" className="primary">
+              Enregistrer
+            </button>
+            <button 
+              type="button" 
+              onClick={() => {
+                setIsEditing(false);
+                setError('');
+              }} 
+              className="secondary"
+            >
+              Annuler
+            </button>
           </div>
-        </div>
+        </form>
       )}
     </div>
   );
-}
+};
+
+export default MyProfile;

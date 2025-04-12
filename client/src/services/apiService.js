@@ -23,33 +23,27 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Enhanced response interceptor
+// Enhanced response interceptor with proper Error objects
 apiClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response) {
       // Handle HTML error responses (like 404 pages)
       if (typeof error.response.data === 'string' && error.response.data.startsWith('<!DOCTYPE html>')) {
-        return Promise.reject({
-          message: 'Endpoint not found',
-          status: error.response.status,
-          response: 'The requested API endpoint does not exist',
-        });
+        const apiError = new Error('Endpoint not found');
+        apiError.status = error.response.status;
+        apiError.response = 'The requested API endpoint does not exist';
+        return Promise.reject(apiError);
       }
 
-      return Promise.reject({
-        message: error.response.data?.message || 'Request failed',
-        response: error.response.data,
-        status: error.response.status,
-      });
+      const apiError = new Error(error.response.data?.message || 'Request failed');
+      apiError.response = error.response.data;
+      apiError.status = error.response.status;
+      return Promise.reject(apiError);
     } else if (error.request) {
-      return Promise.reject({
-        message: 'Network error - no response received',
-      });
+      return Promise.reject(new Error('Network error - no response received'));
     } else {
-      return Promise.reject({
-        message: error.message || 'Error setting up request',
-      });
+      return Promise.reject(new Error(error.message || 'Error setting up request'));
     }
   }
 );
@@ -75,7 +69,7 @@ export const authService = {
       if (response.token) {
         localStorage.setItem('token', response.token);
         if (response.user) {
-          localStorage.setItem('user', JSON.stringify(response.user)); // Save user info
+          localStorage.setItem('user', JSON.stringify(response.user));
         }
       }
       return response;
@@ -85,7 +79,6 @@ export const authService = {
     }
   },
 
-  // Fetches the currently logged-in user
   getCurrentUser: async () => {
     try {
       const endpoints = ['/api/user/me', '/user/me', '/users/me'];
@@ -93,10 +86,10 @@ export const authService = {
       for (const endpoint of endpoints) {
         try {
           const response = await apiClient.get(endpoint);
-          return response;  // Return the first successful response
+          return response;
         } catch (err) {
           if (err.response?.status !== 404) {
-            throw err; // If it's not a 404 error, rethrow
+            throw err;
           }
         }
       }
@@ -104,11 +97,10 @@ export const authService = {
       throw new Error('User endpoint not found');
     } catch (error) {
       console.error('Error fetching user data:', error);
-      throw {
-        message: error.message || 'Failed to fetch user data',
-        status: error.status || 500,
-        response: error.response,
-      };
+      const apiError = new Error(error.message || 'Failed to fetch user data');
+      apiError.status = error.status || 500;
+      apiError.response = error.response;
+      throw apiError;
     }
   },
 
@@ -117,9 +109,9 @@ export const authService = {
     localStorage.removeItem('user');
   },
 
-  // Check if user data is available in localStorage
   getStoredUser: () => {
-    return JSON.parse(localStorage.getItem('user'));
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
 };
 
