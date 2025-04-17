@@ -40,7 +40,7 @@ const UserProfile = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-            <Dropdown.Item as={Link} to="testprofile">
+            <Dropdown.Item as={Link} to="profile">
             Mon Profil
             </Dropdown.Item>
                 <Dropdown.Item href="/settings">Paramètres</Dropdown.Item>

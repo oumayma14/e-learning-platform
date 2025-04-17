@@ -1,0 +1,52 @@
+/* Quiz Application Styles */
+.quiz-app {
+    background-color: #ffffff;
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.quiz-app__title {
+    color: #515151;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.quiz-app__nav-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 2rem;
+}
+
+.quiz-app__button {
+    color: #ffffff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.quiz-app__button--prev,
+.quiz-app__button--next {
+    background-color: #fe6363;
+}
+
+.quiz-app__button:hover {
+    background-color: #be4d4d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-app__button:active {
+    transform: translateY(0);
+}

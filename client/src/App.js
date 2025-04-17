@@ -9,7 +9,6 @@ import { Container } from './Components/Container';
 import { Footer } from './Components/Footer';
 import { Contact } from './Components/Contact';
 import { AuthProvider } from './context/AuthContext';
-import UserProfile from './Components/UserProfile';
 function App() {
   return(
     <AuthProvider>

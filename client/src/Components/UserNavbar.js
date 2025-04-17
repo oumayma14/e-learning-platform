@@ -6,7 +6,7 @@ import { FaSearch, FaTrophy, FaComments, FaChartLine, FaBook, FaUserCircle } fro
 import '../Styles/UserNav.css';
 
 const UserNavbar = () => {
-  const { user, logout } = useAuth(); // Assuming logout function is available in the context
+  const { user, logout } = useAuth(); 
   const location = useLocation();
   const navigate = useNavigate();
   const expand = 'md';
@@ -14,14 +14,9 @@ const UserNavbar = () => {
   const navLinks = [
     { path: '/dashboard', label: 'Accueil', exact: true, icon: <FaBook className="nav-icon" /> },
     {
-      path: '/quiz',
+      path: '/dashboard/catalogue/quiz-start', 
       label: 'Catalogue',
       icon: <FaSearch className="nav-icon" />,
-      subItems: [
-        { path: '/quiz/recherche', label: 'Recherche avancée' },
-        { path: '/quiz/thematiques', label: 'Par Thématique' },
-        { path: '/quiz/niveaux', label: 'Par Niveau' },
-      ],
     },
     {
       path: '/progress',

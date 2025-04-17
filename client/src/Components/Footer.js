@@ -1,16 +1,16 @@
 import "../Styles/Footer.css";
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import linkedinIcon from '../assets/linkedin.png'; // Update with actual path
-import emailIcon from '../assets/email.png'; // Update with actual path
-import phoneIcon from '../assets/phone.png'; // Update with actual path
+import linkedinIcon from '../assets/linkedin.png';
+import emailIcon from '../assets/email.png';
+import phoneIcon from '../assets/phone.png';
 
 export const Footer = () => {
     return (
         <footer className="footer">
             <Container>
                 <Row className="align-items-center">
-                    {/* Social Icons - Now in One Column */}
+                    {/* Social Icons */}
                     <Col md={6} className="social-icons d-flex justify-content-center">
                         <a href="#" className="icon" id="in">
                             <img src={linkedinIcon} alt="LinkedIn" width={24} height={24} />

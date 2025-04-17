@@ -1,0 +1,108 @@
+/* Result.css */
+.result-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 100px 20px; /* Reduced top padding to give more space to content */
+    margin: 0 auto;
+    text-align: center;
+}
+
+.result-card {
+    background-color: #ffffff;
+    border-radius: 20px; /* Increased border radius */
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+    width: 100%;
+    max-width: 700px; /* Increased max width */
+    overflow: hidden;
+    margin: 0 auto;
+    transform: scale(1.02); /* Slight scale up */
+}
+
+.result-title {
+    background-color: #fe6363;
+    color: white;
+    padding: 28px; /* Increased padding */
+    margin: 0;
+    font-size: 2.2rem; /* Larger font */
+    text-align: center;
+    font-weight: 700; /* Bolder */
+    letter-spacing: 0.5px;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px; /* Slightly larger gap */
+    background-color: #e0e0e0;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 22px 30px; /* Increased padding */
+    background-color: #ffffff;
+}
+
+.highlight {
+    background-color: #f9f9f9;
+}
+
+.result-label {
+    color: #515151;
+    font-size: 1.3rem; /* Larger font */
+    font-weight: 500;
+}
+
+.result-value {
+    color: #be4d4d;
+    font-weight: 700; /* Bolder */
+    font-size: 1.3rem; /* Larger font */
+}
+
+.passed {
+    color: #4CAF50;
+    font-size: 1.4rem; /* Slightly larger for passed items */
+}
+
+/* Score display enhancement */
+.total-score {
+    font-size: 1.8rem;
+    padding: 25px;
+    background-color: #f0f0f0;
+    font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .result-card {
+        max-width: 90%;
+    }
+    
+    .result-title {
+        font-size: 1.9rem;
+        padding: 22px;
+    }
+    
+    .result-item {
+        padding: 18px 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .result-title {
+        font-size: 1.7rem;
+        padding: 18px;
+    }
+    
+    .result-item {
+        padding: 16px 20px;
+    }
+    
+    .result-label,
+    .result-value {
+        font-size: 1.2rem;
+    }
+}
