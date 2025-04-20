@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Dropdown } from 'react-bootstrap';
 import defaultAvatar from "../assets/default-avatar.png";
 import { Link } from 'react-router-dom';
+import "../Styles/UserProfile.css"
 
 const UserProfile = () => {
     const { user, logout } = useAuth();
@@ -40,7 +41,7 @@ const UserProfile = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-            <Dropdown.Item as={Link} to="profile">
+            <Dropdown.Item as={Link} to="/dashboard/profile">
             Mon Profil
             </Dropdown.Item>
                 <Dropdown.Item href="/settings">Paramètres</Dropdown.Item>

@@ -1,7 +1,41 @@
 /* Apprenant.css */
 .apprenant-container {
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.profile-card {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tab-content {
+  padding: 20px;
+  background: #fff;
+  border-radius: 0 0 5px 5px;
+}
+
+/* Add more styles as needed */
+.apprenant-container {
     padding: 20px;
     min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   
   .profile-card {

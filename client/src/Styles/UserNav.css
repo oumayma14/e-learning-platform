@@ -6,7 +6,7 @@
   --dark: #515151;
   --danger: #f72525;
   --warning: #ff8c00;
-  --nav-icon-size: 10px; /* Tiny icons */
+  --nav-icon-size: 18px; /* Tiny icons */
   --nav-icon-gap: 0.3rem;
   --nav-transition: all 0.2s ease;
 }
@@ -16,6 +16,7 @@
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   padding: 0.5rem 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
 }
 
 .navbar-brand {

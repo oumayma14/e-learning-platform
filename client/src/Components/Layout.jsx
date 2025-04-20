@@ -1,25 +1,24 @@
-// Layout.jsx
 import UserNavbar from "./UserNavbar";
-import {Footer} from "./Footer"; 
-
 export const Layout = ({ children }) => {
   return (
     <div style={{
       display: 'flex',
       flexDirection: 'column',
       minHeight: '100vh',
-      width: '100%'
+      width: '100vw',  
+      margin: 0,       
+      padding: 0,       
     }}>
       <UserNavbar />
       
       <main style={{
         flex: 1,
         padding: '20px',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        width: '100%', 
       }}>
         {children}
       </main>
-      
     </div>
   );
 };

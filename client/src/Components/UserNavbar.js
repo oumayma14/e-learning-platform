@@ -55,7 +55,7 @@ const UserNavbar = () => {
     <Navbar key={expand} expand={expand} className="bg-body-tertiary mb-3" sticky="top">
       <Container fluid>
         <Navbar.Brand as={Link} to="/">
-          QuizMaster
+          QuizPop
           {user?.badgeCount > 0 && (
             <Badge pill className="ms-2 notification-badge">
               {user.badgeCount}
