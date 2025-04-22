@@ -1,8 +1,9 @@
+// ParticlesComponent.js
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { useEffect, useMemo, useState } from "react";
-import { loadSlim } from "@tsparticles/slim"; 
+import { loadSlim } from "@tsparticles/slim";
 
-const ParticlesComponent = (props) => {
+const ParticlesComponent = ({ id }) => {
   const [init, setInit] = useState(false);
 
   useEffect(() => {
@@ -14,58 +15,55 @@ const ParticlesComponent = (props) => {
   }, []);
 
   const options = useMemo(() => ({
-    background: {
-      color: { value: "#f0f0f0" },
-    },
-    fpsLimit: 120,
+    background: { color: { value: "transparent" } },
+    fpsLimit: 60,
     interactivity: {
       events: {
-        onClick: { enable: true, mode: "repulse" },
+        onClick: { enable: true, mode: "push" },
         onHover: { enable: true, mode: "grab" },
       },
       modes: {
-        push: { distance: 200, duration: 15 },
-        grab: { distance: 150 },
+        push: { quantity: 4 },
+        grab: { distance: 140 },
       },
     },
     particles: {
       color: { value: "#fe6363" },
       links: {
         color: "#fe6363",
-        distance: 150,
+        distance: 120,
         enable: true,
-        opacity: 0.3,
+        opacity: 0.5,
         width: 1,
       },
       move: {
-        direction: "none",
         enable: true,
-        outModes: { default: "bounce" },
-        random: true,
         speed: 1,
-        straight: false,
+        direction: "none",
+        outModes: { default: "bounce" },
       },
-      number: { density: { enable: true }, value: 150 },
-      opacity: { value: 1.0 },
+      number: { value: 80, density: { enable: true, area: 800 } },
+      opacity: { value: 0.5 },
       shape: { type: "circle" },
-      size: { value: { min: 1, max: 3 } },
+      size: { value: { min: 3, max: 4 } },
     },
     detectRetina: true,
   }), []);
 
   return (
     init && (
-      <div 
+      <div
         style={{
           position: "absolute",
           width: "100%",
           height: "100%",
           top: 0,
           left: 0,
-          zIndex: -1, // Puts it behind everything
+          zIndex: 0,
+          pointerEvents: "none",
         }}
       >
-        <Particles id={props.id} options={options} />
+        <Particles id={id} options={options} />
       </div>
     )
   );

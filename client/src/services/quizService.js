@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:5000/api/quizzes';
+import axios from "axios";
+const API_BASE_URL = 'http://localhost:3002/api/quizzes';
 
 export const getQuizzes = async () => {
     const response = await fetch(API_BASE_URL);
@@ -67,3 +68,15 @@ export const addQuestionToQuiz = async (quizId, questionData) => {
     }
     return await response.json();
 };
+
+
+const API_URL = 'http://localhost:3002/api/quizzes/full'; 
+
+export const createFullQuiz = async (quizData) => {
+    try {
+      const response = await axios.post(API_URL, quizData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };

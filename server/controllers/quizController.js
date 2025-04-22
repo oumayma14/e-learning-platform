@@ -1,4 +1,6 @@
 const Quiz = require('../models/quizModel');
+const pool = require('../config/db');
+
 
 const validateQuizData = (data) => {
   const errors = [];
@@ -125,5 +127,64 @@ exports.deleteQuiz = async (req, res) => {
       success: false, 
       message: 'Failed to delete quiz' 
     });
+  }
+};
+
+exports.createFullQuiz = async (req, res) => {
+  const { title, description, difficulty, category, questions } = req.body;
+
+  // Validate quiz data
+  const errors = validateQuizData({ title, description, difficulty, category });
+  if (errors.length > 0) {
+    return res.status(400).json({ success: false, message: 'Validation failed', errors });
+  }
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn.query = require('util').promisify(conn.query);
+    await conn.query('START TRANSACTION');
+
+    // Insert quiz
+    const result = await conn.query(
+      'INSERT INTO quizzes (title, description, difficulty, category) VALUES (?, ?, ?, ?)',
+      [title, description, difficulty, category]
+    );
+    const quizId = result.insertId;
+
+    // Insert questions and options
+    for (const question of questions) {
+      const { questionText, questionType, timeLimit, questionOrder, options } = question;
+
+      const questionResult = await conn.query(
+        'INSERT INTO questions (quiz_id, question_text, question_type, time_limit, question_order) VALUES (?, ?, ?, ?, ?)',
+        [quizId, questionText, questionType, timeLimit || null, questionOrder || 0]
+      );
+      const questionId = questionResult.insertId;
+
+      if (options && options.length > 0) {
+        const optionValues = options.map((opt, index) => [
+          questionId,
+          opt.text,
+          opt.isCorrect || false,
+          index
+        ]);
+        const placeholders = optionValues.map(() => '(?, ?, ?, ?)').join(', ');
+        const flatValues = optionValues.flat();
+
+        await conn.query(
+          `INSERT INTO options (question_id, option_text, is_correct, option_order) VALUES ${placeholders}`,
+          flatValues
+        );
+      }
+    }
+
+    await conn.query('COMMIT');
+    res.status(201).json({ success: true, data: { id: quizId }, message: 'Quiz and questions created successfully' });
+  } catch (error) {
+    if (conn) await conn.query('ROLLBACK');
+    res.status(500).json({ success: false, message: 'Failed to create quiz with questions', error: error.message });
+  } finally {
+    if (conn) conn.release();
   }
 };

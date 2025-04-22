@@ -13,5 +13,7 @@ router.delete('/:id', quizController.deleteQuiz);
 // Question routes
 router.post('/:quizId/questions', questionController.addQuestion);
 router.get('/:quizId/questions', questionController.getQuestions);
+router.post('/full', quizController.createFullQuiz);
+
 
 module.exports = router;

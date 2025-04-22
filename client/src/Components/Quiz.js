@@ -1,59 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../Styles/Quiz.css';
-
-const quizData = {
-  1: {
-    title: "JavaScript Basics",
-    questions: [
-      {
-        id: 1,
-        question: "What is the correct way to declare a variable in JavaScript?",
-        options: ["variable x;", "let x;", "x = var;", "declare x;"],
-        correctAnswer: 1
-      },
-      {
-        id: 2,
-        question: "Which of these is NOT a JavaScript data type?",
-        options: ["Number", "String", "Boolean", "Float"],
-        correctAnswer: 3
-      },
-      {
-        id: 3,
-        question: "What does 'DOM' stand for?",
-        options: [
-          "Document Object Model",
-          "Data Object Management",
-          "Digital Output Module",
-          "Display Object Manager"
-        ],
-        correctAnswer: 0
-      }
-    ]
-  },
-  2: {
-    title: "React Advanced",
-    questions: [
-      {
-        id: 1,
-        question: "Which hook is used for side effects in React?",
-        options: ["useState", "useEffect", "useContext", "useReducer"],
-        correctAnswer: 1
-      },
-      {
-        id: 2,
-        question: "What is the purpose of useMemo?",
-        options: [
-          "To manage state",
-          "To optimize performance by memoizing values",
-          "To handle side effects",
-          "To create memo components"
-        ],
-        correctAnswer: 1
-      }
-    ]
-  }
-};
 
 export default function Quiz() {
   const { id } = useParams();
@@ -66,16 +14,24 @@ export default function Quiz() {
   const [quiz, setQuiz] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [error, setError] = useState(null); // For error handling
 
+  // Fetch quiz data when the component mounts
   useEffect(() => {
-    const selectedQuiz = quizData[id];
-    if (selectedQuiz) {
-      setQuiz(selectedQuiz);
-    } else {
-      navigate('/');
-    }
+    const fetchQuizData = async () => {
+      try {
+        const response = await axios.get(`/api/quizzes/${id}`);
+        setQuiz(response.data); // Set the fetched quiz data to the state
+      } catch (err) {
+        setError('Failed to fetch quiz data');
+        navigate('/'); // Redirect to homepage if quiz is not found
+      }
+    };
+
+    fetchQuizData();
   }, [id, navigate]);
 
+  // Timer logic
   useEffect(() => {
     if (timeLeft > 0 && !quizCompleted && quiz) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -118,6 +74,16 @@ export default function Quiz() {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  // Error handling
+  if (error) {
+    return (
+      <div className="uq-error">
+        <p>{error}</p>
+        <button onClick={() => navigate('/')}>Go Back</button>
+      </div>
+    );
+  }
+
   if (!quiz) {
     return (
       <div className="uq-loading">
@@ -130,22 +96,24 @@ export default function Quiz() {
   if (quizCompleted) {
     const percentage = Math.round((score / quiz.questions.length) * 100);
     const showConfetti = percentage >= 50;
-    
-    const confetti = showConfetti ? Array.from({ length: 80 }).map((_, i) => (
-      <div 
-        key={i}
-        className="uq-confetti"
-        style={{
-          left: `${Math.random() * 100}%`,
-          background: `hsl(${Math.random() * 360}, 100%, 50%)`,
-          animationDuration: `${2 + Math.random() * 3}s`,
-          animationDelay: `${Math.random() * 0.5}s`,
-          width: `${6 + Math.random() * 8}px`,
-          height: `${6 + Math.random() * 8}px`,
-          opacity: 0.8,
-        }}
-      />
-    )) : null;
+
+    const confetti = showConfetti
+      ? Array.from({ length: 80 }).map((_, i) => (
+          <div
+            key={i}
+            className="uq-confetti"
+            style={{
+              left: `${Math.random() * 100}%`,
+              background: `hsl(${Math.random() * 360}, 100%, 50%)`,
+              animationDuration: `${2 + Math.random() * 3}s`,
+              animationDelay: `${Math.random() * 0.5}s`,
+              width: `${6 + Math.random() * 8}px`,
+              height: `${6 + Math.random() * 8}px`,
+              opacity: 0.8,
+            }}
+          />
+        ))
+      : null;
 
     return (
       <div className="uq-complete-container">
@@ -161,16 +129,12 @@ export default function Quiz() {
               <svg className="uq-progress-ring" viewBox="0 0 36 36">
                 <path
                   className="uq-progress-ring-bg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
                 <path
                   className="uq-progress-ring-fill"
                   strokeDasharray={`${percentage}, 100`}
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
               </svg>
               <div className="uq-score-percentage">
@@ -192,10 +156,7 @@ export default function Quiz() {
             </div>
           </div>
 
-          <button 
-            onClick={() => navigate('/dashboard/catalogue/quiz-start')} 
-            className="uq-return-btn"
-          >
+          <button onClick={() => navigate('/dashboard/catalogue/quiz-start')} className="uq-return-btn">
             Back to Quiz List
           </button>
         </div>
@@ -262,9 +223,7 @@ export default function Quiz() {
         <button
           onClick={handleSubmit}
           disabled={selectedOption === null || showFeedback}
-          className={`uq-submit-btn ${
-            selectedOption === null || showFeedback ? 'uq-disabled' : ''
-          }`}
+          className={`uq-submit-btn ${selectedOption === null || showFeedback ? 'uq-disabled' : ''}`}
         >
           {currentQuestionIndex < quiz.questions.length - 1 ? 'Submit Answer' : 'Finish Quiz'}
         </button>

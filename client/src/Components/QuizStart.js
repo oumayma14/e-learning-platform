@@ -1,11 +1,10 @@
 import { useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import MainQuiz from './MainQuiz';
-import { Routes, Route } from "react-router-dom";
 import Quiz from './Quiz';
 import AddQuiz from './AddQuiz';
 
 export const QuizStart = () => {
-  const [showAddQuizModal, setShowAddQuizModal] = useState(false);
 
   return (
     <div style={{
@@ -18,15 +17,17 @@ export const QuizStart = () => {
       overflow: 'hidden',
     }}>
       <Routes>
-        <Route index element={
-          <>
-            <MainQuiz onAddQuizClick={() => setShowAddQuizModal(true)} />
-            {showAddQuizModal && (
-              <AddQuiz onClose={() => setShowAddQuizModal(false)} />
-            )}
-          </>
-        } />
-        <Route path='quiz/:id' element={<Quiz/>}/>
+        {/* Main route showing the main quiz list and AddQuiz button */}
+        <Route 
+          index 
+          element={<MainQuiz />} 
+        />
+        
+        {/* Route to AddQuiz form */}
+        <Route path='add-quiz' element={<AddQuiz />} />
+        
+        {/* Dynamic route for a specific quiz */}
+        <Route path='quiz/:id' element={<Quiz />} />
       </Routes>
     </div>
   );

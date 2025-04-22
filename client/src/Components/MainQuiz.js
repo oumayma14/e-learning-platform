@@ -1,43 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../Styles/MainQuiz.css";
 
-export default function MainQuiz({ onAddQuizClick }) {
-    // Quiz data - moved to state so we can update it
-    const [allQuizzes, setAllQuizzes] = useState([
-        { id: 1, title: "JavaScript Basics", description: "Fundamental JS concepts", questionsCount: 10, difficulty: "Beginner", category: "Programming" },
-        { id: 2, title: "React Advanced", description: "Hooks and performance", questionsCount: 15, difficulty: "Advanced", category: "Web Dev" },
-        { id: 3, title: "CSS Mastery", description: "Flexbox and Grid", questionsCount: 12, difficulty: "Intermediate", category: "Web Dev" },
-        { id: 4, title: "TypeScript", description: "Type systems", questionsCount: 10, difficulty: "Intermediate", category: "Programming" },
-        { id: 5, title: "Python", description: "Syntax basics", questionsCount: 8, difficulty: "Beginner", category: "Programming" },
-        { id: 6, title: "Node.js", description: "Server-side JS", questionsCount: 14, difficulty: "Intermediate", category: "Web Dev" },
-        { id: 7, title: "Data Structures", description: "Arrays, Lists", questionsCount: 20, difficulty: "Advanced", category: "CS" },
-        { id: 8, title: "Algorithms", description: "Sorting", questionsCount: 18, difficulty: "Advanced", category: "CS" },
-        { id: 9, title: "HTML5", description: "Modern elements", questionsCount: 10, difficulty: "Beginner", category: "Web Dev" },
-        { id: 10, title: "Databases", description: "SQL/NoSQL", questionsCount: 12, difficulty: "Intermediate", category: "CS" },
-        { id: 11, title: "Git", description: "Version control", questionsCount: 10, difficulty: "Intermediate", category: "Tools" },
-        { id: 12, title: "Docker", description: "Containers", questionsCount: 8, difficulty: "Intermediate", category: "DevOps" },
-        { id: 13, title: "AWS", description: "Cloud services", questionsCount: 12, difficulty: "Intermediate", category: "Cloud" },
-        { id: 14, title: "ML Basics", description: "AI concepts", questionsCount: 15, difficulty: "Advanced", category: "AI" },
-        { id: 15, title: "Security", description: "Web protection", questionsCount: 10, difficulty: "Intermediate", category: "Security" },
-        { id: 16, title: "API Design", description: "REST principles", questionsCount: 8, difficulty: "Intermediate", category: "Web Dev" },
-        { id: 17, title: "GraphQL", description: "Query language", questionsCount: 10, difficulty: "Intermediate", category: "Web Dev" },
-        { id: 18, title: "Redux", description: "State management", questionsCount: 12, difficulty: "Intermediate", category: "Web Dev" },
-    ]);
+// API URL - adjust this based on your environment
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '/api/quizzes' 
+  : 'http://localhost:3002/api/quizzes';
 
-    // Get all unique categories and difficulties
-    const allCategories = [...new Set(allQuizzes.map(quiz => quiz.category))];
-    const allDifficulties = [...new Set(allQuizzes.map(quiz => quiz.difficulty))];
-    const maxQuestions = Math.max(...allQuizzes.map(quiz => quiz.questionsCount));
+export default function MainQuiz({ onAddQuizClick }) {
+    // Move quiz data to state
+    const [allQuizzes, setAllQuizzes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     // State management
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedDifficulties, setSelectedDifficulties] = useState([]);
-    const [questionRange, setQuestionRange] = useState([0, maxQuestions]);
+    const [questionRange, setQuestionRange] = useState([0, 100]); // Default range until we get real data
     const [showFilters, setShowFilters] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const quizzesPerPage = 6;
+
+    // Fetch quizzes from API when component mounts
+    useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(API_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    // Map the backend data to match our frontend structure
+                    const quizzes = result.data.map(quiz => ({
+                        id: quiz.id,
+                        title: quiz.title,
+                        description: quiz.description,
+                        questionsCount: quiz.questions ? quiz.questions.length : 0, // If questions are included
+                        difficulty: quiz.difficulty,
+                        category: quiz.category
+                    }));
+                    
+                    setAllQuizzes(quizzes);
+                    
+                    // Set question range based on actual data
+                    const maxQuestions = Math.max(...quizzes.map(quiz => quiz.questionsCount), 0);
+                    setQuestionRange([0, maxQuestions]);
+                } else {
+                    throw new Error(result.message || 'Failed to fetch quizzes');
+                }
+            } catch (err) {
+                console.error('Error fetching quizzes:', err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchQuizzes();
+    }, []);
+
+    // Get all unique categories and difficulties
+    const allCategories = [...new Set(allQuizzes.map(quiz => quiz.category))];
+    const allDifficulties = [...new Set(allQuizzes.map(quiz => quiz.difficulty))];
+    const maxQuestions = Math.max(...allQuizzes.map(quiz => quiz.questionsCount), 0);
 
     // Filter quizzes
     const filteredQuizzes = allQuizzes.filter(quiz => {
@@ -97,6 +128,32 @@ export default function MainQuiz({ onAddQuizClick }) {
         selectedDifficulties.length, 
         questionRange[0] > 0 || questionRange[1] < maxQuestions ? 1 : 0
     ].filter(Boolean).length;
+
+    // Show a loading state while fetching data
+    if (loading) {
+        return (
+            <div className="quiz-app-container">
+                <div className="quiz-container">
+                    <div className="loading-message">Loading quizzes...</div>
+                </div>
+            </div>
+        );
+    }
+
+    // Show an error state if fetch failed
+    if (error) {
+        return (
+            <div className="quiz-app-container">
+                <div className="quiz-container">
+                    <div className="error-message">
+                        <h3>Error loading quizzes</h3>
+                        <p>{error}</p>
+                        <button onClick={() => window.location.reload()}>Try Again</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="quiz-app-container">

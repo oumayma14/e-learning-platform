@@ -5,7 +5,7 @@ const rateLimit = require('express-rate-limit');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const quizRoutes = require('./routes/quizRoutes');
-const pool = require('./config/db'); // Changed from destructuring
+const pool = require('./config/db');
 
 const app = express();
 
@@ -30,9 +30,17 @@ app.use(limiter);
 app.use(express.json({ limit: '10kb' }));
 
 // =============
-// 2. Static Files
+// 2. Static Files (ONLY CHANGE MADE)
 // =============
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads', {
+  setHeaders: (res) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.setHeader('Access-Control-Allow-Origin', 
+      process.env.NODE_ENV === 'production' 
+        ? process.env.CLIENT_URL 
+        : 'http://localhost:3000');
+  }
+}));
 
 // =============
 // 3. Routes
@@ -83,10 +91,8 @@ app.use((err, req, res, next) => {
 // ======================
 const PORT = process.env.PORT || 3002;
 
-// Verify DB connection after server starts
 const startServer = async () => {
   try {
-    // Test database connection
     const [rows] = await pool.query('SELECT 1');
     console.log('**Database connected successfully');
     
@@ -101,7 +107,6 @@ const startServer = async () => {
 
 startServer();
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received. Shutting down gracefully...');
   pool.end().then(() => {
