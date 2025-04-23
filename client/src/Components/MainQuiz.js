@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../Styles/MainQuiz.css";
-
-// API URL - adjust this based on your environment
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? '/api/quizzes' 
-  : 'http://localhost:3002/api/quizzes';
+import { QUIZ_API_URL } from '../services/quizService';
 
 export default function MainQuiz({ onAddQuizClick }) {
     // Move quiz data to state
@@ -27,7 +23,7 @@ export default function MainQuiz({ onAddQuizClick }) {
         const fetchQuizzes = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(API_URL);
+                const response = await fetch(QUIZ_API_URL);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);

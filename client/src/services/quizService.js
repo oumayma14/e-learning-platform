@@ -1,6 +1,12 @@
 import axios from "axios";
 const API_BASE_URL = 'http://localhost:3002/api/quizzes';
 
+const URL = process.env.NODE_ENV === 'production'
+  ? '/api'
+  : 'http://localhost:3002/api';
+
+export const QUIZ_API_URL = `${URL}/quizzes`;
+
 export const getQuizzes = async () => {
     const response = await fetch(API_BASE_URL);
     if (!response.ok) {
