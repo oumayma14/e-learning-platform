@@ -1,57 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "../Styles/MainQuiz.css";
 import { QUIZ_API_URL } from '../services/quizService';
 
 export default function MainQuiz({ onAddQuizClick }) {
-    // Move quiz data to state
+    const navigate = useNavigate();
     const [allQuizzes, setAllQuizzes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // State management
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedDifficulties, setSelectedDifficulties] = useState([]);
-    const [questionRange, setQuestionRange] = useState([0, 100]); // Default range until we get real data
+    const [questionRange, setQuestionRange] = useState([0, 100]);
     const [showFilters, setShowFilters] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const quizzesPerPage = 6;
 
-    // Fetch quizzes from API when component mounts
     useEffect(() => {
         const fetchQuizzes = async () => {
             try {
                 setLoading(true);
                 const response = await fetch(QUIZ_API_URL);
-                
+
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
                 }
-                
+
                 const result = await response.json();
-                
+
                 if (result.success && result.data) {
-                    // Map the backend data to match our frontend structure
                     const quizzes = result.data.map(quiz => ({
                         id: quiz.id,
                         title: quiz.title,
                         description: quiz.description,
-                        questionsCount: quiz.questions ? quiz.questions.length : 0, // If questions are included
+                        questionsCount: quiz.questions ? quiz.questions.length : 0,
                         difficulty: quiz.difficulty,
                         category: quiz.category
                     }));
-                    
+
                     setAllQuizzes(quizzes);
-                    
-                    // Set question range based on actual data
                     const maxQuestions = Math.max(...quizzes.map(quiz => quiz.questionsCount), 0);
                     setQuestionRange([0, maxQuestions]);
                 } else {
-                    throw new Error(result.message || 'Failed to fetch quizzes');
+                    throw new Error(result.message || 'Échec du chargement des quiz');
                 }
             } catch (err) {
-                console.error('Error fetching quizzes:', err);
+                console.error('Erreur lors du chargement des quiz :', err);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -61,12 +56,10 @@ export default function MainQuiz({ onAddQuizClick }) {
         fetchQuizzes();
     }, []);
 
-    // Get all unique categories and difficulties
     const allCategories = [...new Set(allQuizzes.map(quiz => quiz.category))];
     const allDifficulties = [...new Set(allQuizzes.map(quiz => quiz.difficulty))];
     const maxQuestions = Math.max(...allQuizzes.map(quiz => quiz.questionsCount), 0);
 
-    // Filter quizzes
     const filteredQuizzes = allQuizzes.filter(quiz => {
         return (
             quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -77,19 +70,16 @@ export default function MainQuiz({ onAddQuizClick }) {
         );
     });
 
-    // Pagination calculations
     const totalPages = Math.ceil(filteredQuizzes.length / quizzesPerPage);
     const indexOfLastQuiz = currentPage * quizzesPerPage;
     const indexOfFirstQuiz = indexOfLastQuiz - quizzesPerPage;
     const currentQuizzes = filteredQuizzes.slice(indexOfFirstQuiz, indexOfLastQuiz);
 
-    // Group quizzes into rows of 3
     const groupedQuizzes = [];
     for (let i = 0; i < currentQuizzes.length; i += 3) {
         groupedQuizzes.push(currentQuizzes.slice(i, i + 3));
     }
 
-    // Helper functions
     const toggleCategory = (category) => {
         setSelectedCategories(prev => 
             prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
@@ -125,26 +115,24 @@ export default function MainQuiz({ onAddQuizClick }) {
         questionRange[0] > 0 || questionRange[1] < maxQuestions ? 1 : 0
     ].filter(Boolean).length;
 
-    // Show a loading state while fetching data
     if (loading) {
         return (
             <div className="quiz-app-container">
                 <div className="quiz-container">
-                    <div className="loading-message">Loading quizzes...</div>
+                    <div className="loading-message">Chargement des quiz...</div>
                 </div>
             </div>
         );
     }
 
-    // Show an error state if fetch failed
     if (error) {
         return (
             <div className="quiz-app-container">
                 <div className="quiz-container">
                     <div className="error-message">
-                        <h3>Error loading quizzes</h3>
+                        <h3>Erreur de chargement</h3>
                         <p>{error}</p>
-                        <button onClick={() => window.location.reload()}>Try Again</button>
+                        <button onClick={() => window.location.reload()}>Réessayer</button>
                     </div>
                 </div>
             </div>
@@ -155,12 +143,11 @@ export default function MainQuiz({ onAddQuizClick }) {
         <div className="quiz-app-container">
             <div className="quiz-container">
                 <div className="quiz-content-wrapper">
-                    {/* Search and Filter Controls */}
                     <div className="controls-container">
                         <div className="search-container">
                             <input
                                 type="text"
-                                placeholder="Search quizzes by name..."
+                                placeholder="Rechercher un quiz par nom..."
                                 value={searchTerm}
                                 onChange={(e) => {
                                     setSearchTerm(e.target.value);
@@ -170,7 +157,7 @@ export default function MainQuiz({ onAddQuizClick }) {
                             />
                             {(searchTerm || activeFilterCount > 0) && (
                                 <button onClick={resetFilters} className="clear-search-button">
-                                    Reset All
+                                    Réinitialiser tout
                                 </button>
                             )}
                         </div>
@@ -180,26 +167,25 @@ export default function MainQuiz({ onAddQuizClick }) {
                                 onClick={() => setShowFilters(!showFilters)}
                                 className={`filter-toggle-button ${showFilters ? 'active' : ''}`}
                             >
-                                {showFilters ? 'Hide Filters' : 'Show Filters'}
+                                {showFilters ? 'Masquer les filtres' : 'Afficher les filtres'}
                                 {activeFilterCount > 0 && (
                                     <span className="filter-count">{activeFilterCount}</span>
                                 )}
                             </button>
 
                             <button 
-                                onClick={onAddQuizClick}
+                                onClick={() => navigate('add-quiz')}
                                 className="add-quiz-button"
                             >
-                                + Add Quiz
+                                + Ajouter un quiz
                             </button>
                         </div>
                     </div>
 
-                    {/* Collapsible Filter Section */}
                     {showFilters && (
                         <div className="filters-section">
                             <div className="filter-group">
-                                <h3 className="filter-title">Categories</h3>
+                                <h3 className="filter-title">Catégories</h3>
                                 <div className="filter-options">
                                     {allCategories.map(category => (
                                         <button
@@ -214,7 +200,7 @@ export default function MainQuiz({ onAddQuizClick }) {
                             </div>
 
                             <div className="filter-group">
-                                <h3 className="filter-title">Difficulty</h3>
+                                <h3 className="filter-title">Difficulté</h3>
                                 <div className="filter-options">
                                     {allDifficulties.map(difficulty => (
                                         <button
@@ -229,7 +215,7 @@ export default function MainQuiz({ onAddQuizClick }) {
                             </div>
 
                             <div className="filter-group">
-                                <h3 className="filter-title">Questions: {questionRange[0]} - {questionRange[1]}</h3>
+                                <h3 className="filter-title">Questions : {questionRange[0]} - {questionRange[1]}</h3>
                                 <div className="range-slider">
                                     <input
                                         type="range"
@@ -252,22 +238,20 @@ export default function MainQuiz({ onAddQuizClick }) {
                         </div>
                     )}
 
-                    {/* Results Info */}
                     <div className="results-info">
                         <span className="results-count">
-                            Showing {filteredQuizzes.length} of {allQuizzes.length} quizzes
+                            Affichage de {filteredQuizzes.length} sur {allQuizzes.length} quiz
                         </span>
                         {activeFilterCount > 0 && (
                             <button onClick={resetFilters} className="clear-filters-button">
-                                Clear filters
+                                Réinitialiser les filtres
                             </button>
                         )}
                     </div>
 
-                    {/* Quiz Grid */}
                     {filteredQuizzes.length === 0 ? (
                         <div className="no-results-message">
-                            No quizzes found matching your criteria. Try adjusting your filters.
+                            Aucun quiz ne correspond à vos critères. Essayez de modifier vos filtres.
                         </div>
                     ) : (
                         <>
@@ -283,14 +267,14 @@ export default function MainQuiz({ onAddQuizClick }) {
                                                     <h3 className="quiz-card__title">{quiz.title}</h3>
                                                     <p className="quiz-card__description">{quiz.description}</p>
                                                     <div className="quiz-card__meta">
-                                                        <span>{quiz.questionsCount} Questions</span>
+                                                        <span>{quiz.questionsCount} questions</span>
                                                         <span className={`difficulty difficulty-${quiz.difficulty.toLowerCase()}`}>
                                                             {quiz.difficulty}
                                                         </span>
                                                     </div>
                                                 </div>
                                                 <Link to={`quiz/${quiz.id}`} className="quiz-card__button">
-                                                    Start Quiz
+                                                    Commencer le quiz
                                                 </Link>
                                             </div>
                                         ))}
@@ -298,7 +282,6 @@ export default function MainQuiz({ onAddQuizClick }) {
                                 ))}
                             </div>
 
-                            {/* Pagination */}
                             {totalPages > 1 && (
                                 <div className="pagination">
                                     <button 
@@ -309,7 +292,7 @@ export default function MainQuiz({ onAddQuizClick }) {
                                         disabled={currentPage === 1}
                                         className="pagination-button"
                                     >
-                                        Previous
+                                        Précédent
                                     </button>
                                     
                                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
@@ -333,7 +316,7 @@ export default function MainQuiz({ onAddQuizClick }) {
                                         disabled={currentPage === totalPages}
                                         className="pagination-button"
                                     >
-                                        Next
+                                        Suivant
                                     </button>
                                 </div>
                             )}
