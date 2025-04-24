@@ -1,240 +1,376 @@
-/* Import slick-carousel styles */
+/* Import slick-carousel and animate.css for animations */
 @import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
 @import url('https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
 
-/* Base styles */
+/* Base styles with modern font stack */
 * {
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
+}
+body {
+    margin: 0;
+    overflow-x: hidden;
 }
 
-/* Centered carousel container */
+/* Modern background with primary color */
 .quiz {
-    background-color: #fe6363;
-    min-height: 80vh;
+    background: #fe6363;
+    height: 90vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 0;
-    width: 100%;
+    padding: 3rem 0;
+    width: 100vw;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    justify-content: center;  
+    align-items: center;   
 }
 
-/* Main container - responsive */
-.topquiz {
-    width: min(90%, 1200px);
-    margin: 0 auto;
-    position: relative;
-    padding: 0 clamp(1rem, 2vw, 2rem);
-}
-
-/* Content container - centered */
+/* Container with subtle white transparency */
 .cont {
-    background-color: #ffffff37;
-    width: 100%;
-    min-height: 60vh;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 100vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: clamp(1rem, 2vw, 2rem) 0;
-    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Card grid - responsive */
-.card-wrapper {
+/* Main carousel container */
+.topquiz {
+    width: min(90%, 1300px);
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-    gap: clamp(1rem, 2vw, 1.5rem);
-    width: 95%;
-    max-width: 1200px;
-    padding: 0.5rem 0;
+    position: relative;
+    padding: 0 1.5rem;
 }
 
-/* Card styles - unchanged but responsive */
+/* Card styles with centered content */
 .card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f0f0f0;
-    color: black;
-    border-radius: 1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    min-height: clamp(300px, 35vw, 350px);
-    height: 100%;
+    background: #ffffff;
+    color: #515151;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    height: 420px; /* Fixed height for consistency */
+    margin: 0 15px;
+    overflow: hidden;
+    position: relative;
 }
 
 .card:hover {
-    transform: scale(1.03);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
-.card-header {
-    height: clamp(10rem, 25vw, 180px);
-    border-radius: 1rem 1rem 0 0;
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem;
-    width: 100%;
-}
-
-.card-img {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 8px;
-    padding: 0.5rem;
-}
-
+/* Centered card content */
 .card-body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: clamp(0.8rem, 1.5vw, 1rem);
-    padding: clamp(0.8rem, 1.5vw, 1rem);
     text-align: center;
-    width: 100%;
+    padding: 2rem;
+    height: 100%;
 }
 
-.card-title {
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-    font-weight: 600;
-}
-
-.card-button {
-    background-color: #6366f1;
+/* Category badge */
+.quiz-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #be4d4d;
     color: white;
-    font-size: clamp(0.9rem, 1.3vw, 1.125rem);
-    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(1rem, 1.5vw, 1.5rem);
-    border-radius: 1rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+/* Quiz title styling */
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: #515151;
+    line-height: 1.3;
+}
+
+/* Description text */
+.card-description {
+    color: #515151;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 90%;
+}
+
+/* Read more button styling */
+.read-more-btn {
+    color: #be4d4d;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 5px;
+    transition: all 0.2s ease;
+}
+
+.read-more-btn:hover {
+    color: #fe6363;
+    text-decoration: underline;
+}
+
+/* Difficulty indicator */
+.difficulty {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    background: rgba(190, 77, 77, 0.1);
+    color: #be4d4d;
+}
+
+/* Start quiz button */
+.quiz-button {
+    background: #be4d4d;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.7rem 1.5rem;
+    border-radius: 50px;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    width: 90%;
+    transition: all 0.3s ease;
+    width: 80%;
     max-width: 200px;
-    margin-top: auto;
-    margin-bottom: 1rem;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    margin-top: 1.5rem;
+    box-shadow: 0 4px 6px rgba(190, 77, 77, 0.3);
 }
 
-.card-button:hover {
-    background-color: #4f46e5;
+.quiz-button:hover {
+    background: #fe6363;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(190, 77, 77, 0.4);
 }
 
-p.card-description {
-    color: #898989;
-    max-height: 80px;
-    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-}
-
-/* Slick carousel responsive adjustments */
+/* Slick carousel customizations */
 .slick-slide {
-    padding: 0 clamp(5px, 1vw, 10px);
+    padding: 0 10px;
+    transition: transform 0.3s ease;
 }
 
 .slick-list {
-    margin: 0 clamp(-5px, -1vw, -10px);
+    margin: 0 -10px;
+    padding: 20px 0;
 }
 
 .slick-track {
     display: flex;
-    align-items: center; /* Vertical centering for slides */
+    align-items: stretch;
 }
 
-/* Responsive breakpoints */
-@media (max-width: 1024px) {
+/* Custom dots styling */
+.slick-dots {
+    bottom: -40px;
+}
+
+.slick-dots li button:before {
+    font-size: 10px;
+    color: white;
+    opacity: 0.5;
+}
+
+.slick-dots li.slick-active button:before {
+    color: white;
+    opacity: 1;
+}
+
+/* Arrow styling */
+.slick-prev, .slick-next {
+    width: 40px;
+    height: 40px;
+    z-index: 1;
+}
+
+.slick-prev:before, .slick-next:before {
+    font-size: 40px;
+    color: white;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.slick-prev:hover:before, .slick-next:hover:before {
+    opacity: 1;
+}
+
+.slick-prev {
+    left: -50px;
+}
+
+.slick-next {
+    right: -50px;
+}
+
+/* Carousel animation */
+.slick-active .card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading and error states */
+.loading, .error, .no-quizzes {
+    text-align: center;
+    color: white;
+    font-size: 1.2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
     .cont {
-        min-height: 55vh;
+        width: 94%;
+        min-height: 60vh;
     }
     
-    .card-wrapper {
-        width: 98%;
+    .card {
+        height: 400px;
+    }
+}
+
+@media (max-width: 992px) {
+    .quiz {
+        min-height: 85vh;
+    }
+    
+    .cont {
+        min-height: 55vh;
+        padding: 1.5rem 0;
+    }
+    
+    .card-title {
+        font-size: 1.2rem;
+    }
+    
+    .slick-prev {
+        left: -30px;
+    }
+    
+    .slick-next {
+        right: -30px;
     }
 }
 
 @media (max-width: 768px) {
     .quiz {
-        min-height: 75vh;
+        min-height: 80vh;
+        padding: 2rem 0;
     }
     
     .cont {
+        width: 96%;
         min-height: 50vh;
     }
     
-    .card-wrapper {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    .card {
+        height: 380px;
+        margin: 0 10px;
     }
     
-    .card-header {
-        height: 12rem;
+    .card-body {
+        padding: 1.5rem;
     }
     
-    .card-img {
-        max-height: 11rem;
+    .slick-prev, .slick-next {
+        display: none !important;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .quiz {
-        min-height: 70vh;
-        padding: 1rem 0;
+        min-height: 75vh;
+        padding: 1.5rem 0;
     }
     
     .cont {
-        min-height: 45vh;
-        padding: 0.5rem 0;
+        padding: 1rem 0;
+        border-radius: 15px;
     }
     
-    .card-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
+    .topquiz {
+        padding: 0 1rem;
     }
     
     .card {
-        width: 90%;
-        min-height: 300px;
-    }
-    
-    .card-header {
-        height: 10rem;
-    }
-    
-    .card-img {
-        max-height: 8rem;
-    }
-    
-    .card-button {
-        width: 80%;
-    }
-}
-
-@media (max-width: 360px) {
-    .card {
-        min-height: 280px;
-    }
-    
-    .card-header {
-        height: 8rem;
+        height: 360px;
     }
     
     .card-title {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
     }
     
-    .card-button {
-        font-size: 0.85rem;
+    .quiz-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
+}
+
+/* No quizzes message */
+.no-quizzes {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 2rem;
+    border-radius: 10px;
+    color: white;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 80%;
+}
+
+.section-header h2 {
+    font-size: 2.2rem;
+    color: #f5f5f5;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: #d6d6d6;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
 }

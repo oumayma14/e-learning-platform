@@ -1,59 +1,69 @@
-import {useState} from "react";
-import devops from '../assets/devops.png';
-import cloud from '../assets/cloud.png';
-import flutter from '../assets/flutter.jpg';
-import react from '../assets/react.jpg';
-import springboot from '../assets/springboot.png';
+import { useState, useEffect } from "react";
+import { QUIZ_API_URL } from '../services/quizService';
 import Slider from "react-slick";
 import "../Styles/Topquiz.css";
-
+import { Link } from "react-router-dom";
 
 export const Topquiz = () => {
-    const ReadMore = ({ text, maxLength = 80 }) => {
+    const [quizzes, setQuizzes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(QUIZ_API_URL);
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const quizzes = result.data.map(quiz => ({
+                        id: quiz.id,
+                        title: quiz.title,
+                        description: quiz.description,
+                        difficulty: quiz.difficulty,
+                        category: quiz.category,
+                        featured: Math.random() > 0.8 // 20% chance d’être en vedette
+                    }));
+
+                    setQuizzes(quizzes);
+                } else {
+                    throw new Error(result.message || 'Échec du chargement des quiz');
+                }
+            } catch (err) {
+                console.error('Erreur de chargement des quiz :', err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchQuizzes();
+    }, []);
+
+    const ReadMore = ({ text = "", maxLength = 80 }) => {
         const [isReadMore, setIsReadMore] = useState(true);
-    
+
         const toggleReadMore = () => {
             setIsReadMore(!isReadMore);
         };
-    
+
         return (
             <p className="card-description">
                 {isReadMore ? text.slice(0, maxLength) + (text.length > maxLength ? "..." : "") : text}
-            {text.length > maxLength && (
-                <span onClick={toggleReadMore} className="read-more-btn" style={{ color: "rgb(67, 66, 66)", cursor: "pointer",fontWeight: "bold" }}>
-                    {isReadMore ? " Voir Plus" : " Voir Moins"}
-                </span>
-            )}
+                {text.length > maxLength && (
+                    <span onClick={toggleReadMore} className="read-more-btn">
+                        {isReadMore ? " Voir Plus" : " Voir Moins"}
+                    </span>
+                )}
             </p>
         );
     };
-    const data = [
-        {
-            name: 'Devops Quiz',
-            img: devops,
-            description: 'Test your knowledge of DevOps principles, CI/CD, Docker, Kubernetes, cloud computing, and automation. Sharpen your skills and level up your expertise!'
-        },
-        {
-            name: 'Cloud Quiz',
-            img: cloud,
-            description: 'Assess your skills in AWS, Azure, GCP, and cloud computing fundamentals. Test your knowledge and level up!'
-        },
-        {
-            name: 'Flutter Quiz',
-            img: flutter,
-            description: 'Test your understanding of Dart, widgets, state management, and UI design in Flutter.'
-        },
-        {
-            name: 'React Quiz',
-            img: react,
-            description: 'Test your knowledge of DevOps principles, CI/CD, Docker, Kubernetes, cloud computing, and automation. Sharpen your skills and level up your expertise!'
-        },
-        {
-            name: 'Springboot Quiz',
-            img: springboot,
-            description: 'Evaluate your knowledge of Spring Boot, REST APIs, Spring Security, databases, and building scalable backend applications.'
-        }
-    ];
 
     const settings = {
         dots: true,
@@ -79,25 +89,68 @@ export const Topquiz = () => {
         ],
     };
 
+    if (loading) {
+        return (
+            <section className="quiz">
+                <div className="cont">
+                    <div className="loading">
+                        <div className="loading-spinner"></div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section className="quiz">
+                <div className="cont">
+                    <div className="error">Erreur lors du chargement des quiz : {error}</div>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="quiz">
             <div className="cont">
-            <div className="topquiz">
-                <Slider {...settings}>
-                    {data.map((d, index) => (
-                        <div key={index} className="card">
-                            <div className="card-header">
-                                <img src={d.img} alt={d.name} className="card-img" loading="lazy" />
-                            </div>
-                            <div className="card-body">
-                                <p className="card-title">{d.name}</p>
-                                <ReadMore text={d.description} maxLength={90} />
-                                
-                            </div>
+                <div className="section-header">
+                    <h2>Découvrez Nos Quiz</h2>
+                    <p>Testez vos connaissances avec nos quiz interactifs</p>
+                </div>
+                <div className="topquiz">
+                    {quizzes.length > 0 ? (
+                        <Slider {...settings}>
+                            {quizzes.map((quiz) => (
+                                <div key={quiz.id} className={`card ${quiz.featured ? 'featured' : ''}`}>
+                                    <div className="card-body">
+                                        <div className={`quiz-badge ${quiz.category.replace(/\s+/g, '-').toLowerCase()}`}>
+                                            {quiz.category}
+                                        </div>
+                                        <h3 className="card-title">{quiz.title}</h3>
+                                        <ReadMore text={quiz.description} maxLength={90} />
+                                        <div className="quiz-meta">
+                                            <span className={`difficulty difficulty-${quiz.difficulty.toLowerCase()}`}>
+                                                {quiz.difficulty}
+                                            </span>
+                                        </div>
+                                        <Link 
+                                            to={`quiz/${quiz.id}`} 
+                                            className="quiz-button"
+                                            aria-label={`Commencer le quiz ${quiz.title}`}
+                                        >
+                                            Commencer le Quiz
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </Slider>
+                    ) : (
+                        <div className="no-quizzes">
+                            Aucun quiz disponible pour le moment. Revenez plus tard !
                         </div>
-                    ))}
-                </Slider>
-            </div>
+                    )} 
+                </div>
             </div>
         </section>
     );

@@ -4,6 +4,7 @@ import UserProfile from './UserProfile';
 import { Badge, Container, Nav, Navbar, NavDropdown, Offcanvas } from 'react-bootstrap';
 import { FaSearch, FaTrophy, FaComments, FaChartLine, FaBook, FaUserCircle } from 'react-icons/fa';
 import '../Styles/UserNav.css';
+import logo from '../assets/quizpop-high-resolution-logo-removebg-preview.png';
 
 const UserNavbar = () => {
   const { user, logout } = useAuth(); 
@@ -54,14 +55,16 @@ const UserNavbar = () => {
   return (
     <Navbar key={expand} expand={expand} className="bg-body-tertiary mb-3" sticky="top">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/">
-          QuizPop
-          {user?.badgeCount > 0 && (
-            <Badge pill className="ms-2 notification-badge">
-              {user.badgeCount}
-            </Badge>
-          )}
-        </Navbar.Brand>
+      <Navbar.Brand as={Link} to="/dashboard">
+      <img
+        src={logo}
+        alt="QuizPop Logo"
+        height="40"
+        width='auto'
+        className="d-inline-block align-top"
+      />
+    </Navbar.Brand>
+
         <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
         <Navbar.Offcanvas
           id={`offcanvasNavbar-expand-${expand}`}
@@ -125,7 +128,6 @@ const UserNavbar = () => {
                   <UserProfile />
                 </>
               ) : (
-                // Removed the Connexion and Inscription buttons
                 null
               )}
             </div>

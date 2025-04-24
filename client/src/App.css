@@ -1,13 +1,12 @@
 /* Prevent horizontal scrolling */
 body, html {
-    overflow-x: hidden;
+    overflow-x: hidden !important;
     margin: 0;
     padding: 0;
     width: 100%;
   }
-  
+
   * {
     box-sizing: border-box;
   }
-  
   
