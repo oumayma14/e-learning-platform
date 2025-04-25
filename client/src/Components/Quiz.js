@@ -110,7 +110,7 @@ function Quiz() {
 
             <button 
               className="uq-return-btn"
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/dashboard/catalogue/quiz-start')}
             >
               Return to Home
             </button>

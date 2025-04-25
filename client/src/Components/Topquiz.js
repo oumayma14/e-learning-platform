@@ -135,7 +135,7 @@ export const Topquiz = () => {
                                             </span>
                                         </div>
                                         <Link 
-                                            to={`quiz/${quiz.id}`} 
+                                            to={`catalogue/quiz-start/quiz/${quiz.id}`} 
                                             className="quiz-button"
                                             aria-label={`Commencer le quiz ${quiz.title}`}
                                         >
