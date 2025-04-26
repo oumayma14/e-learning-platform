@@ -3,7 +3,7 @@ import { FaTimes, FaBars } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import "../Styles/HomeNav.css";
 import { Link } from "react-router-dom";
-import logo from "../assets/black-logo.png";
+import logo from "../assets/grey-logo.png";
 
 export const Navbar = () =>{
     const navRef = useRef ();
