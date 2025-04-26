@@ -11,6 +11,9 @@ const UserNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const expand = 'md';
+  console.log('user navbar =>', JSON.stringify(user, null, 2));
+  console.log('User fetched from database =>', user);
+
 
   const navLinks = [
     { path: '/dashboard', label: 'Accueil', exact: true, icon: <FaBook className="nav-icon" /> },
@@ -125,7 +128,12 @@ const UserNavbar = () => {
             <div className="d-flex align-items-center gap-2 ms-auto user-actions mt-3 mt-md-0">
               {user ? (
                 <>
-                  <UserProfile />
+                  <div className="user-score">
+                    <FaTrophy className="nav-icon" />
+                    <strong>{user.score}</strong> pts
+                  </div>
+
+                <UserProfile />
                 </>
               ) : (
                 null

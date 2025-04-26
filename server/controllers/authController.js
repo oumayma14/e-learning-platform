@@ -37,7 +37,7 @@ const register = async (req, res) => {
         
         res.status(201).json({ 
             message: "User registered successfully",
-            user: { username, email, role } 
+            user: { username, email, role, score: 0 } 
         });
 
     } catch (error) {
@@ -85,7 +85,8 @@ const login = async (req, res) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                image: user.image
+                image: user.image,
+                score: user.score
             }
         });
 

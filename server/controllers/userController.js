@@ -1,4 +1,6 @@
 const db =require('../config/db'); //db importation
+const util = require('util');
+db.query= util.promisify(db.query);
 
 
 // (leaderboard users)
@@ -24,6 +26,7 @@ const getUsers = (req,res) =>{
 };
 //update
 const bcrypt = require('bcrypt');
+const { error } = require('console');
 
 const updateUser = async (req, res) => {
     const { username } = req.params;
@@ -75,4 +78,15 @@ const deleteUser = (req,res) =>{
     });
 };
 
-module.exports = {getAllUsers, getUsers, deleteUser, updateUser};
+//update user score 
+const updateUserScore = async(username, scoreToAdd) =>{
+    const [user] = await db.query('SELECT score FROM user WHERE username = ?', [username]);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    const newScore = user.score + scoreToAdd;
+    await db.query('UPDATE user SET score = ? WHERE username = ?', [newScore, username]);
+    return newScore; 
+};
+
+module.exports = {getAllUsers, getUsers, deleteUser, updateUser, updateUserScore};

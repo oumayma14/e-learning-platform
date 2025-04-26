@@ -116,3 +116,17 @@
     padding-left: 0.5rem;
   }
 }
+
+.user-score {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333; /* Texte noir ou gris foncé */
+  gap: 8px;
+}
+
+.user-score .nav-icon {
+  font-size: 20px;
+  color: #f5c518; /* Doré bien visible */
+}

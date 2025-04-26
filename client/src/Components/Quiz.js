@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getQuizById } from '../services/quizService';
 import '../Styles/Quiz.css';
+import { getQuizById, submitQuizScore } from '../services/quizService';
+import { useAuth } from '../context/AuthContext';
+
+
 
 function Quiz() {
   const [quiz, setQuiz] = useState(null);
@@ -13,6 +16,9 @@ function Quiz() {
   const [quizTimeLeft, setQuizTimeLeft] = useState(0);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const quizTimerRef = useRef(null);
+  const [scoreSent, setScoreSent] = useState(false);
+  const { user, setUser } = useAuth();
+
   
   const { id } = useParams();
   const navigate = useNavigate();
@@ -53,6 +59,14 @@ function Quiz() {
   }, [id, navigate]);
 
   useEffect(() => {
+    if (showScore && !scoreSent) {
+      submitScore();
+      setScoreSent(true);
+    }
+  }, [showScore, scoreSent]);
+  
+
+  useEffect(() => {
     if (!quiz) return;
   
     quizTimerRef.current = setInterval(() => {
@@ -90,6 +104,29 @@ function Quiz() {
     setIsTimeUp(true);
     setShowScore(true);
   };
+
+  const submitScore = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user || !user.username) {
+        console.error('User not found in localStorage');
+        return;
+      }
+  
+      const percentageScore = Math.round((score / quiz.questions.length) * 100);
+  
+      await submitQuizScore(id, user.username, percentageScore);
+      const updatedUser = { ...user, score: (user.score || 0) + percentageScore };
+      setUser(updatedUser); 
+  
+  
+      console.log('Score envoyé avec succès');
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi du score:', error.message);
+    }
+  };
+  
+  
   
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);

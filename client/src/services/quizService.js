@@ -86,3 +86,16 @@ export const createFullQuiz = async (quizData) => {
       throw error;
     }
   };
+
+  export const submitQuizScore = async (quizId, username, score) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/${quizId}/submit`, {
+        username,
+        score
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
