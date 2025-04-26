@@ -8,17 +8,16 @@ class Question {
       conn.query = require('util').promisify(conn.query); // ⬅️ For async/await
       await conn.query('START TRANSACTION');
 
-      const { questionText, questionType, timeLimit, questionOrder } = questionData;
+      const { questionText, questionType, questionOrder } = questionData;
 
       const result = await conn.query(
         `INSERT INTO questions 
-        (quiz_id, question_text, question_type, time_limit, question_order) 
-        VALUES (?, ?, ?, ?, ?)`,
+        (quiz_id, question_text, question_type, question_order) 
+        VALUES (?, ?, ?)`,
         [
           quizId,
           questionText,
           questionType,
-          timeLimit || null,
           questionOrder || 0
         ]
       );

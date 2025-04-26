@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getQuizById } from '../services/quizService';
 import '../Styles/Quiz.css';
@@ -10,7 +10,10 @@ function Quiz() {
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [error, setError] = useState(null);
-
+  const [quizTimeLeft, setQuizTimeLeft] = useState(0);
+  const [isTimeUp, setIsTimeUp] = useState(false);
+  const quizTimerRef = useRef(null);
+  
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -22,6 +25,7 @@ function Quiz() {
 
         const transformedQuiz = {
           title: rawQuiz.title,
+          timeLimit: rawQuiz.time_limit, 
           questions: rawQuiz.questions.map((q) => {
             const options = q.options.map((opt) => opt.option_text);
             const correctAnswerIndex = q.options.findIndex((opt) => opt.is_correct === 1);
@@ -34,14 +38,36 @@ function Quiz() {
         };
 
         setQuiz(transformedQuiz);
+        setQuizTimeLeft(transformedQuiz.timeLimit);
+        
       } catch (err) {
-        setError('Failed to fetch quiz data');
+        setError('Échec de la récupération des données du quiz');
         navigate('/');
       }
     };
 
     fetchQuizData();
+    return () => {
+      clearInterval(quizTimerRef.current);
+    };
   }, [id, navigate]);
+
+  useEffect(() => {
+    if (!quiz) return;
+  
+    quizTimerRef.current = setInterval(() => {
+      setQuizTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(quizTimerRef.current);
+          handleTimeUp();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  
+    return () => clearInterval(quizTimerRef.current);
+  }, [quiz]);
 
   const handleOptionSelect = (index) => {
     setSelectedOption(index);
@@ -60,11 +86,22 @@ function Quiz() {
     }
   };
 
-  if (error) return <div className="uq-loading">Error: {error}</div>;
+  const handleTimeUp = () => {
+    setIsTimeUp(true);
+    setShowScore(true);
+  };
+  
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  if (error) return <div className="uq-loading">Erreur : {error}</div>;
   if (!quiz) return (
     <div className="uq-loading">
       <div className="uq-spinner"></div>
-      Loading...
+      Chargement...
     </div>
   );
 
@@ -74,7 +111,7 @@ function Quiz() {
         <div className="uq-complete-container">
           <div className="uq-complete-card">
             <div className="uq-complete-header">
-              <h2>Quiz Completed!</h2>
+              <h2>{isTimeUp ? 'Temps écoulé !' : 'Quiz terminé !'}</h2>
               <p className="uq-quiz-title">{quiz.title}</p>
             </div>
             
@@ -104,7 +141,7 @@ function Quiz() {
 
             <div className="uq-score-details">
               <div className="uq-score-detail">
-                Correct Answers: <strong>{score}</strong> out of <strong>{quiz.questions.length}</strong>
+                Réponses correctes : <strong>{score}</strong> sur <strong>{quiz.questions.length}</strong>
               </div>
             </div>
 
@@ -112,20 +149,28 @@ function Quiz() {
               className="uq-return-btn"
               onClick={() => navigate('/dashboard/catalogue/quiz-start')}
             >
-              Return to Home
+              Retour à l'accueil
             </button>
           </div>
         </div>
       ) : (
         <>
-          <div className="uq-header">
-            <div className="uq-info">
-              <h1>{quiz.title}</h1>
-              <div className="uq-counter">
-                Question {currentQuestion + 1} of {quiz.questions.length}
-              </div>
+        <div className="uq-header">
+          <div className="uq-info">
+            <h1>{quiz.title}</h1>
+            <div className="uq-counter">
+              Question {currentQuestion + 1} sur {quiz.questions.length}
             </div>
           </div>
+          <div className="uq-timers">
+            <div className="uq-timer">
+              <span className="uq-timer-label">Temps restant :</span>
+              <span className={`uq-timer-value ${quizTimeLeft <= 30 ? 'low-time' : ''}`}>
+                {formatTime(quizTimeLeft)}
+              </span>
+            </div>
+          </div>
+        </div>
 
           <div className="uq-progress-bar">
             <div 
@@ -159,7 +204,7 @@ function Quiz() {
               onClick={handleNextQuestion}
               disabled={selectedOption === null}
             >
-              {currentQuestion + 1 === quiz.questions.length ? 'Finish Quiz' : 'Next Question'}
+              {currentQuestion + 1 === quiz.questions.length ? 'Terminer le quiz' : 'Question suivante'}
             </button>
           </div>
         </>

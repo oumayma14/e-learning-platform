@@ -555,3 +555,27 @@ body, html {
         font-size: 13px;
     }
 }
+/* Time display styles */
+.quiz-card__meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.quiz-time {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.time-icon {
+    font-size: 0.8rem;
+}
+
+/* Adjust difficulty badge to accommodate time */
+.difficulty {
+    margin-right: auto; /* Pushes time to the right */
+}

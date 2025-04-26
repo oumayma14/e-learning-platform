@@ -4,12 +4,7 @@ const pool = require('../config/db');
 
 const validateQuizData = (data) => {
   const errors = [];
-  const requiredFields = {
-    title: 'string',
-    description: 'string',
-    difficulty: 'string',
-    category: 'string'
-  };
+  const requiredFields = {title: 'string',  description: 'string',  difficulty: 'string',  category: 'string', timeLimit: 'number' };
 
   for (const [field, type] of Object.entries(requiredFields)) {
     if (!data[field]) {
@@ -18,6 +13,27 @@ const validateQuizData = (data) => {
       errors.push(`${field} must be a ${type}`);
     }
   }
+  for (const [field, type] of Object.entries(requiredFields)) {
+    if (!data[field]) {
+      errors.push(`${field} is required`);
+    } else if (typeof data[field] !== type) {
+      errors.push(`${field} must be a ${type}`);
+    }
+  }
+  if (data.timeLimit !== undefined) {
+    if (!Number.isInteger(data.timeLimit)) {
+      errors.push('Time limit must be a whole number');
+    } else if (data.timeLimit < 1) {
+      errors.push('Time limit must be at least 1 second');
+    } else if (data.timeLimit > 7200) {
+      errors.push('Time limit cannot exceed 7200 seconds (2 hours)');
+    }
+  }
+  const validDifficulties = ['Débutant', 'Intermédiaire', 'Avancé'];
+  if (data.difficulty && !validDifficulties.includes(data.difficulty)) {
+    errors.push(`Invalid difficulty. Must be one of: ${validDifficulties.join(', ')}`);
+  }
+
 
   return errors;
 };
@@ -131,10 +147,10 @@ exports.deleteQuiz = async (req, res) => {
 };
 
 exports.createFullQuiz = async (req, res) => {
-  const { title, description, difficulty, category, questions } = req.body;
+  const { title, description, difficulty, category, questions, timeLimit} = req.body;
 
   // Validate quiz data
-  const errors = validateQuizData({ title, description, difficulty, category });
+  const errors = validateQuizData({ title, description, difficulty, category, timeLimit });
   if (errors.length > 0) {
     return res.status(400).json({ success: false, message: 'Validation failed', errors });
   }
@@ -147,8 +163,8 @@ exports.createFullQuiz = async (req, res) => {
 
     // Insert quiz
     const result = await conn.query(
-      'INSERT INTO quizzes (title, description, difficulty, category) VALUES (?, ?, ?, ?)',
-      [title, description, difficulty, category]
+      'INSERT INTO quizzes (title, description, difficulty, category, time_limit) VALUES (?, ?, ?, ?, ?)',
+      [title, description, difficulty, category, timeLimit]
     );
     const quizId = result.insertId;
 

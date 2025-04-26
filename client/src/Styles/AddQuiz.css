@@ -411,3 +411,21 @@ button {
     gap: 0.5rem;
   }
 }
+.time-limit-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 10%;
+}
+
+.time-limit-input input,
+.time-limit-input select {
+  padding: 6px 10px;
+  font-size: 14px;
+  width: 20%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.timer-input{
+  width: 20%  !important;
+}

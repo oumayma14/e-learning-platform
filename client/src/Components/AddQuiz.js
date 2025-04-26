@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { createFullQuiz } from '../services/quizService';
 import '../Styles/AddQuiz.css';
 
-
 const AddQuiz = () => {
   const [step, setStep] = useState(1);
   const [showReview, setShowReview] = useState(false);
@@ -12,11 +11,11 @@ const AddQuiz = () => {
     description: '',
     difficulty: '',
     category: '',
+    timeLimit: 30, // Default time in seconds
     questions: [
       {
         questionText: '',
         questionType: 'unique',
-        timeLimit: 30,
         questionOrder: 1,
         options: [
           { text: '', isCorrect: true },
@@ -52,6 +51,12 @@ const AddQuiz = () => {
     const { name, value } = e.target;
     setQuizData({ ...quizData, [name]: value });
   };
+
+  const handleTimeLimitChange = (e) => {
+    const value = parseInt(e.target.value) || 0;
+    setQuizData(prev => ({ ...prev, timeLimit: value }));
+  };
+
 
   const handleQuestionChange = (qIndex, field, value) => {
     const updatedQuestions = [...quizData.questions];
@@ -95,7 +100,6 @@ const AddQuiz = () => {
         {
           questionText: '',
           questionType: 'unique',
-          timeLimit: 30,
           questionOrder: quizData.questions.length + 1,
           options: [
             { text: '', isCorrect: true },
@@ -159,7 +163,9 @@ const AddQuiz = () => {
     return (
       quizData.title.trim() !== '' &&
       quizData.difficulty !== '' &&
-      quizData.category !== ''
+      quizData.description.trim() !== '' && 
+      quizData.category !== '' &&
+      quizData.timeLimit > 0
     );
   };
 
@@ -205,13 +211,39 @@ const AddQuiz = () => {
   const confirmSubmit = async () => {
     setShowReview(false);
     try {
-      await createFullQuiz(quizData);
-      alert('Quiz créé avec succès !');
+      const submissionData = {
+        title: quizData.title,
+      description: quizData.description,
+      difficulty: quizData.difficulty,
+      category: quizData.category,
+      timeLimit: quizData.timeLimit,
+      timeUnit: "seconds",
+        questions: quizData.questions.map(question => ({
+          questionText: question.questionText,
+          questionType: question.questionType,
+          timeLimit: question.timeLimit || null,
+          questionOrder: question.questionOrder,
+          options: question.questionType === 'courte' 
+            ? [] 
+            : question.options.map(opt => ({
+                text: opt.text,
+                isCorrect: opt.isCorrect
+              })),
+          correctShortAnswer: question.questionType === 'courte' 
+            ? question.correctShortAnswer 
+            : null
+        }))
+      };
+      await createFullQuiz(quizData); 
     } catch (error) {
       console.error(error);
       alert("Erreur lors de la création du quiz");
     }
   };
+
+  // Format time for display
+  const formatTimeForDisplay = (seconds) => {
+    return `${seconds} seconde${seconds !== 1 ? 's' : ''}`;};
 
   // Step 1: Quiz Information
   if (step === 1) {
@@ -232,11 +264,12 @@ const AddQuiz = () => {
           </div>
           
           <div className="form-group">
-            <label>Description</label>
+            <label>Description*</label>
             <textarea
               name="description"
               value={quizData.description}
               onChange={handleQuizInfoChange}
+              required
             />
           </div>
           
@@ -269,7 +302,21 @@ const AddQuiz = () => {
               ))}
             </select>
           </div>
-        </div>
+            <label>Limite de temps*</label>
+            <div className="time-limit-input">
+              <input
+                type="number"
+                name="timeLimit"
+                min="1"
+                max="7200"
+                value={quizData.timeLimit}
+                onChange={handleTimeLimitChange}
+                className='timer-input'
+                required
+              />
+            </div>
+            <small className="time-limit-hint">(1-7200 secondes)</small>
+          </div>
         
         <div className="form-navigation">
           <button
@@ -321,18 +368,6 @@ const AddQuiz = () => {
                   type="text"
                   value={question.questionText}
                   onChange={(e) => handleQuestionChange(qIndex, 'questionText', e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Limite de temps (secondes)*</label>
-                <input
-                  type="number"
-                  min="5"
-                  max="300"
-                  value={question.timeLimit}
-                  onChange={(e) => handleQuestionChange(qIndex, 'timeLimit', e.target.value)}
                   required
                 />
               </div>
@@ -419,14 +454,15 @@ const AddQuiz = () => {
           <div className="review-modal">
             <h2>Vérification du Quiz</h2>
             <h3>{quizData.title}</h3>
-            <p><strong>Difficulté:</strong> {quizData.difficulty}</p>
-            <p><strong>Catégorie:</strong> {quizData.category}</p>
+            <p><strong style={{color:'#be4d4d'}}>Difficulté:</strong> {quizData.difficulty}</p>
+            <p><strong style={{color:'#be4d4d'}}>Catégorie:</strong> {quizData.category}</p>
+            {formatTimeForDisplay(quizData.timeLimit)}
             
             <div className="questions-review">
               <h4>Questions:</h4>
               {quizData.questions.map((question, qIndex) => (
                 <div key={qIndex} className="review-question">
-                  <p><strong>Question {qIndex + 1}:</strong> {question.questionText}</p>
+                  <p><strong style={{color:'#be4d4d'}}>Question {qIndex + 1}:</strong> {question.questionText}</p>
                   <p><em>Type: {question.questionType === 'unique' ? 'Réponse unique' : 
                                question.questionType === 'multiple' ? 'Réponses multiples' : 'Réponse courte'}</em></p>
                   

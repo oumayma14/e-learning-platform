@@ -34,7 +34,8 @@ export default function MainQuiz() {
                         title: quiz.title,
                         description: quiz.description,
                         difficulty: quiz.difficulty,
-                        category: quiz.category
+                        category: quiz.category, 
+                        timeLimit: quiz.time_limit
                     }));
 
                     setAllQuizzes(quizzes);
@@ -51,6 +52,13 @@ export default function MainQuiz() {
 
         fetchQuizzes();
     }, []);
+
+    const formatTime = (seconds) => {
+        if (!seconds) return 'No time limit';
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins > 0 ? `${mins}m ` : ''}${secs}s`;
+    };
 
     const allCategories = [
         'Géographie', 'Histoire', 'Science', 'Technologie', 'Art', 
@@ -111,7 +119,7 @@ export default function MainQuiz() {
         return (
             <div className="quiz-app-container">
                 <div className="quiz-container">
-                    <div className="loading-message">Loading quizzes...</div>
+                    <div className="loading-message">Chargement des quizzes...</div>
                 </div>
             </div>
         );
@@ -122,9 +130,9 @@ export default function MainQuiz() {
             <div className="quiz-app-container">
                 <div className="quiz-container">
                     <div className="error-message">
-                        <h3>Loading Error</h3>
+                        <h3>Erreur de chargement</h3>
                         <p>{error}</p>
-                        <button onClick={() => window.location.reload()}>Try Again</button>
+                        <button onClick={() => window.location.reload()}>Réessayer</button>
                     </div>
                 </div>
             </div>
@@ -139,7 +147,7 @@ export default function MainQuiz() {
                         <div className="search-container">
                             <input
                                 type="text"
-                                placeholder="Search for a quiz by name..."
+                                placeholder="Rechercher un quiz par nom..."
                                 value={searchTerm}
                                 onChange={(e) => {
                                     setSearchTerm(e.target.value);
@@ -169,7 +177,7 @@ export default function MainQuiz() {
                                 onClick={() => navigate('add-quiz')}
                                 className="add-quiz-button"
                             >
-                                + Add Quiz
+                                + Ajouter un Quiz
                             </button>
                         </div>
                     </div>
@@ -179,7 +187,7 @@ export default function MainQuiz() {
                         <div className="modal-overlay" onClick={() => setShowFilters(false)}>
                             <div className="filter-modal" onClick={e => e.stopPropagation()}>
                                 <div className="modal-header">
-                                    <h2>Filters</h2>
+                                    <h2>Filtres</h2>
                                     <button 
                                         className="close-modal-button"
                                         onClick={() => setShowFilters(false)}
@@ -190,7 +198,7 @@ export default function MainQuiz() {
                                 
                                 <div className="filters-section">
                                     <div className="filter-group">
-                                        <h3 className="filter-title">Categories</h3>
+                                        <h3 className="filter-title">Catégories</h3>
                                         <div className="filter-options">
                                             {allCategories.map(category => (
                                                 <button
@@ -205,7 +213,7 @@ export default function MainQuiz() {
                                     </div>
 
                                     <div className="filter-group">
-                                        <h3 className="filter-title">Difficulty</h3>
+                                        <h3 className="filter-title">Difficulté</h3>
                                         <div className="filter-options">
                                             {allDifficulties.map(difficulty => (
                                                 <button
@@ -225,13 +233,13 @@ export default function MainQuiz() {
                                         onClick={resetFilters}
                                         className="clear-filters-button"
                                     >
-                                        Reset
+                                        Réinitialiser tout
                                     </button>
                                     <button 
                                         onClick={applyFilters}
                                         className="apply-filters-button"
                                     >
-                                        Apply Filters
+                                        Appliquer les filtres
                                     </button>
                                 </div>
                             </div>
@@ -240,13 +248,13 @@ export default function MainQuiz() {
 
                     <div className="results-info">
                         <span className="results-count">
-                            Showing {filteredQuizzes.length} of {allQuizzes.length} quizzes
+                        Affichage de {filteredQuizzes.length} sur {allQuizzes.length} quiz
                         </span>
                     </div>
 
                     {filteredQuizzes.length === 0 ? (
                         <div className="no-results-message">
-                            No quizzes match your criteria. Try adjusting your filters.
+                            Aucun quiz ne correspond à vos critères. Essayez de modifier vos filtres.
                         </div>
                     ) : (
                         <>
@@ -265,10 +273,13 @@ export default function MainQuiz() {
                                                         <span className={`difficulty difficulty-${quiz.difficulty.toLowerCase()}`}>
                                                             {quiz.difficulty}
                                                         </span>
+                                                        <span className="quiz-time">
+                                                            ⏱ {Math.ceil(quiz.timeLimit / 60)} min
+                                                        </span>
                                                     </div>
                                                 </div>
                                                 <Link to={`quiz/${quiz.id}`} className="quiz-card__button">
-                                                    Start Quiz
+                                                    Commencer le Quiz
                                                 </Link>
                                             </div>
                                         ))}
@@ -286,7 +297,7 @@ export default function MainQuiz() {
                                         disabled={currentPage === 1}
                                         className="pagination-button"
                                     >
-                                        Previous
+                                        Précédent
                                     </button>
                                     
                                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
@@ -310,7 +321,7 @@ export default function MainQuiz() {
                                         disabled={currentPage === totalPages}
                                         className="pagination-button"
                                     >
-                                        Next
+                                        Suivant
                                     </button>
                                 </div>
                             )}

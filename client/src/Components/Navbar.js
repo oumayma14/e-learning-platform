@@ -3,6 +3,7 @@ import { FaTimes, FaBars } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import "../Styles/HomeNav.css";
 import { Link } from "react-router-dom";
+import logo from "../assets/black-logo.png";
 
 export const Navbar = () =>{
     const navRef = useRef ();
@@ -11,7 +12,13 @@ export const Navbar = () =>{
     }
     return(
         <header>
-                <h3>QuizPoP</h3>
+                     <img
+                       src={logo}
+                       alt="QuizPop Logo"
+                       height="40"
+                       width='auto'
+                       className="d-inline-block align-top"
+                     />
                 <nav ref={navRef} className="homeNav">
                 <a href="/#acceuil">Acceuil</a>
                 <a href="/#a-propos-de-nous">A propos de nous</a>

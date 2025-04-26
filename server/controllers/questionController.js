@@ -26,7 +26,6 @@ exports.addQuestion = async (req, res) => {
         const questionId = await Question.create(quizId, {
             questionText: req.body.questionText,
             questionType: req.body.questionType,
-            timeLimit: req.body.timeLimit,
             questionOrder: req.body.questionOrder || 0
         });
 
