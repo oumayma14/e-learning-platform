@@ -23,7 +23,7 @@ const UserNavbar = () => {
       icon: <FaSearch className="nav-icon" />,
     },
     {
-      path: '/progress',
+      path: '/dashboard/progression',
       label: 'Progression',
       icon: <FaChartLine className="nav-icon" />,
       badge: user?.stats?.newAchievements,

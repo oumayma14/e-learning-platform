@@ -136,5 +136,17 @@ export const checkApiHealth = async () => {
     return false;
   }
 };
+// Progression service
+export const progressService = {
+  getUserProgress: async (username, range = 'week') => {
+    try {
+      return await apiClient.get(`/api/progress/${username}?period=${range}`);
+    } catch (error) {
+      console.error('Error fetching user progress:', error);
+      throw error;
+    }
+  }
+};
+
 
 export default apiClient;

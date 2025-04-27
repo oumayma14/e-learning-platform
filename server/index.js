@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const pool = require('./config/db');
+const progressRoutes = require("./routes/progressRoutes");
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/uploads', express.static('uploads', {
 app.use('/', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api/quizzes', quizRoutes);
+app.use('/api/progress', progressRoutes);
 
 // ======================
 // 4. Database Health Check

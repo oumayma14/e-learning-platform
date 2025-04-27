@@ -86,6 +86,8 @@ const updateUserScore = async(username, scoreToAdd) =>{
     }
     const newScore = user.score + scoreToAdd;
     await db.query('UPDATE user SET score = ? WHERE username = ?', [newScore, username]);
+    await db.query('INSERT INTO user_progress (username, score, created_at) VALUES (?, ?, NOW())', [username, scoreToAdd]);
+
     return newScore; 
 };
 

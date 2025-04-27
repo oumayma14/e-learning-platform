@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import MyProfile from "./MyProfile";
 import { QuizStart } from "./QuizStart";
 import { Layout } from "./Layout";
+import ProgressChart from "./ProgressCHart";
 
 export const Apprenant = () => {
   return (
@@ -23,6 +24,7 @@ export const Apprenant = () => {
           />
           <Route path="profile" element={<MyProfile />} />
           <Route path="catalogue/quiz-start/*" element={<QuizStart />} />
+          <Route path="progression" element={<ProgressChart />} />
         </Routes>
       </div>
     </Layout>

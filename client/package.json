@@ -35,6 +35,7 @@
     "react-toastify": "^11.0.5",
     "reactjs-popup": "^2.0.6",
     "reactjs-social-login": "^2.6.3",
+    "recharts": "^2.15.3",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.2.5",
     "url": "^0.11.4",

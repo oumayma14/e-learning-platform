@@ -4,8 +4,6 @@ import '../Styles/Quiz.css';
 import { getQuizById, submitQuizScore } from '../services/quizService';
 import { useAuth } from '../context/AuthContext';
 
-
-
 function Quiz() {
   const [quiz, setQuiz] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -15,13 +13,19 @@ function Quiz() {
   const [error, setError] = useState(null);
   const [quizTimeLeft, setQuizTimeLeft] = useState(0);
   const [isTimeUp, setIsTimeUp] = useState(false);
-  const quizTimerRef = useRef(null);
   const [scoreSent, setScoreSent] = useState(false);
-  const { user, setUser } = useAuth();
+  const [scoreBreakdown, setScoreBreakdown] = useState({
+    correctAnswersPoints: 0,
+    fastAnswerBonus: 0,
+    difficultyBonusPercent: 0,
+    finalScore: 0,
+  });
 
-  
+  const { user, setUser } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
+  const quizTimerRef = useRef(null);
+  const questionStartTime = useRef(null);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -31,7 +35,8 @@ function Quiz() {
 
         const transformedQuiz = {
           title: rawQuiz.title,
-          timeLimit: rawQuiz.time_limit, 
+          difficulty: rawQuiz.difficulty, 
+          timeLimit: rawQuiz.time_limit,
           questions: rawQuiz.questions.map((q) => {
             const options = q.options.map((opt) => opt.option_text);
             const correctAnswerIndex = q.options.findIndex((opt) => opt.is_correct === 1);
@@ -45,7 +50,7 @@ function Quiz() {
 
         setQuiz(transformedQuiz);
         setQuizTimeLeft(transformedQuiz.timeLimit);
-        
+        questionStartTime.current = Date.now();
       } catch (err) {
         setError('Échec de la récupération des données du quiz');
         navigate('/');
@@ -60,15 +65,13 @@ function Quiz() {
 
   useEffect(() => {
     if (showScore && !scoreSent) {
-      submitScore();
+      finalizeScore();
       setScoreSent(true);
     }
   }, [showScore, scoreSent]);
-  
 
   useEffect(() => {
     if (!quiz) return;
-  
     quizTimerRef.current = setInterval(() => {
       setQuizTimeLeft((prev) => {
         if (prev <= 1) {
@@ -79,7 +82,7 @@ function Quiz() {
         return prev - 1;
       });
     }, 1000);
-  
+
     return () => clearInterval(quizTimerRef.current);
   }, [quiz]);
 
@@ -88,13 +91,35 @@ function Quiz() {
   };
 
   const handleNextQuestion = () => {
+    let pointsEarned = 0;
+    let fastBonus = 0;
+
     if (selectedOption === quiz.questions[currentQuestion].correctAnswer) {
-      setScore(score + 1);
+      pointsEarned += 10;
+
+      const timeTaken = (Date.now() - questionStartTime.current) / 1000;
+      if (timeTaken <= 5) {
+        pointsEarned += 10;
+        fastBonus = 10;
+      } else if (timeTaken <= 10) {
+        pointsEarned += 5;
+        fastBonus = 5;
+      }
     }
+
+    setScore((prev) => prev + pointsEarned);
+
+    setScoreBreakdown((prev) => ({
+      ...prev,
+      correctAnswersPoints: prev.correctAnswersPoints + (pointsEarned - fastBonus),
+      fastAnswerBonus: prev.fastAnswerBonus + fastBonus,
+    }));
+
     setSelectedOption(null);
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < quiz.questions.length) {
       setCurrentQuestion(nextQuestion);
+      questionStartTime.current = Date.now();
     } else {
       setShowScore(true);
     }
@@ -105,29 +130,41 @@ function Quiz() {
     setShowScore(true);
   };
 
-  const submitScore = async () => {
+  const finalizeScore = async () => {
     try {
+      const baseScore = score;
+      const multiplier = getDifficultyMultiplier(quiz.difficulty);
+      const finalScore = Math.round(baseScore * multiplier);
+
+      setScoreBreakdown((prev) => ({
+        ...prev,
+        difficultyBonusPercent: (multiplier - 1) * 100,
+        finalScore: finalScore,
+      }));
+
       const user = JSON.parse(localStorage.getItem('user'));
       if (!user || !user.username) {
-        console.error('User not found in localStorage');
+        console.error('User not found');
         return;
       }
-  
-      const percentageScore = Math.round((score / quiz.questions.length) * 100);
-  
-      await submitQuizScore(id, user.username, percentageScore);
-      const updatedUser = { ...user, score: (user.score || 0) + percentageScore };
-      setUser(updatedUser); 
-  
-  
+
+      await submitQuizScore(id, user.username, finalScore);
+
+      const updatedUser = { ...user, score: (user.score || 0) + finalScore };
+      setUser(updatedUser);
+
       console.log('Score envoyé avec succès');
     } catch (error) {
       console.error('Erreur lors de l\'envoi du score:', error.message);
     }
   };
-  
-  
-  
+
+  const getDifficultyMultiplier = (difficulty) => {
+    if (difficulty === "Intermédiaire") return 1.10;
+    if (difficulty === "Avancé") return 1.20;
+    return 1;
+  };
+
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -151,35 +188,15 @@ function Quiz() {
               <h2>{isTimeUp ? 'Temps écoulé !' : 'Quiz terminé !'}</h2>
               <p className="uq-quiz-title">{quiz.title}</p>
             </div>
-            
-            <div className="uq-score-display">
-              <div className="uq-circular-progress">
-                <svg className="uq-progress-ring" viewBox="0 0 36 36">
-                  <path
-                    className="uq-progress-ring-bg"
-                    d="M18 2.0845
-                      a 15.9155 15.9155 0 0 1 0 31.831
-                      a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="uq-progress-ring-fill"
-                    strokeDasharray={`${(score / quiz.questions.length) * 100}, 100`}
-                    d="M18 2.0845
-                      a 15.9155 15.9155 0 0 1 0 31.831
-                      a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-                <div className="uq-score-percentage">
-                  <span>{Math.round((score / quiz.questions.length) * 100)}%</span>
-                  <div className="uq-score-text">Score</div>
-                </div>
-              </div>
-            </div>
 
-            <div className="uq-score-details">
-              <div className="uq-score-detail">
-                Réponses correctes : <strong>{score}</strong> sur <strong>{quiz.questions.length}</strong>
-              </div>
+            <div className="uq-score-display">
+              <h3>Détail du Score :</h3>
+              <ul className="uq-score-breakdown">
+                <li>Réponses Correctes : +{scoreBreakdown.correctAnswersPoints} pts</li>
+                <li>Bonus Rapidité : +{scoreBreakdown.fastAnswerBonus} pts</li>
+                <li>Bonus Difficulté ({quiz.difficulty}) : +{scoreBreakdown.difficultyBonusPercent}%</li>
+              </ul>
+              <h2>Total Final : {scoreBreakdown.finalScore} pts</h2>
             </div>
 
             <button 
@@ -192,22 +209,22 @@ function Quiz() {
         </div>
       ) : (
         <>
-        <div className="uq-header">
-          <div className="uq-info">
-            <h1>{quiz.title}</h1>
-            <div className="uq-counter">
-              Question {currentQuestion + 1} sur {quiz.questions.length}
+          <div className="uq-header">
+            <div className="uq-info">
+              <h1>{quiz.title}</h1>
+              <div className="uq-counter">
+                Question {currentQuestion + 1} sur {quiz.questions.length}
+              </div>
+            </div>
+            <div className="uq-timers">
+              <div className="uq-timer">
+                <span className="uq-timer-label">Temps restant :</span>
+                <span className={`uq-timer-value ${quizTimeLeft <= 30 ? 'low-time' : ''}`}>
+                  {formatTime(quizTimeLeft)}
+                </span>
+              </div>
             </div>
           </div>
-          <div className="uq-timers">
-            <div className="uq-timer">
-              <span className="uq-timer-label">Temps restant :</span>
-              <span className={`uq-timer-value ${quizTimeLeft <= 30 ? 'low-time' : ''}`}>
-                {formatTime(quizTimeLeft)}
-              </span>
-            </div>
-          </div>
-        </div>
 
           <div className="uq-progress-bar">
             <div 
