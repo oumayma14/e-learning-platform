@@ -11,6 +11,21 @@ const ProgressChart = () => {
   const [stats, setStats] = useState({ totalPoints: 0, quizzesCompleted: 0, bestScore: 0 });
   const [progressData, setProgressData] = useState([]);
   const [range, setRange] = useState('year');
+  const funMessages = [
+    "Continue comme ça, futur champion ! 🏆",
+    "Chaque jour un pas de plus 🚀",
+    "Ton succès est en construction 🔥",
+    "Les petits progrès font de grandes réussites ✨",
+    "Tu es sur la bonne voie ! 🎯",
+    "Bientôt au sommet ! ⛰️",
+    "Ta persévérance paie ! 🌟",
+  ];
+  const [motivationalMessage, setMotivationalMessage] = useState("");
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * funMessages.length);
+    setMotivationalMessage(funMessages[randomIndex]);
+  }, []); 
 
   useEffect(() => {
     if (user) {
@@ -50,18 +65,7 @@ const ProgressChart = () => {
     <div className="progress-container">
       
       <div className="stats-cards-container">
-        <div className="stat-card">
-          <h3>🏆 Points Totaux</h3>
-          <p><CountUp end={stats.totalPoints} duration={1.5} separator="," /></p>
-        </div>
-        <div className="stat-card">
-          <h3>🧩 Quizz Terminés</h3>
-          <p><CountUp end={stats.quizzesCompleted} duration={1.5} separator="," /></p>
-        </div>
-        <div className="stat-card">
-          <h3>🥇 Meilleur Score</h3>
-          <p><CountUp end={stats.bestScore} duration={1.5} separator="," /></p>
-        </div>
+      <p className="motivational-message">{motivationalMessage}</p>
 
         {/* Carte Niveau dynamique */}
         <div className="stat-card level-card" style={{ backgroundColor: userLevel.color }}>
@@ -70,7 +74,6 @@ const ProgressChart = () => {
       </div>
 
       <h2 className="progress-title">📈 Progression Totale</h2>
-
       <div className="range-buttons">
         {['week', 'month', 'year'].map((r) => (
           <button

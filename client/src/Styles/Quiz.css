@@ -1,244 +1,520 @@
-/* Container principal */
+/* Main Quiz Styles */
 .uq-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', sans-serif;
-  color: #2c3e50;
-}
+    max-width: 800px;
+    margin: 2rem auto;
+    width: 50;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+  }
+  
+  .uq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .uq-info h1 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+  
+  .uq-counter {
+    font-weight: 500;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+  }
+  
+  .uq-timer {
+    text-align: right;
+  }
+  
+  .uq-time-text {
+    font-size: 0.9rem;
+    color: #fe6363;
+    font-weight: bold;
+  }
+  
+  .uq-time-bar {
+    background: #eee;
+    height: 8px;
+    width: 150px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  
+  .uq-time-fill {
+    height: 100%;
+    background-color: #fe6363;
+    transition: width 1s linear;
+  }
+  
+  .uq-progress-bar {
+    background: #ecf0f1;
+    height: 8px;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  
+  .uq-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #fe6363, #be4d4d);
+    transition: width 0.5s ease;
+  }
+  
+  .uq-question-box {
+    margin-bottom: 2rem;
+  }
+  
+  .uq-question-text {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    line-height: 1.4;
+  }
+  
+  .uq-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .uq-option-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #f8f9fa;
+    border: 2px solid #dfe6e9;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+    text-align: left;
+  }
+  
+  .uq-option-btn:hover {
+    background: #f1f3f5;
+    border-color: #bdc3c7;
+  }
+  
+  .uq-selected {
+    border-color: #fe6363;
+    background-color: #fde8e8;
+  }
+  
+  .uq-correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724 !important;
+  }
+  
+  .uq-incorrect {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24 !important;
+  }
+  
+  .uq-letter {
+    font-weight: bold;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fe6363;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  
+  .uq-text {
+    flex-grow: 1;
+  }
+  
+  .uq-feedback {
+    margin-top: 1.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .uq-feedback-correct {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .uq-feedback-incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .uq-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .uq-submit-btn {
+    background: linear-gradient(135deg, #fe6363, #be4d4d);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(254, 99, 99, 0.3);
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .uq-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(254, 99, 99, 0.4);
+    background: linear-gradient(135deg, #be4d4d, #fe6363);
+  }
+  
+  .uq-disabled {
+    background: #95a5a6 !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Loading State */
+  .uq-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+  }
+  
+  .uq-spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #fe6363;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Quiz Completion Styles */
+  .uq-complete-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    overflow: hidden;
+    z-index: 1000;
+  }
+  
+  .uq-complete-card {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    z-index: 2;
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  .uq-complete-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .uq-complete-header h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  
+  .uq-quiz-title {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+  
+  /* Circular Progress */
+  .uq-score-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5rem 0;
+  }
+  
+  .uq-circular-progress {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin-bottom: 1rem;
+  }
+  
+  .uq-progress-ring {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .uq-progress-ring-bg {
+    fill: none;
+    stroke: #ecf0f1;
+    stroke-width: 4;
+  }
+  
+  .uq-progress-ring-fill {
+    fill: none;
+    stroke: #fe6363;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dasharray 0.8s ease;
+  }
+  
+  .uq-score-percentage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .uq-score-percentage span {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  .uq-score-text {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-top: -0.5rem;
+  }
+  
+  /* Score Details */
+  .uq-score-details {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
+  .uq-score-detail {
+    margin: 0.6rem 0;
+    font-size: 0.95rem;
+  }
+  
+  /* Return Button */
+  .uq-return-btn {
+    background: linear-gradient(135deg, #fe6363, #be4d4d);
+    color: white;
+    border: none;
+    padding: 0.9rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(254, 99, 99, 0.3);
+    margin: 1.5rem auto 0;
+    width: 80%;
+  }
+  
+  .uq-return-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(254, 99, 99, 0.4);
+    background: linear-gradient(135deg, #be4d4d, #fe6363);
+  }
+  
+  /* Confetti */
+  .uq-confetti-container {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
+  }
+  
+  /* Chaque confetti */
+  .uq-confetti {
+    position: absolute;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, #fe6363, #ffd700);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: confettiFall 3s ease-out forwards, confettiRotate 2s infinite linear;
+    left: calc(5% + 90% * random());
+  }
+  
+  /* Animation de chute */
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+  
+  /* Animation de rotation */
+  @keyframes confettiRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 600px) {
+    .uq-container {
+      padding: 1.5rem;
+      margin: 1rem auto;
+      border-radius: 12px;
+    }
+  
+    .uq-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .uq-timer {
+      text-align: left;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+  
+    .uq-time-bar {
+      width: 100%;
+    }
+  
+    .uq-question-text {
+      font-size: 1.2rem;
+    }
+  
+    .uq-complete-card {
+      padding: 1.5rem;
+    }
+  
+    .uq-circular-progress {
+      width: 140px;
+      height: 140px;
+    }
+  
+    .uq-score-percentage span {
+      font-size: 1.8rem;
+    }
+  
+    .uq-score-detail {
+      font-size: 0.9rem;
+    }
+  }
 
-/* Header Quiz */
-.uq-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.uq-info h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-.uq-counter {
-  font-size: 1rem;
-  color: #7f8c8d;
-  font-weight: 500;
-}
-
-/* Timer Section */
+  /* Timer Styles */
 .uq-timers {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  gap: 20px;
   margin-top: 10px;
 }
 
 .uq-timer {
-  background: #f1f3f5;
-  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 10px;
   border-radius: 20px;
-  font-size: 0.9rem;
+}
+
+.uq-timer-label {
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .uq-timer-value {
   font-family: monospace;
   font-weight: bold;
+  font-size: 1rem;
 }
 
+/* Time Warning States */
 .uq-timer-value.low-time {
-  color: #fe6363;
+  color: #ff6b6b;
   animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
+  0% { opacity: 1; }
   50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
-/* Barre de progression de la question */
-.uq-progress-bar {
-  background: #ecf0f1;
-  height: 8px;
-  border-radius: 5px;
-  margin: 1.5rem 0;
-  overflow: hidden;
-}
-
-.uq-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #fe6363, #be4d4d);
-  transition: width 0.5s ease;
-}
-
-/* Question et Options */
-.uq-question-box {
-  margin-bottom: 2rem;
-}
-
-.uq-question-text {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
-}
-
-.uq-options {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.uq-option-btn {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: #f9f9f9;
-  border: 2px solid #dfe6e9;
-  border-radius: 12px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 1rem;
-}
-
-.uq-option-btn:hover {
-  background: #f1f3f5;
-}
-
-.uq-selected {
-  border-color: #fe6363;
-  background: #fde8e8;
-}
-
-.uq-letter {
-  width: 30px;
-  height: 30px;
-  background: #fe6363;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-}
-
-.uq-text {
-  flex-grow: 1;
-}
-
-/* Footer */
-.uq-footer {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.uq-submit-btn {
-  background: linear-gradient(135deg, #fe6363, #be4d4d);
-  color: white;
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  border-radius: 50px;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(254, 99, 99, 0.3);
-}
-
-.uq-submit-btn:hover {
-  transform: translateY(-3px);
-}
-
-.uq-disabled {
-  background: #95a5a6;
-  cursor: not-allowed;
-}
-
-/* Loading State */
-.uq-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 60vh;
-  font-size: 1.3rem;
-  color: #7f8c8d;
-}
-
-.uq-spinner {
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #fe6363;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Complete State */
-.uq-complete-container {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-  z-index: 1000;
-}
-
+/* Style général pour la carte de fin */
 .uq-complete-card {
-  background: white;
+  background: #ffffff;
   border-radius: 20px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 500px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  animation: fadeInUp 0.5s ease-out;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Score Final */
-.uq-score-display {
-  margin: 2rem 0;
-}
-
-.uq-circular-progress {
-  width: 160px;
-  height: 160px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
-.uq-progress-ring {
-  width: 100%;
-  height: 100%;
+/* Titre principal */
+.uq-complete-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: #fe6363;
 }
 
-.uq-score-percentage span {
-  font-size: 2.5rem;
-  font-weight: bold;
+/* Sous-titre */
+.uq-quiz-title {
+  font-size: 1.2rem;
+  color: #515151;
 }
 
-.uq-score-text {
-  font-size: 1rem;
-  color: #7f8c8d;
-}
-
-/* Score Breakdown */
+/* Liste des détails du score */
 .uq-score-breakdown {
   list-style: none;
   padding: 0;
@@ -248,54 +524,86 @@
 
 .uq-score-breakdown li {
   font-size: 1.1rem;
-  padding: 10px 0;
+  padding: 10px;
   border-bottom: 1px solid #eee;
+  color: #333;
 }
 
-/* Return Button */
-.uq-return-btn {
-  background: linear-gradient(135deg, #fe6363, #be4d4d);
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-size: 1rem;
-  border: none;
+/* Total final */
+.uq-score-display h2 {
   margin-top: 20px;
+  font-size: 2rem;
+  color: #9B30FF;
+}
+
+/* Bouton Retour */
+.uq-return-btn {
+  margin-top: 30px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #fe6363;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  transition: background 0.3s;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
 .uq-return-btn:hover {
-  background: linear-gradient(135deg, #be4d4d, #fe6363);
+  background-color: #be4d4d;
 }
 
-/* Confetti */
-.uq-confetti {
+/* Animation Pop de Félicitations */
+.uq-complete-card h2 {
+  animation: popIn 0.8s ease;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Stars Celebration */
+.uq-stars {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  margin: 1rem 0;
+}
+
+.uq-star {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #fe6363;
+  width: 15px;
+  height: 15px;
+  background: radial-gradient(circle, #ffd700, #ffecb3);
   border-radius: 50%;
-  animation: confettiFall 3s linear forwards;
+  animation: sparkle 2s infinite ease-in-out;
+  opacity: 0.8;
 }
 
-@keyframes confettiFall {
-  0% { transform: translateY(-100vh) rotate(0); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+.uq-star:nth-child(1) {
+  top: 0;
+  left: 30%;
+  animation-delay: 0s;
+}
+.uq-star:nth-child(2) {
+  top: 20px;
+  right: 25%;
+  animation-delay: 0.5s;
+}
+.uq-star:nth-child(3) {
+  bottom: 0;
+  left: 50%;
+  animation-delay: 1s;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .uq-container {
-    padding: 1.5rem;
-  }
-
-  .uq-complete-card {
-    padding: 1.5rem;
-  }
-
-  .uq-circular-progress {
-    width: 130px;
-    height: 130px;
-  }
+@keyframes sparkle {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.5); opacity: 1; }
 }
