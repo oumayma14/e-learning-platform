@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "../Styles/MainQuiz.css";
-import { QUIZ_API_URL } from '../services/quizService';
+import { challengeService } from '../services/challengeService';
+import { useAuth } from '../context/AuthContext';
+import ChallengeModal from './ChallengeModal';
+import { generateChallengeCode } from '../utils/generatedCode';
+import { getQuizzes } from '../services/quizService';
+
 
 export default function MainQuiz() {
+    const [showChallengeModal, setShowChallengeModal] = useState(false);
+    const [showJoinModal, setShowJoinModal] = useState(false);
+    const [joinCode, setJoinCode] = useState('');
+    const{user} = useAuth();
+    const [challengeCode, setChallengeCode] = useState(null);
     const navigate = useNavigate();
     const [allQuizzes, setAllQuizzes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,42 +26,57 @@ export default function MainQuiz() {
     const [currentPage, setCurrentPage] = useState(1);
     const quizzesPerPage = 6;
 
-    useEffect(() => {
-        const fetchQuizzes = async () => {
-            try {
+    const handleJoinChallenge = () =>{
+        if(joinCode){
+            navigate(`/dashboard/catalogue/quiz-start/join-challenge/${encodeURIComponent(joinCode)}`);
+
+        }
+    }
+
+    const handleCreateChallenge = async (quizId) =>{
+        try{
+            const generatedCode = generateChallengeCode();
+            const res = await challengeService.createChallenge(quizId, user.username, generatedCode);
+            setChallengeCode(generatedCode);
+            setShowChallengeModal(true); 
+        }catch(error){
+            console.error("Erreur création défi: ", error.message);
+        }
+    };
+        useEffect(() => {
+            const fetchQuizzes = async () => {
+              try {
                 setLoading(true);
-                const response = await fetch(QUIZ_API_URL);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.success && result.data) {
-                    const quizzes = result.data.map(quiz => ({
-                        id: quiz.id,
-                        title: quiz.title,
-                        description: quiz.description,
-                        difficulty: quiz.difficulty,
-                        category: quiz.category, 
-                        timeLimit: quiz.time_limit
-                    }));
-
-                    setAllQuizzes(quizzes);
+          
+                const response = await getQuizzes();
+          
+                if (response.success && response.data) {
+                  const quizzes = response.data.map(quiz => ({
+                    id: quiz.id,
+                    title: quiz.title,
+                    description: quiz.description,
+                    difficulty: quiz.difficulty,
+                    category: quiz.category,
+                    timeLimit: quiz.time_limit
+                  }));
+          
+                  setAllQuizzes(quizzes);
                 } else {
-                    throw new Error(result.message || 'Failed to load quizzes');
+                  console.error('Erreur serveur:', response.message);
+                  setError(response.message || 'Erreur serveur lors du chargement des quizzes');
                 }
-            } catch (err) {
-                console.error('Error loading quizzes:', err);
-                setError(err.message);
-            } finally {
+                
+              } catch (err) {
+                console.error('Erreur réseau lors du chargement des quizzes:', err.message);
+                setError('Impossible de charger les quizzes. Réessaye plus tard.');
+                
+              } finally {
                 setLoading(false);
-            }
-        };
-
-        fetchQuizzes();
-    }, []);
+              }
+            };
+          
+            fetchQuizzes();
+          }, []);
 
     const formatTime = (seconds) => {
         if (!seconds) return 'No time limit';
@@ -179,6 +204,13 @@ export default function MainQuiz() {
                             >
                                 + Ajouter un Quiz
                             </button>
+                            <button 
+                            onClick={() => setShowJoinModal(true)} 
+                            className="join-challenge-button"
+                            >
+                            🎯 Rejoindre un défi
+                            </button>
+
                         </div>
                     </div>
 
@@ -259,6 +291,32 @@ export default function MainQuiz() {
                     ) : (
                         <>
                             <div className="quiz-rows-container">
+                            {showJoinModal && (
+                            <div className="modal-overlay" onClick={() => setShowJoinModal(false)}>
+                                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <h2>🎯 Rejoindre un défi</h2>
+                                <input 
+                                    type="text" 
+                                    placeholder="Colle ici le code du défi" 
+                                    value={joinCode} 
+                                    onChange={(e) => setJoinCode(e.target.value)}
+                                    className="modal-input"
+                                />
+                                <button 
+                                    onClick={handleJoinChallenge} 
+                                    className="modal-button"
+                                >
+                                    Rejoindre
+                                </button>
+                                <button 
+                                    onClick={() => setShowJoinModal(false)} 
+                                    className="modal-cancel-button"
+                                >
+                                    Annuler
+                                </button>
+                                </div>
+                            </div>
+                            )}
                                 {groupedQuizzes.map((row, rowIndex) => (
                                     <div key={rowIndex} className="quiz-row">
                                         {row.map(quiz => (
@@ -281,6 +339,9 @@ export default function MainQuiz() {
                                                 <Link to={`quiz/${quiz.id}`} className="quiz-card__button">
                                                     Commencer le Quiz
                                                 </Link>
+                                                <button className='quiz-challenge-btn' onClick={() => handleCreateChallenge(quiz.id)}>
+                                                    ⚔️ Défier un ami
+                                                </button>
                                             </div>
                                         ))}
                                     </div>
@@ -329,6 +390,11 @@ export default function MainQuiz() {
                     )}
                 </div>
             </div>
+            <ChallengeModal 
+            show={showChallengeModal} 
+            onClose={() => setShowChallengeModal(false)} 
+            challengeCode={challengeCode}
+            />
         </div>
     );
 }

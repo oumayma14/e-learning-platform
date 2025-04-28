@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import MainQuiz from './MainQuiz';
 import Quiz from './Quiz';
 import AddQuiz from './AddQuiz';
-
+import JoinChallenge
+ from './JoinChallenge';
 export const QuizStart = () => {
 
   return (
@@ -17,17 +17,11 @@ export const QuizStart = () => {
       overflow: 'hidden',
     }}>
       <Routes>
-        {/* Main route showing the main quiz list and AddQuiz button */}
-        <Route 
-          index 
-          element={<MainQuiz />} 
-        />
-        
-        {/* Route to AddQuiz form */}
+        <Route index element={<MainQuiz />} />
         <Route path='add-quiz' element={<AddQuiz />} />
-        
-        {/* Dynamic route for a specific quiz */}
         <Route path='quiz/:id' element={<Quiz />} />
+        <Route path='join-challenge/:code' element={<JoinChallenge />} />
+
       </Routes>
     </div>
   );

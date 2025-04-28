@@ -1,0 +1,126 @@
+/* src/Styles/JoinChallenge.css */
+
+.join-challenge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+  
+  .join-challenge-loading,
+  .join-challenge-error {
+    font-size: 1.5rem;
+    color: #be4d4d;
+    margin-top: 2rem;
+  }
+  
+  .start-challenge-btn {
+    background: linear-gradient(135deg, #fe6363, #be4d4d);
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .start-challenge-btn:hover {
+    background: linear-gradient(135deg, #be4d4d, #fe6363);
+  }
+
+  /* JoinChallenge.css */
+
+.join-challenge-container {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .join-challenge-loading {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fe6363;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .dot-flashing {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #fe6363;
+    color: #fe6363;
+    animation: dotFlashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+  }
+  
+  .dot-flashing::before, .dot-flashing::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+  }
+  
+  .dot-flashing::before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #fe6363;
+    color: #fe6363;
+    animation: dotFlashing 1s infinite alternate;
+    animation-delay: 0s;
+  }
+  
+  .dot-flashing::after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #fe6363;
+    color: #fe6363;
+    animation: dotFlashing 1s infinite alternate;
+    animation-delay: 1s;
+  }
+  
+  @keyframes dotFlashing {
+    0% {
+      background-color: #fe6363;
+    }
+    50%,
+    100% {
+      background-color: #ffe0e0;
+    }
+  }
+  
+  /* Start Challenge Button */
+  .start-challenge-btn {
+    background: linear-gradient(135deg, #fe6363, #be4d4d);
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  
+  .start-challenge-btn:hover {
+    background: linear-gradient(135deg, #be4d4d, #fe6363);
+    transform: scale(1.05);
+  }
+  
+  

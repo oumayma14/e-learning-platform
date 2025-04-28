@@ -2,7 +2,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import UserProfile from './UserProfile';
 import { Badge, Container, Nav, Navbar, NavDropdown, Offcanvas } from 'react-bootstrap';
-import { FaSearch, FaTrophy, FaComments, FaChartLine, FaBook, FaUserCircle } from 'react-icons/fa';
+import { FaSearch, FaTrophy, FaComments, FaChartLine, FaBook} from 'react-icons/fa';
 import '../Styles/UserNav.css';
 import logo from '../assets/quizpop-high-resolution-logo-removebg-preview.png';
 

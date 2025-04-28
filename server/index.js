@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const pool = require('./config/db');
 const progressRoutes = require("./routes/progressRoutes");
+const challengeRouutes = require("./routes/challengeRoutes");
 
 const app = express();
 
@@ -23,8 +24,8 @@ app.use(cors({
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
+  windowMs: 1 * 60 * 1000,
+  max: 300
 });
 app.use(limiter);
 
@@ -50,6 +51,7 @@ app.use('/', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/challenges', challengeRouutes);
 
 // ======================
 // 4. Database Health Check

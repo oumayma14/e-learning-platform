@@ -579,3 +579,83 @@ body, html {
 .difficulty {
     margin-right: auto; /* Pushes time to the right */
 }
+
+/* === Modal Overlay === */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  /* === Modal Content === */
+  .modal-content {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    animation: fadeInUp 0.4s ease;
+  }
+  
+  /* === Modal Title === */
+  .modal-content h2 {
+    color: #fe6363;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* === Modal Input === */
+  .modal-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    border: 2px solid #515151;
+    font-size: 1rem;
+  }
+  
+  /* === Modal Button (Join) === */
+  .modal-button {
+    background: linear-gradient(135deg, #fe6363, #be4d4d);
+    color: #fff;
+    border: none;
+    padding: 0.9rem 1.5rem;
+    margin-top: 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  
+  .modal-button:hover {
+    background: #be4d4d;
+  }
+  
+  /* === Modal Cancel Button === */
+  .modal-cancel-button {
+    margin-top: 10px;
+    display: block;
+    background: none;
+    color: #515151;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* === Modal Animation === */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
