@@ -213,33 +213,34 @@ const AddQuiz = () => {
     try {
       const submissionData = {
         title: quizData.title,
-      description: quizData.description,
-      difficulty: quizData.difficulty,
-      category: quizData.category,
-      timeLimit: quizData.timeLimit,
-      timeUnit: "seconds",
+        description: quizData.description,
+        difficulty: quizData.difficulty,
+        category: quizData.category,
+        timeLimit: quizData.timeLimit,
         questions: quizData.questions.map(question => ({
           questionText: question.questionText,
           questionType: question.questionType,
           timeLimit: question.timeLimit || null,
           questionOrder: question.questionOrder,
-          options: question.questionType === 'courte' 
-            ? [] 
-            : question.options.map(opt => ({
+          options: question.questionType !== 'courte' 
+            ? question.options.map(opt => ({
                 text: opt.text,
                 isCorrect: opt.isCorrect
-              })),
-          correctShortAnswer: question.questionType === 'courte' 
-            ? question.correctShortAnswer 
+              }))
+            : [],
+          correctShortAnswer: question.questionType === 'courte'
+            ? question.correctShortAnswer
             : null
         }))
       };
-      await createFullQuiz(quizData); 
+  
+      await createFullQuiz(submissionData);
     } catch (error) {
-      console.error(error);
-      alert("Erreur lors de la création du quiz");
+      console.error("❌ Erreur confirmSubmit:", error.response?.data || error.message);
+      alert("Erreur lors de la création du quiz. " + (error.response?.data?.message || ""));
     }
   };
+  
 
   // Format time for display
   const formatTimeForDisplay = (seconds) => {

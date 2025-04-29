@@ -87,6 +87,9 @@ exports.createQuiz = async (req, res) => {
       message: 'Quiz created successfully' 
     });
   } catch (error) {
+    console.error("⛔ Erreur createFullQuiz:", error);
+    console.log("⛔ DATA REÇUE:", req.body);
+    console.error("❌ Error creating quiz:", error);
     res.status(500).json({ 
       success: false, 
       message: 'Failed to create quiz',
@@ -170,12 +173,13 @@ exports.createFullQuiz = async (req, res) => {
 
     // Insert questions and options
     for (const question of questions) {
-      const { questionText, questionType, timeLimit, questionOrder, options } = question;
+      const { questionText, questionType, timeLimit, questionOrder, options, correctShortAnswer } = question;
 
       const questionResult = await conn.query(
-        'INSERT INTO questions (quiz_id, question_text, question_type, time_limit, question_order) VALUES (?, ?, ?, ?, ?)',
-        [quizId, questionText, questionType, timeLimit || null, questionOrder || 0]
+        'INSERT INTO questions (quiz_id, question_text, question_type, time_limit, question_order, correct_short_answer) VALUES (?, ?, ?, ?, ?, ?)',
+        [quizId, questionText, questionType, timeLimit || null, questionOrder || 0, correctShortAnswer || null]
       );
+      
       const questionId = questionResult.insertId;
 
       if (options && options.length > 0) {

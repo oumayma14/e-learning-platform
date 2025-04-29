@@ -11,8 +11,6 @@ const UserNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const expand = 'md';
-  console.log('user navbar =>', JSON.stringify(user, null, 2));
-  console.log('User fetched from database =>', user);
 
 
   const navLinks = [

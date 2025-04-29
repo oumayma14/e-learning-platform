@@ -12,8 +12,9 @@ class Question {
 
       const result = await conn.query(
         `INSERT INTO questions 
-        (quiz_id, question_text, question_type, question_order) 
-        VALUES (?, ?, ?)`,
+      (quiz_id, question_text, question_type, question_order, correct_short_answer) 
+        VALUES (?, ?, ?, ?, ?)`,
+        [quizId, questionText, questionType, questionOrder || 0, questionData.correctShortAnswer || null]
         [
           quizId,
           questionText,
