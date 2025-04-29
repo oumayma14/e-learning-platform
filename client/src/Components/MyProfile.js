@@ -1,18 +1,36 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import apiService from '../services/apiService';
-import "../Styles/MyProfile.css";
+import apiClient from '../services/apiService';
+import '../Styles/MyProfile.css';
+import { useNavigate } from 'react-router-dom';
 
 const MyProfile = () => {
   const { user, setUser, logout } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    password: '',
-    score: user?.score || 0
-  });
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        password: ''
+      });
+    }
+    setLoading(false);
+  }, [user]);
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,159 +39,103 @@ const MyProfile = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setSaving(true);
+    setSuccessMessage('');
+    setErrorMessage('');
+
     try {
-      const response = await apiService.updateUser(user.username, formData);
-      setUser(response.data);
-      setIsEditing(false);
-      setError('');
-    } catch (err) {
-      setError('Échec de la mise à jour du profil. Veuillez réessayer.');
+      const { password, ...updates } = formData;
+      const updateData = password ? formData : updates;
+
+      const response = await apiClient.put(`/api/update/${user.username}`, updateData);
+
+      if (response.message) {
+        setSuccessMessage('Profil mis à jour avec succès!');
+        const updatedUser = { ...user, name: formData.name, email: formData.email };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
+        setEditMode(false);
+      }
+    } catch (error) {
+      setErrorMessage(error.message || 'Erreur lors de la mise à jour.');
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleDelete = async () => {
-    const confirmDialog = document.createElement('div');
-    confirmDialog.className = 'fullscreen-dialog';
-    
-    confirmDialog.innerHTML = `
-      <div class="dialog-content">
-        <div class="dialog-header">
-          <h3>Confirmation requise</h3>
-        </div>
-        <div class="dialog-body">
-          <p>Êtes-vous certain de vouloir supprimer définitivement votre compte ? Cette action est irréversible et toutes vos données seront perdues.</p>
-        </div>
-        <div class="dialog-footer">
-          <button class="cancel-btn">
-            Annuler
-          </button>
-          <button class="confirm-btn">
-            Confirmer
-          </button>
-        </div>
-      </div>
-    `;
-    
-    document.body.appendChild(confirmDialog);
-    
-    const cancelBtn = confirmDialog.querySelector('.cancel-btn');
-    const confirmBtn = confirmDialog.querySelector('.confirm-btn');
-    
-    const closeDialog = () => {
-      confirmDialog.remove();
-    };
-    
-    cancelBtn.addEventListener('click', closeDialog);
-    
-    confirmBtn.addEventListener('click', async () => {
-      try {
-        await apiService.deleteUser(user.username);
-        closeDialog();
-        logout();
-      } catch (err) {
-        setError('Échec de la suppression du compte. Veuillez réessayer.');
-        closeDialog();
-      }
-    });
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.")) return;
+    try {
+      await apiClient.delete(`/api/delete/${user.username}`);
+      logout();
+      navigate('/');
+      window.alert("Votre compte a été supprimé avec succès.");
+    } catch (error) {
+      window.alert("Erreur lors de la suppression du compte: " + (error.message || 'Erreur serveur'));
+    }
   };
 
-  if (!user) return <div className="profile-container">Veuillez vous connecter pour voir votre profil</div>;
+  if (loading) return <div className="profile-loading">Chargement...</div>;
+
+  if (!user) {
+    return (
+      <div className="profile-container">
+        <div className="profile-card">
+          <h2>Vous êtes déconnecté(e)</h2>
+          <p>Veuillez vous reconnecter pour accéder à votre profil.</p>
+          <button className="profile-btn" onClick={() => navigate('/')}>Accueil</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-container">
-      <h2>Votre Profil</h2>
-      {error && <div className="error">{error}</div>}
-      
-      <div className="score-display">
-        Votre score actuel : <span className="score-value">{user.score} points</span>
+      <h2>Mon Profil</h2>
+      <div className="profile-card">
+        {!editMode ? (
+          <div className="profile-info">
+            <p><strong>Nom:</strong> {user.name}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <p><strong>Score:</strong> {user.score || 0}</p>
+            <p><strong>Rôle:</strong> {user.role}</p>
+            <div className="profile-actions">
+              <button className="profile-btn edit-btn" onClick={() => setEditMode(true)}>Modifier mes infos</button>
+              <button className="profile-btn delete-btn" onClick={handleDeleteAccount}>Supprimer mon compte</button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleUpdate} className="profile-form">
+            <label>Nom complet:</label>
+            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+
+            <label>Email:</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+
+            <label>Nouveau mot de passe (laisser vide si inchangé):</label>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} />
+
+            <div className="form-buttons">
+              <button type="submit" className="profile-btn save-btn" disabled={saving}>
+                {saving ? "Sauvegarde..." : "Sauvegarder"}
+              </button>
+              <button 
+                type="button" 
+                className="profile-btn cancel-btn" 
+                onClick={() => {
+                  setFormData({ name: user.name, email: user.email, password: '' });
+                  setEditMode(false);
+                }}
+              >
+                Annuler
+              </button>
+            </div>
+          </form>
+        )}
+
+        {successMessage && <div className="profile-success">{successMessage}</div>}
+        {errorMessage && <div className="profile-error">{errorMessage}</div>}
       </div>
-      
-      {!isEditing ? (
-        <div className="profile-info">
-          <p><strong>Nom d'utilisateur :</strong> {user.username}</p>
-          <p><strong>Nom :</strong> {user.name}</p>
-          <p><strong>Email :</strong> {user.email}</p>
-          <p><strong>Rôle :</strong> {user.role}</p>
-          
-          <div className="profile-actions">
-            <button 
-              onClick={() => setIsEditing(true)} 
-              className="primary"
-            >
-              Modifier le profil
-            </button>
-            <button 
-              onClick={handleDelete} 
-              className="delete-btn"
-            >
-              Supprimer le compte
-            </button>
-          </div>
-        </div>
-      ) : (
-        <form onSubmit={handleUpdate} className="edit-form">
-          <label>
-            Nom :
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          
-          <label>
-            Email :
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          
-          <label>
-            Nouveau mot de passe (laisser vide pour ne pas changer) :
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              minLength="6"
-            />
-          </label>
-          
-          <label>
-            Score :
-            <input
-              type="number"
-              name="score"
-              value={formData.score}
-              onChange={handleChange}
-              min="0"
-            />
-          </label>
-          
-          <div className="form-actions">
-            <button type="submit" className="primary">
-              Enregistrer
-            </button>
-            <button 
-              type="button" 
-              onClick={() => {
-                setIsEditing(false);
-                setError('');
-              }} 
-              className="secondary"
-            >
-              Annuler
-            </button>
-          </div>
-        </form>
-      )}
     </div>
   );
 };

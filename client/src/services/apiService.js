@@ -65,19 +65,28 @@ export const authService = {
 
   loginUser: async (credentials) => {
     try {
-      const response = await apiClient.post('/login', credentials);
+      const response = await apiClient.post('/login', {
+        email: credentials.email, 
+        password: credentials.password, 
+      });
+  
       if (response.token) {
         localStorage.setItem('token', response.token);
+  
         if (response.user) {
           localStorage.setItem('user', JSON.stringify(response.user));
         }
       }
+  
       return response;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
     }
   },
+  
+
+  
 
   getCurrentUser: async () => {
     try {

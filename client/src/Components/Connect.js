@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from 'lucide-react';
 import { authService } from "../services/apiService";
 import { useAuth } from '../context/AuthContext';
 import "../Styles/Auth.css";
@@ -11,15 +12,16 @@ export const Connect = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Check for existing token on component mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       navigate("/connecter");
     }
   }, [navigate]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -33,10 +35,10 @@ export const Connect = () => {
 
     try {
       await login({
-        LoginEmail: loginEmail.trim(),
-        LoginPassword: loginPassword.trim()
+        email: loginEmail.trim(),
+        password: loginPassword.trim()
       });
-      
+
       setLoginEmail("");
       setLoginPassword("");
       navigate("/dashboard");
@@ -55,12 +57,10 @@ export const Connect = () => {
   return (
     <Container fluid className="vh-100 d-flex align-items-center justify-content-center">
       <Row className="connect-container">
-        {/* Left Side - Quote */}
         <Col md={6} className="connect-left">
           <h2>Connecte-toi et prouve ton talent ! Apprends, teste tes compétences et grimpe dans le classement</h2>
         </Col>
 
-        {/* Right Side - Form */}
         <Col md={6} className="connect-right">
           <h3 className="mb-3 text-center">Bienvenue</h3>
           <p className="text-muted text-center">Entrez votre email et mot de passe pour accéder à votre compte</p>
@@ -91,14 +91,23 @@ export const Connect = () => {
 
             <Form.Group className="mb-3">
               <Form.Label>Mot de Passe</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Entrez votre mot de passe"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                required
-                minLength={6}
-              />
+              <div className="password-field position-relative">
+                <Form.Control
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Entrez votre mot de passe"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+                <button 
+                  type="button" 
+                  className="toggle-password-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </Form.Group>
 
             <Form.Group className="d-flex justify-content-between mb-3">
@@ -119,27 +128,6 @@ export const Connect = () => {
               disabled={isLoading}
             >
               {isLoading ? "Connexion en cours..." : "Se Connecter"}
-            </Button>
-            
-            <div className="text-center position-relative my-3">
-              <hr />
-              <span className="bg-white px-2 position-absolute top-50 start-50 translate-middle">
-                OU
-              </span>
-            </div>
-
-            <Button 
-              variant="outline-dark" 
-              className="w-100 d-flex align-items-center justify-content-center"
-              disabled={isLoading}
-            >
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" 
-                alt="Google" 
-                width="20" 
-                className="me-2"
-              />
-              Se Connecter avec Google
             </Button>
 
             <p className="text-center mt-3 mb-0">

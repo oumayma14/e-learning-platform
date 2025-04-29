@@ -50,18 +50,18 @@ const register = async (req, res) => {
 
 // User login
 const login = async (req, res) => {
-    const { LoginEmail, LoginPassword } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const SQL = 'SELECT * FROM user WHERE email = ?';
-        const results = await db.query(SQL, [LoginEmail]);
+            const SQL = 'SELECT * FROM user WHERE email = ?';
+            const results = await db.query(SQL, [email]);
 
-        if (results.length === 0) {
-            return res.status(401).json({ message: "Invalid email or password!" });
-        }
+            if (results.length === 0) {
+                return res.status(401).json({ message: "Invalid email or password!" });
+            }
 
-        const user = results[0];
-        const passwordMatch = await bcrypt.compare(LoginPassword, user.password);
+            const user = results[0];
+            const passwordMatch = await bcrypt.compare(password, user.password);
         
         if (!passwordMatch) {
             return res.status(401).json({ message: "Invalid email or password!" });
@@ -83,6 +83,7 @@ const login = async (req, res) => {
             user: {
                 id: user.id,
                 username: user.username,
+                name: user.name, 
                 email: user.email,
                 role: user.role,
                 image: user.image,

@@ -121,3 +121,22 @@
     width: 100%;
   }
 }
+
+.toggle-password-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  color: #be4d4d;
+}
+
+.toggle-password-btn:hover {
+  background: none;
+  color: #ffffff;
+}
+
