@@ -218,6 +218,81 @@
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
+
+  /* 🌙 Dark Theme Styles */
+[data-theme="dark"] .uq-container {
+  background: #1e1e1e;
+  color: #e0e0e0;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .uq-info h1,
+[data-theme="dark"] .uq-question-text,
+[data-theme="dark"] .uq-counter {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .uq-option-btn {
+  background: #2a2a2a;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .uq-option-btn:hover {
+  background: #3a3a3a;
+  border-color: #666;
+}
+
+[data-theme="dark"] .uq-selected {
+  background-color: #3f2b2b;
+  border-color: #fe6363;
+}
+
+[data-theme="dark"] .uq-correct {
+  background-color: #275634 !important;
+  border-color: #28a745 !important;
+  color: #b8f1c2 !important;
+}
+
+[data-theme="dark"] .uq-incorrect {
+  background-color: #5c1a1f !important;
+  border-color: #dc3545 !important;
+  color: #f8d7da !important;
+}
+
+[data-theme="dark"] .uq-letter {
+  background: #fe6363;
+  color: white;
+}
+
+[data-theme="dark"] .uq-feedback-correct {
+  background-color: #275634;
+  color: #b8f1c2;
+}
+
+[data-theme="dark"] .uq-feedback-incorrect {
+  background-color: #5c1a1f;
+  color: #f8d7da;
+}
+
+[data-theme="dark"] .uq-submit-btn {
+  background: linear-gradient(135deg, #be4d4d, #fe6363);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .uq-submit-btn:hover {
+  background: linear-gradient(135deg, #fe6363, #be4d4d);
+}
+
+[data-theme="dark"] .uq-loading {
+  color: #bbbbbb;
+}
+
+[data-theme="dark"] .uq-spinner {
+  border: 5px solid #444;
+  border-top: 5px solid #fe6363;
+}
+
   
   /* Quiz Completion Styles */
   .uq-complete-container {
@@ -606,4 +681,80 @@
 @keyframes sparkle {
   0%, 100% { transform: scale(1); opacity: 0.8; }
   50% { transform: scale(1.5); opacity: 1; }
+}
+/* 🌙 Dark Mode for Quiz Completion */
+[data-theme="dark"] .uq-complete-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+[data-theme="dark"] .uq-complete-card {
+  background: #1f1f1f;
+  color: #e0e0e0;
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .uq-complete-header h2 {
+  color: #ff8686;
+}
+
+[data-theme="dark"] .uq-quiz-title {
+  color: #bbbbbb;
+}
+
+[data-theme="dark"] .uq-score-detail,
+[data-theme="dark"] .uq-score-breakdown li {
+  color: #dddddd;
+  border-bottom: 1px solid #333;
+}
+
+[data-theme="dark"] .uq-score-display h2 {
+  color: #c79bff;
+}
+
+[data-theme="dark"] .uq-score-percentage span {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .uq-score-text {
+  color: #bbbbbb;
+}
+
+[data-theme="dark"] .uq-progress-ring-bg {
+  stroke: #444;
+}
+
+[data-theme="dark"] .uq-progress-ring-fill {
+  stroke: #ff6b6b;
+}
+
+[data-theme="dark"] .uq-return-btn {
+  background-color: #be4d4d;
+  color: white;
+}
+
+[data-theme="dark"] .uq-return-btn:hover {
+  background-color: #a93c3c;
+}
+
+/* Confetti and stars stay bright in dark mode */
+[data-theme="dark"] .uq-confetti {
+  background: radial-gradient(circle, #ff6b6b, #ffdd00);
+}
+
+[data-theme="dark"] .uq-star {
+  background: radial-gradient(circle, #ffe066, #fff1b3);
+}
+
+/* Timer appearance in dark mode */
+[data-theme="dark"] .uq-timer {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .uq-timer-label,
+[data-theme="dark"] .uq-timer-value {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .uq-timer-value.low-time {
+  color: #ff6b6b;
 }

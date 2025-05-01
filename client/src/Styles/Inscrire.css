@@ -10,8 +10,20 @@ body {
     box-sizing: border-box;
     font-family: inherit;
   }
+  :root {
+    --link-txt: #515151;
+    --button-bg : #fe6363;
+  }
+  
+  body[data-theme="dark"] {
+    --link-txt: white;
+    --button-bg: #4a0000;
+  }
   
   /* Main container - responsive */
+  a{
+    color: var(--link-txt);
+  }
   .connect-container {
     max-width: min(900px, 90vw); /* Responsive max-width */
     width: 100%;
@@ -63,7 +75,7 @@ body {
   
   /* Buttons - responsive */
   .connect-right button[type="submit"] {
-    background-color: #fe6363;
+    background-color: var(--button-bg) !important;
     border: #fe6363;
     width: 100%;
     padding: clamp(10px, 1.5vh, 12px);

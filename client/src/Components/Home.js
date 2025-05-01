@@ -30,7 +30,7 @@ export const Home = () => {
                 {/* Fixed Contact Button Alignment */}
                 <Row className="justify-content-center mt-3">
                     <Col xs="auto">
-                        <Link to="/contact"><Button className="hm_btn cn">Contactez-nous</Button></Link>
+                        <Link to="/contact"><Button className="hm_btn cn text-light">Contactez-nous</Button></Link>
                         
                     </Col>
                 </Row>

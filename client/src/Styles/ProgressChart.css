@@ -1,10 +1,13 @@
+/* 🌞 Light Mode (default) */
 .progress-container {
   padding: 30px;
-  margin: 10px 0;
+  margin: 10px auto; /* Center horizontally */
   background: linear-gradient(135deg, #f8f9fa 0%, #e0eafc 100%);
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  width: 80%;
 }
+
 
 .stats-cards-container {
   gap: 20px;
@@ -36,14 +39,13 @@
   text-align: center;
   border-radius: 16px;
   padding: 1.5rem;
-  width: 200px; /* slightly bigger for better visual */
+  width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; /* center inside itself */
-  margin: 0 auto; /* center the card itself in the page */
+  align-items: center;
+  margin: 0 auto;
 }
-
 
 .progress-title {
   text-align: center;
@@ -71,7 +73,7 @@
   background: linear-gradient(135deg, #be4d4d, #fe6363);
   border-left: 5px solid #fe6363;
   border-radius: 10px;
-  color: #f8f9fa ;
+  color: #f8f9fa;
   font-style: italic;
   font-size: 1.3rem;
   text-align: center;
@@ -83,23 +85,6 @@
 .motivational-message::before {
   content: "✨ ";
   font-size: 1.5rem;
-}
-
-@keyframes fadeInQuote {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .range-buttons {
@@ -136,4 +121,69 @@
   width: 100%;
   height: 400px;
   padding: 10px;
+}
+
+/* Animations */
+@keyframes fadeInQuote {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 🌙 Dark Mode */
+
+[data-theme="dark"] .progress-container {
+  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .stat-card {
+  background: #2b2b2b;
+  color: #e0e0e0;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .stat-card:hover {
+  background: #333333;
+}
+
+[data-theme="dark"] .progress-title {
+  color: #ff8a8a;
+}
+
+[data-theme="dark"] .progress-title::after {
+  background-color: #ff6b6b;
+}
+
+[data-theme="dark"] .motivational-message {
+  background: linear-gradient(135deg, #863636, #cc4c4c);
+  color: #fff9f9;
+  border-left-color: #ff6b6b;
+}
+
+[data-theme="dark"] .range-buttons button {
+  background: #2c2c2c;
+  border-color: #888;
+  color: #dddddd;
+}
+
+[data-theme="dark"] .range-buttons button:hover {
+  background: #fe6363;
+  color: white;
+  border-color: #fe6363;
+}
+
+[data-theme="dark"] .range-buttons .active {
+  background: #fe6363;
+  color: white;
+  border-color: #fe6363;
 }

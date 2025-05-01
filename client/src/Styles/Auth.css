@@ -6,9 +6,32 @@
   --primary-padding: 40px;
   --mobile-padding: 30px;
   --transition: all 0.3s ease;
+
+  --connect-left-bg: url("../assets/background.jpg") center/cover no-repeat;
+  --connect-left-overlay: none;
+  --connect-left-color: white;
+  --connect-right-bg: #ffffff;
+  --connect-right-text: #515151;
+  --button-hover-bg: #f0f0f0;
+  --button-bg : #fe6363;
+  --link-txt: #515151;
+}
+
+body[data-theme="dark"] {
+  --connect-left-bg: url("../assets/background.jpg") center/cover no-repeat;
+  --connect-left-overlay: rgba(0, 0, 0, 0.6);
+  --connect-left-color: white;
+  --connect-right-bg: #763535;
+  --connect-right-text: #ffffff;
+  --button-hover-bg: #333333;
+  --button-bg: #4a0000;
+  --link-txt: white;
 }
 
 /* Base Container Styles */
+a{
+  color: var(--link-txt);
+}
 .connect-container {
   max-width: var(--container-max-width);
   width: 100%;
@@ -21,8 +44,8 @@
 
 /* Left Section - Quote */
 .connect-left {
-  background: url("../assets/background.jpg") center/cover no-repeat;
-  color: white;
+  background: var(--connect-left-bg);
+  color: var(--connect-left-color);
   text-align: left;
   padding: var(--primary-padding);
   display: flex;
@@ -32,6 +55,20 @@
   min-height: 400px;
   border-top-left-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
+  position: relative;
+}
+
+body[data-theme="dark"] .connect-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--connect-left-overlay);
+  z-index: 0;
+}
+
+.connect-left > * {
+  position: relative;
+  z-index: 1;
 }
 
 .connect-left h2 {
@@ -47,13 +84,15 @@
 
 /* Right Section - Form */
 .connect-right {
-  background: white;
+  background: var(--connect-right-bg) !important;
+  color: var(--connect-right-text);
   padding: var(--primary-padding);
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
   min-height: 400px;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .connect-right h3 {
@@ -64,7 +103,7 @@
 .connect-right p {
   font-size: clamp(0.875rem, 1.5vw, 1rem);
   margin-bottom: 1.5rem;
-  color: #666;
+  color: var(--connect-right-text) !important;
 }
 
 /* Form Elements */
@@ -72,10 +111,18 @@
   transition: var(--transition);
   padding: 12px;
   font-size: clamp(0.875rem, 1.5vw, 1rem);
+
+}
+.connect-right .cnt-btn{
+  background-color: var(--button-bg) !important;
+}
+
+.connect-right .cnt-btn:hover{
+  background-color: var();
 }
 
 .connect-right button:hover {
-  background: #f0f0f0;
+  background: var(--button-hover-bg);
 }
 
 .connect-right button img {
@@ -139,4 +186,3 @@
   background: none;
   color: #ffffff;
 }
-

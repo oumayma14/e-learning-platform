@@ -5,12 +5,15 @@ import { Badge, Container, Nav, Navbar, NavDropdown, Offcanvas } from 'react-boo
 import { FaSearch, FaTrophy, FaComments, FaChartLine, FaBook} from 'react-icons/fa';
 import '../Styles/UserNav.css';
 import logo from '../assets/quizpop-high-resolution-logo-removebg-preview.png';
+import DarkMode from './DarkMode/DarkMode'
 
 const UserNavbar = () => {
   const { user, logout } = useAuth(); 
   const location = useLocation();
   const navigate = useNavigate();
   const expand = 'md';
+  console.log('user navbar =>', JSON.stringify(user, null, 2));
+  console.log('User fetched from database =>', user);
 
 
   const navLinks = [
@@ -124,11 +127,12 @@ const UserNavbar = () => {
             </Nav>
 
             <div className="d-flex align-items-center gap-2 ms-auto user-actions mt-3 mt-md-0">
+              <DarkMode />
               {user ? (
                 <>
-                  <div className="user-score">
+                  <div className="user-score" style={{color: 'white'}}>
                     <FaTrophy className="nav-icon" />
-                    <strong>{user.score}</strong> pts
+                    <strong >{user.score}</strong> pts
                   </div>
 
                 <UserProfile />

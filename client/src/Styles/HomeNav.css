@@ -1,11 +1,51 @@
-/* Navbar */
+/* ======================== */
+/*        THEMES            */
+/* ======================== */
+
+/* Light Mode */
+body[data-theme="light"] {
+  --bg-color: #ffffff;
+  --primary-color: #fe6363;
+  --secondary-color: #be4d4d;
+  --text-color: #515151;
+  --white-color: #ffffff;
+  --hover-link-color: #fe6363;
+  --nav-bg-color: #ffffff;
+  --nav-text-color: #515151;
+}
+
+/* Dark Mode */
+body[data-theme="dark"] {
+  --bg-color: #515151;
+  --primary-color: #be4d4d;
+  --secondary-color: #fe6363;
+  --text-color: #ffffff;
+  --white-color: #ffffff;
+  --hover-link-color: #fe6363;
+  --nav-bg-color: #333333;
+  --nav-text-color: #ffffff;
+}
+
+/* ======================== */
+/*       BASE STYLES        */
+/* ======================== */
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Roboto Flex", sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.4s, color 0.4s;
+}
+
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: clamp(60px, 8vw, 80px); /* Responsive height */
-  padding: 0 clamp(1rem, 3vw, 2rem); /* Responsive padding */
-  background-color: #ffffff;
+  height: clamp(60px, 8vw, 80px);
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  background-color: var(--nav-bg-color); 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100vw;
   position: fixed;
@@ -18,17 +58,16 @@ header {
 }
 
 .homeNav a {
-  font-family: "Roboto Flex", sans-serif;
-  margin: 0 clamp(0.5rem, 2vw, 2rem); /* Responsive margin */
-  color: #515151;
+  margin: 0 clamp(0.5rem, 2vw, 2rem);
+  color: var(--nav-text-color);
   text-decoration: none;
-  font-size: clamp(0.9rem, 1vw, 1rem); /* Fluid typography */
+  font-size: clamp(0.9rem, 1vw, 1rem);
   white-space: nowrap;
   transition: color 0.3s ease;
 }
 
 .homeNav a:hover {
-  color: #fe6363;
+  color: var(--hover-link-color);
 }
 
 /* Mobile Menu Button */
@@ -37,17 +76,18 @@ header .nav-btn {
   cursor: pointer;
   background: transparent;
   border: none;
-  color: #515151;
+  color: var(--nav-text-color);
   visibility: hidden;
   opacity: 0;
-  font-size: clamp(1.5rem, 2vw, 1.8rem); /* Responsive icon */
+  font-size: clamp(1.5rem, 2vw, 1.8rem);
   position: absolute;
-  right: clamp(1rem, 3vw, 50px); /* Responsive positioning */
+  right: clamp(1rem, 3vw, 50px);
 }
 
 /* Home Section */
 #content {
-  padding: clamp(5%, 10vw, 15%); /* Responsive padding */
+  padding: clamp(5%, 10vw, 15%);
+
 }
 
 .home {
@@ -60,66 +100,71 @@ header .nav-btn {
   flex-direction: column;
   margin-bottom: 0;
   padding-bottom: 0;
+  background-color: transparent; /* Light mode default */
 }
+
+[data-theme="dark"] .home {
+  background-color: rgba(0, 0, 0, 0.815); 
+  backdrop-filter: blur(2px); 
+}
+
 
 svg {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: auto; /* Ensure SVG scales properly */
+  height: auto;
 }
 
 .home p {
-  color: black;
+  color: var(--text-color);
   font-weight: 500;
-  font-size: clamp(1.2rem, 3vw, 1.7rem); /* Fluid typography */
-  font-family: "Roboto Flex", sans-serif;
-  text-align: left;
-  margin-bottom: clamp(10px, 2vw, 20px); /* Responsive margin */
+  font-size: clamp(1.2rem, 3vw, 1.7rem);
+  margin-bottom: clamp(10px, 2vw, 20px);
 }
 
 /* Buttons */
 .homeNav .homeBtn,
 .home .hm_btn,
 .home .hm_btn.cn {
-  background-color: #fe6363;
-  border-color: #fe6363;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
   border-radius: 62px;
-  width: clamp(100px, 15%, 200px); /* Responsive width */
+  width: clamp(100px, 15%, 200px);
   margin-right: 10px;
-  color: #ffffff;
+  color: var(--white-color);
   font-weight: 600;
   display: inline-block;
-  font-size: clamp(0.8rem, 1vw, 1rem); /* Fluid typography */
-  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.5vw, 15px); /* Responsive padding */
+  font-size: clamp(0.8rem, 1vw, 1rem);
+  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.5vw, 15px);
 }
 
 .homeNav .homeBtn.Out {
-  width: clamp(90px, 110px, 120px); /* Responsive width */
+  width: clamp(90px, 110px, 120px);
 }
 
 .homeNav .homeBtn:hover,
 .home .hm_btn.cn:hover {
-  background-color: #be4d4d;
-  border-color: #be4d4d;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
 }
 
 .homeNav .homeBtn.Out,
 .home .hm_btn {
   background-color: transparent;
-  color: #fe6363;
-  border-color: #fe6363;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .homeNav .homeBtn.Out:hover,
 .home .hm_btn:hover {
-  background-color: #fe6363;
-  color: #ffffff;
+  background-color: var(--primary-color);
+  color: var(--white-color);
 }
 
 .home .hm_btn {
-  width: clamp(120px, 40%, 200px); /* Responsive width */
+  width: clamp(120px, 40%, 200px);
   max-width: fit-content;
   min-width: fit-content;
 }
@@ -127,14 +172,14 @@ svg {
 .home .hm_btn.cn {
   z-index: 999;
   position: absolute;
-  bottom: clamp(120px, 15vw, 180px); /* Responsive positioning */
-  right: clamp(10px, 2vw, 20px); /* Responsive positioning */
+  bottom: clamp(120px, 15vw, 180px);
+  right: clamp(10px, 2vw, 20px);
   margin: 1rem;
-  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.5vw, 15px); /* Responsive padding */
-  font-size: clamp(0.8rem, 1vw, 1rem); /* Fluid typography */
+  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.5vw, 15px);
+  font-size: clamp(0.8rem, 1vw, 1rem);
 }
 
-/* Responsive Breakpoints */
+/* Responsive */
 @media (max-width: 1024px) {
   header .nav-btn {
     visibility: visible !important;
@@ -147,14 +192,11 @@ svg {
     left: 0;
     height: 100%;
     width: 100%;
-    display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    background-color: #fe6363;
-    transition: 1s;
+    background-color: var(--primary-color);
     transform: translateY(-100vh);
+    transition: 1s;
     z-index: 1001;
   }
 
@@ -164,24 +206,24 @@ svg {
 
   header .nav-close-btn {
     position: absolute;
-    top: clamp(1rem, 2vw, 2rem); /* Responsive positioning */
-    right: clamp(1rem, 2vw, 2rem); /* Responsive positioning */
+    top: clamp(1rem, 2vw, 2rem);
+    right: clamp(1rem, 2vw, 2rem);
   }
 
   .homeNav a {
-    font-size: clamp(1.2rem, 3vw, 1.5rem); /* Fluid typography */
-    color: white;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    color: var(--white-color);
   }
 
   .homeNav a:hover {
-    color: #ffffff;
+    color: var(--white-color);
   }
 
   .homeNav .homeBtn {
-    background-color: #ffffff !important;
-    border-color: #ffffff !important;
-    color: #fe6363 !important;
-    width: clamp(100px, 30vw, 200px) !important; /* Responsive width */
+    background-color: var(--white-color) !important;
+    border-color: var(--white-color) !important;
+    color: var(--primary-color) !important;
+    width: clamp(100px, 30vw, 200px) !important;
   }
 }
 
@@ -189,7 +231,7 @@ svg {
   .home .hm_btn.cn {
     width: 50%;
     right: 50%;
-    bottom: clamp(100px, 15vw, 120px); /* Responsive positioning */
+    bottom: clamp(100px, 15vw, 120px);
     transform: translateX(50%);
     text-align: center;
   }
@@ -202,7 +244,7 @@ svg {
 @media (max-width: 480px) {
   .home .hm_btn.cn {
     width: 80%;
-    bottom: clamp(120px, 20vw, 140px); /* Responsive positioning */
+    bottom: clamp(120px, 20vw, 140px);
   }
 
   .home .hm_btn {
@@ -210,7 +252,7 @@ svg {
   }
 }
 
-/* Ensure images scale properly */
+/* Images Responsive */
 .home img {
   max-width: 100%;
   height: auto;

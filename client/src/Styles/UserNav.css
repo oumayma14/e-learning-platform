@@ -6,29 +6,44 @@
   --dark: #515151;
   --danger: #f72525;
   --warning: #ff8c00;
-  --nav-icon-size: 18px; /* Tiny icons */
+
+  --nav-icon-size: 18px;
   --nav-icon-gap: 0.3rem;
   --nav-transition: all 0.2s ease;
+
+  --navbar-bg: linear-gradient(135deg, #fe6363, #fe6363);
+  --navbar-text: #ffffff;
+  --dropdown-bg: #fe6363;
+}
+
+body[data-theme="dark"] {
+  --primary: #be4d4d;
+  --primary-dark: #be4d4d;
+  --navbar-bg: #843333;
+  --navbar-text: #ffffff;
+  --dropdown-bg: #9d3d3d;
 }
 
 /* Navbar Core */
 .navbar {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: var(--navbar-bg) !important;
   padding: 0.5rem 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   width: 100%;
+  margin-bottom: 0 !important;
+  transition: background-color 0.4s ease;
 }
 
 .navbar-brand {
   font-weight: 700;
-  color: var(--light) !important;
+  color: var(--navbar-text) !important;
   font-size: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-/* Icons (Super Small) */
+/* Icons */
 .nav-icon {
   width: var(--nav-icon-size);
   height: var(--nav-icon-size);
@@ -39,9 +54,9 @@
   top: -1px;
 }
 
-/* Nav Items */
+/* Nav Links */
 .nav-link {
-  color: var(--light) !important;
+  color: var(--navbar-text) !important;
   font-weight: 500;
   padding: 0.4rem 0.8rem !important;
   display: flex;
@@ -57,7 +72,7 @@
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Dropdowns */
+/* Dropdown */
 .nav-dropdown .dropdown-toggle {
   display: flex;
   align-items: center;
@@ -65,10 +80,11 @@
 }
 
 .dropdown-menu {
-  background-color: var(--primary-dark);
+  background-color: var(--dropdown-bg) !important;
   border: none;
   border-radius: 0.5rem;
   padding: 0.25rem 0;
+  transition: background-color 0.4s ease;
 }
 
 .dropdown-item {
@@ -76,11 +92,10 @@
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
 }
+
 .dropdown-item:hover {
-  color: var(--light) !important;
-  background-color: var(--secondary);
-  padding: 0.4rem 1rem;
-  font-size: 0.9rem;
+  background-color: var(--secondary) !important;
+  color: #ffffff !important;
 }
 
 /* Badges */
@@ -103,30 +118,29 @@
     background-color: var(--primary);
     padding: 1rem 1.5rem;
   }
-  
+
   .nav-link {
     padding: 0.5rem 1rem !important;
   }
 
   .dropdown-menu {
-    background-color: transparent;
-    border: 2px var(--secondary);
-    background-color: var(--secondary);
+    background-color: var(--secondary) !important;
     margin-left: 0.5rem;
     padding-left: 0.5rem;
   }
 }
 
+/* User Score Example */
 .user-score {
   display: flex;
   align-items: center;
   font-weight: bold;
   font-size: 16px;
-  color: #333; /* Texte noir ou gris foncé */
+  color: #333;
   gap: 8px;
 }
 
 .user-score .nav-icon {
   font-size: 20px;
-  color: #f5c518; /* Doré bien visible */
+  color: #f5c518;
 }

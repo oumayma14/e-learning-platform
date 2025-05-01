@@ -1,17 +1,28 @@
-/* Original styles preserved exactly */
 .main {
   background-color: #f0f0f0b9;
   width: 100vw;
-  min-height: 100vh; /* Changed to min-height for better mobile behavior */
-  padding: clamp(5%, 13%, 15%); /* Responsive padding */
-  box-sizing: border-box; /* Prevents padding overflow */
+  min-height: 100vh;
+  padding: clamp(5%, 13%, 15%);
+  box-sizing: border-box;
+}
+
+/* ✨ Dark mode */
+[data-theme="dark"] .main {
+  background-color: rgba(18, 18, 18, 0.9); /* Plus sombre */
 }
 
 .main h1 {
-  font-size: clamp(1.8rem, 2.5rem, 3vw); /* Fluid typography */
+  font-size: clamp(1.8rem, 2.5rem, 3vw);
   margin-bottom: 1.5rem;
+  color: #333; /* Light mode */
 }
 
+/* Dark mode pour le titre */
+[data-theme="dark"] .main h1 {
+  color: #ffffff;
+}
+
+/* Accordion Items */
 .accordion-item {
   background-color: #f8f9fa !important;
   border-radius: 10px;
@@ -20,13 +31,19 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Accordion en dark mode */
+[data-theme="dark"] .accordion-item {
+  background-color: #242424 !important;
+  box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.05);
+}
+
 .accordion-button {
   background-color: #858383 !important;
   color: white !important;
   font-weight: bold;
-  font-size: clamp(1rem, 1.1rem, 1.25vw); /* Responsive font */
+  font-size: clamp(1rem, 1.1rem, 1.25vw);
   border: none;
-  padding: 1rem 1.25rem; /* Consistent padding */
+  padding: 1rem 1.25rem;
 }
 
 .accordion-button:hover {
@@ -40,14 +57,32 @@
   box-shadow: none;
 }
 
+/* Dark mode boutons */
+[data-theme="dark"] .accordion-button {
+  background-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .accordion-button:hover,
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+  background-color: #be4d4d !important;
+  color: #ffffff !important;
+}
+
 .accordion-body {
   background-color: #f0f0f0 !important;
   color: #333;
-  padding: clamp(0.75rem, 1rem, 1.25rem); /* Responsive padding */
-  font-size: clamp(0.9rem, 1rem, 1.1vw); /* Fluid typography */
+  padding: clamp(0.75rem, 1rem, 1.25rem);
+  font-size: clamp(0.9rem, 1rem, 1.1vw);
 }
 
-/* Enhanced responsive breakpoints */
+/* Dark mode accordion-body */
+[data-theme="dark"] .accordion-body {
+  background-color: #1f1f1f !important;
+  color: #ccc;
+}
+
+/* Responsive Breakpoints (inchangés) */
 @media (max-width: 992px) {
   .main {
     padding: 10%;
@@ -60,7 +95,7 @@
   }
   
   .accordion-button {
-    font-size: 1rem !important; /* Slightly smaller */
+    font-size: 1rem !important;
     padding: 0.9rem 1.1rem;
   }
   

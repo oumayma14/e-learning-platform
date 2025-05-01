@@ -7,10 +7,13 @@
     justify-content: center;
     height: 80vh;
     padding: 2rem;
-    background: #ffffff;
+    background: #e10e0e;
     border-radius: 16px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     text-align: center;
+  }
+  h2{
+    color: #be4d4d;
   }
   
   .join-challenge-loading,

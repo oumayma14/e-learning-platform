@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { authService } from "../services/apiService";
+import DarkMode from './DarkMode/DarkMode'
 import "../Styles/Inscrire.css";
 
 export const Inscrire = () => {
@@ -141,6 +142,7 @@ export const Inscrire = () => {
             <div className="connect-left">
                 <h2>Ton parcours commence ici. Es-tu prêt à relever le défi ?</h2>
                 <p>Rejoignez notre communauté d'apprenants et accédez à des ressources exclusives.</p>
+                <DarkMode />
             </div>
 
             <div className="connect-right">

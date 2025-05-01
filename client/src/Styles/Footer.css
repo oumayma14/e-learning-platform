@@ -110,3 +110,21 @@
         gap: 8px;
     }
 }
+/* Dark mode for Footer */
+[data-theme="dark"] .footer {
+    background-color: #1a1a1a; /* plus foncé que #333 pour dark */
+    color: #f5f5f5;
+}
+
+[data-theme="dark"] .footer-links a {
+    color: #f5f5f5;
+}
+
+[data-theme="dark"] .footer-links a:hover {
+    color: #fe6363; /* Toujours mettre en avant ton rouge principal */
+}
+
+[data-theme="dark"] .social-icons a:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2); /* Légère brillance au hover */
+}

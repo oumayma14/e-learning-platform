@@ -1,26 +1,45 @@
-
 :root {
   --primary-color: #fe6363;
   --secondary-color: #fceaea;
   --text-color: #333;
   --counter-bg: white;
-  --base-font-size: clamp(1rem, 2vw, 1.5rem); /* Responsive font scaling */
+  --aboutus-bg: #fe6363;
+  --base-font-size: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* 🎯 Dark Mode */
+body[data-theme="dark"] {
+  --primary-color: #be4d4d;
+  --secondary-color: #fa7676; 
+  --text-color: #ffffff;
+  --counter-bg: #333333;
+  --aboutus-bg: #515151;
 }
 
 /* Base styles (mobile-first) */
 .aboutus {
   width: 100%;
-  background-color: var(--primary-color);
+  background-color: var(--aboutus-bg);
   text-align: center;
-  color: white;
+  color: var(--text-color);
   min-height: 100vh;
   padding: 5%;
   box-sizing: border-box;
+  transition: background-color 0.4s, color 0.4s;
+  position: relative;       /* Needed for z-index to work */
+  z-index: 1;   
 }
+
+[data-theme="dark"] .aboutus {
+  backdrop-filter: blur(8px); 
+  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.678); 
+}
+
 
 .counter-container {
   display: flex;
-  flex-direction: column; /* Stack vertically on mobile */
+  flex-direction: column; 
   align-items: center;
   gap: 2rem;
   padding: 1rem;
@@ -36,6 +55,7 @@
   padding: 1.5rem;
   margin: 0.5rem 0;
   box-sizing: border-box;
+  transition: background-color 0.4s, color 0.4s;
 }
 
 p {
@@ -45,8 +65,9 @@ p {
   font-weight: 700;
   font-family: "Winky Sans", sans-serif;
   margin: 0 auto;
-  max-width: 90%; /* More breathing room on mobile */
+  max-width: 90%;
   line-height: 1.4;
+  transition: color 0.4s;
 }
 
 p strong {
@@ -60,14 +81,14 @@ p strong {
   }
 
   .counter-container {
-    flex-direction: row; /* Horizontal layout */
-    flex-wrap: wrap; /* Allow wrapping */
+    flex-direction: row; 
+    flex-wrap: wrap;
     justify-content: center;
     gap: 1.5rem;
   }
 
   .counter {
-    flex: 1 1 40%; /* Two columns */
+    flex: 1 1 40%; 
     min-width: 200px;
   }
 
@@ -79,7 +100,7 @@ p strong {
 /* Desktop (992px and up) */
 @media (min-width: 992px) {
   .counter-container {
-    flex-wrap: nowrap; /* Single row */
+    flex-wrap: nowrap;
     gap: 8%;
   }
 

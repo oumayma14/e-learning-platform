@@ -81,7 +81,7 @@ const JoinChallenge = () => {
 
   return (
     <div className="join-challenge-container">
-      <h2>🎯 Défi : {challenge.code}</h2>
+      <h2 style={{color:'black'}}>🎯 Défi : {challenge.code}</h2>
 
       <div style={{ margin: '20px 0' }}>
         <p><strong>Créateur:</strong> {challenge.challenger_username}</p>

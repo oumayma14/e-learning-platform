@@ -219,7 +219,7 @@ export default function MainQuiz() {
                         <div className="modal-overlay" onClick={() => setShowFilters(false)}>
                             <div className="filter-modal" onClick={e => e.stopPropagation()}>
                                 <div className="modal-header">
-                                    <h2>Filtres</h2>
+                                    <h2 className='filter-title'>Filtres</h2>
                                     <button 
                                         className="close-modal-button"
                                         onClick={() => setShowFilters(false)}
@@ -300,7 +300,7 @@ export default function MainQuiz() {
                                     placeholder="Colle ici le code du défi" 
                                     value={joinCode} 
                                     onChange={(e) => setJoinCode(e.target.value)}
-                                    className="modal-input"
+                                    className="modal-input" style={{backgroundColor: 'white'}}
                                 />
                                 <button 
                                     onClick={handleJoinChallenge} 
@@ -336,12 +336,15 @@ export default function MainQuiz() {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <Link to={`quiz/${quiz.id}`} className="quiz-card__button">
-                                                    Commencer le Quiz
-                                                </Link>
-                                                <button className='quiz-challenge-btn' onClick={() => handleCreateChallenge(quiz.id)}>
-                                                    ⚔️ Défier un ami
-                                                </button>
+                                                <div className="quiz-card__actions">
+  <Link to={`quiz/${quiz.id}`} className="quiz-card__button">
+    Commencer le Quiz
+  </Link>
+  <button className="quiz-challenge-btn" onClick={() => handleCreateChallenge(quiz.id)}>
+    ⚔️ Défier un ami
+  </button>
+</div>
+
                                             </div>
                                         ))}
                                     </div>

@@ -5,7 +5,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { authService } from "../services/apiService";
 import { useAuth } from '../context/AuthContext';
 import "../Styles/Auth.css";
-
+import DarkMode from './DarkMode/DarkMode'
 export const Connect = () => {
   const { login } = useAuth();
   const [loginEmail, setLoginEmail] = useState("");
@@ -59,6 +59,7 @@ export const Connect = () => {
       <Row className="connect-container">
         <Col md={6} className="connect-left">
           <h2>Connecte-toi et prouve ton talent ! Apprends, teste tes compétences et grimpe dans le classement</h2>
+          <DarkMode />
         </Col>
 
         <Col md={6} className="connect-right">
@@ -123,7 +124,7 @@ export const Connect = () => {
 
             <Button 
               variant="primary" 
-              className="w-100 mb-3 py-2" 
+              className="w-100 mb-3 py-2 cnt-btn" 
               type="submit"
               disabled={isLoading}
             >

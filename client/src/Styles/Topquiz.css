@@ -374,3 +374,63 @@ body {
     margin: 0 auto;
     line-height: 1.6;
 }
+
+/* Dark mode adjustments */
+[data-theme="dark"] .quiz {
+    background: #121212;
+  }
+  
+  [data-theme="dark"] .card {
+    background: #1e1e1e;
+    color: #f5f5f5;
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.05);
+  }
+  
+  [data-theme="dark"] .card-title,
+  [data-theme="dark"] .card-description {
+    color: #f5f5f5;
+  }
+  
+  [data-theme="dark"] .quiz-badge {
+    background: #fe6363;
+    color: #ffffff;
+  }
+  
+  [data-theme="dark"] .difficulty {
+    background: rgba(254, 99, 99, 0.2);
+    color: #fe6363;
+  }
+  
+  [data-theme="dark"] .quiz-button {
+    background: #fe6363;
+    box-shadow: 0 4px 6px rgba(254, 99, 99, 0.4);
+  }
+  
+  [data-theme="dark"] .quiz-button:hover {
+    background: #be4d4d;
+    box-shadow: 0 6px 12px rgba(190, 77, 77, 0.5);
+  }
+  
+  [data-theme="dark"] .slick-dots li button:before {
+    color: #ffffff;
+  }
+  
+  [data-theme="dark"] .slick-dots li.slick-active button:before {
+    color: #fe6363;
+  }
+  
+  [data-theme="dark"] .loading,
+  [data-theme="dark"] .error,
+  [data-theme="dark"] .no-quizzes {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+  }
+  
+  [data-theme="dark"] .section-header h2 {
+    color: #ffffff;
+  }
+  
+  [data-theme="dark"] .section-header p {
+    color: #d6d6d6;
+  }
+  
