@@ -157,5 +157,17 @@ export const progressService = {
   }
 };
 
+export const userService = {
+  getUserScore: async () => {
+    try {
+      const response = await apiClient.get('/api/user/score');
+      return response.score; // ou `response.data.score` selon ton backend
+    } catch (error) {
+      console.error('Erreur lors de la récupération du score :', error);
+      throw error;
+    }
+  }
+};
+
 
 export default apiClient;

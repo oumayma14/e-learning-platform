@@ -325,7 +325,6 @@
 .range-input {
     width: 100%;
     margin: 10px 0;
-    -webkit-appearance: none;
     height: 6px;
     border-radius: 3px;
     background: #e0e0e0;

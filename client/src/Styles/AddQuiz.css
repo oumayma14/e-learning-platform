@@ -458,3 +458,55 @@ button {
   width: 20%  !important;
 }
 
+.access-denied-container {
+  text-align: center !important;
+  padding: 3rem 2rem !important;
+  background-color: #fff4f4 !important;
+  border: 1px solid #ffc1c1 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+  max-width: 500px !important;
+  margin: 4rem auto !important;
+  color: #be4d4d !important;
+}
+
+.lock-icon-wrapper {
+  background-color: #ffe1e1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  width: 32px !important;   /* reduced from 50px */
+  height: 32px !important;  /* reduced from 50px */
+  margin-bottom: 1rem !important;
+  margin: 0 auto 1rem auto !important; 
+}
+
+.access-denied-heading {
+  font-size: 1.8rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.access-denied-text {
+  font-size: 1.1rem !important;
+}
+
+/* Dark Mode - Access Denied */
+[data-theme="dark"] .access-denied-container {
+  background-color: #3a3a3a !important;
+  border-color: #860000 !important;
+  color: #f8d7da !important;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .lock-icon-wrapper {
+  background-color: #860000 !important;
+}
+
+[data-theme="dark"] .access-denied-heading {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .access-denied-text {
+  color: #f8d7da !important;
+}

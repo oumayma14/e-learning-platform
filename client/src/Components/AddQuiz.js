@@ -1,17 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createFullQuiz } from '../services/quizService';
+import { authService } from '../services/apiService';
+import { Lock } from 'lucide-react';
 import '../Styles/AddQuiz.css';
 
 const AddQuiz = () => {
   const [step, setStep] = useState(1);
   const [showReview, setShowReview] = useState(false);
-  
+  const [userScore, setUserScore] = useState(null);
+  const [accessDenied, setAccessDenied] = useState(false);
+
+  useEffect(() => {
+    const fetchUserScore = async () => {
+      try {
+        const user = authService.getStoredUser();
+        if (!user || user.score < 10000) {
+          setAccessDenied(true);
+        } else {
+          setUserScore(user.score);
+        }
+      } catch (err) {
+        console.error("Error fetching user score", err);
+        setAccessDenied(true);
+      }
+    };
+    fetchUserScore();
+  }, []);
+
   const [quizData, setQuizData] = useState({
     title: '',
     description: '',
     difficulty: '',
     category: '',
-    timeLimit: 30, // Default time in seconds
+    timeLimit: 30,
     questions: [
       {
         questionText: '',
@@ -32,6 +53,20 @@ const AddQuiz = () => {
     'Musique', 'Cinéma', 'Littérature', 'Sport', 'Divertissement',
     'Culture générale', 'Mathématiques', 'Langues', 'Cuisine'
   ];
+
+  if (accessDenied) {
+    return (
+      <div className="access-denied-container">
+      <div className="lock-icon-wrapper">
+      <Lock style={{ width: '20px', height: '20px', marginLeft:'737px', marginBottom:'634px'}} strokeWidth={2} />
+      </div>
+      <h2 className="access-denied-heading">Accès Refusé</h2>
+      <p className="access-denied-text">
+        Vous devez avoir un score supérieur à <strong style={{color:'#be4d4d'}}>10 000</strong> pour ajouter un quiz.
+      </p>
+    </div>
+    );
+  }
 
   // Navigation handlers
   const goToQuestions = () => {
@@ -245,7 +280,7 @@ const AddQuiz = () => {
   // Format time for display
   const formatTimeForDisplay = (seconds) => {
     return `${seconds} seconde${seconds !== 1 ? 's' : ''}`;};
-
+    
   // Step 1: Quiz Information
   if (step === 1) {
     return (
