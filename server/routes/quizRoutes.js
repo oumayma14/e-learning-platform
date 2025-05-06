@@ -3,6 +3,7 @@ const router = express.Router();
 const quizController = require('../controllers/quizController');
 const questionController = require('../controllers/questionController');
 const { updateUserScore } = require('../controllers/userController');
+const authenticateToken = require('../middlewares/authenticateToken');
 
 // Quiz routes
 router.get('/', quizController.getAllQuizzes);
@@ -10,6 +11,7 @@ router.get('/:id', quizController.getQuiz);
 router.post('/', quizController.createQuiz);
 router.put('/:id', quizController.updateQuiz);
 router.delete('/:id', quizController.deleteQuiz);
+router.get('/formateur/quizzes', authenticateToken, quizController.getQuizzesByFormateur);
 
 // Question routes
 router.post('/:quizId/questions', questionController.addQuestion);

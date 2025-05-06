@@ -8,6 +8,7 @@ const quizRoutes = require('./routes/quizRoutes');
 const pool = require('./config/db');
 const progressRoutes = require("./routes/progressRoutes");
 const challengeRouutes = require("./routes/challengeRoutes");
+const formateurRoutes = require('./routes/formateur.routes');
 
 const app = express();
 
@@ -16,10 +17,7 @@ const app = express();
 // ======================
 app.use(helmet());
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.CLIENT_URL 
-    : 'http://localhost:3000',
-  credentials: true
+  origin: process.env.NODE_ENV === 'production'  ? process.env.CLIENT_URL  : 'http://localhost:3000', credentials: true
 }));
 
 // Rate limiting
@@ -52,6 +50,7 @@ app.use('/api', userRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/challenges', challengeRouutes);
+app.use('/api/formateur', formateurRoutes);
 
 // ======================
 // 4. Database Health Check

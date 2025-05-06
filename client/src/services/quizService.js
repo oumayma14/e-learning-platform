@@ -1,4 +1,6 @@
 import axios from "axios";
+import { getFormateurToken } from './formateurService';
+
 const API_BASE_URL = 'http://localhost:3002/api/quizzes';
 
 const URL = process.env.NODE_ENV === 'production'
@@ -94,6 +96,27 @@ export const createFullQuiz = async (quizData) => {
         score
       });
       return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+
+
+  export const getQuizzesByFormateur = async () => {
+    try {
+      const token = getFormateurToken();
+      const response = await fetch(`${API_BASE_URL}/formateur/quizzes`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des quizzes du formateur');
+      }
+  
+      return await response.json();
     } catch (error) {
       throw error;
     }

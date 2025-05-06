@@ -1,0 +1,43 @@
+/* FormateurNavbar.css */
+
+/* Navbar background and spacing */
+.navbar {
+    background-color: #212529 !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Brand styling */
+  .navbar-brand {
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: #ffffff !important;
+  }
+  
+  /* Navbar links */
+  .navbar-nav .nav-link {
+    color: #cfd8dc !important;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #ffffff !important;
+  }
+  
+  /* Active link (optional if using NavLink) */
+  .navbar-nav .nav-link.active {
+    color: #f8f9fa !important;
+    font-weight: 500;
+  }
+  
+  /* Logout button */
+  .btn-outline-light {
+    border-color: #ffffff;
+    color: #ffffff;
+    transition: background-color 0.2s ease;
+  }
+  
+  .btn-outline-light:hover {
+    background-color: #ffffff;
+    color: #212529;
+  }
+  

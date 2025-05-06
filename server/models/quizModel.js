@@ -127,6 +127,22 @@ class Quiz {
         
         return formattedQuiz;
     }
+
+    static async getByFormateurId(formateurId, timeFormat = 'seconds') {
+        try {
+          const rows = await pool.query(`
+            SELECT q.*
+            FROM quizzes q
+            JOIN formateur_quizzes fq ON fq.quiz_id = q.id
+            WHERE fq.formateur_id = ?
+          `, [formateurId]);
+      
+          return rows.map(quiz => this.formatQuizTime(quiz, timeFormat));
+        } catch (error) {
+          throw error;
+        }
+      }
+      
 }
 
 module.exports = Quiz;

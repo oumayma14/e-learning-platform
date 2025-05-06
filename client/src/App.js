@@ -9,6 +9,8 @@ import { Container } from './Components/Container';
 import { Footer } from './Components/Footer';
 import { Contact } from './Components/Contact';
 import { AuthProvider } from './context/AuthContext';
+import FormateurAuth from './Components/FormateurAuth';
+import { FormateurContainer } from './Components/FormateurContainer';
 function App() {
   return(
     <AuthProvider>
@@ -19,7 +21,9 @@ function App() {
         <Route path='/dashboard/*' element={<Apprenant />} />
         <Route path="/inscrire" element={<Inscrire />} />
         <Route path='/contact' element= {<Contact/>} />
-        
+        <Route path="/formateur" element={<FormateurAuth />} />
+      <Route path="/formateur/dashboard/*" element={<FormateurContainer />} />
+
       </Routes>
       <Footer />
     </Router>

@@ -5,14 +5,6 @@ const pool = require('../config/db');
 const validateQuizData = (data) => {
   const errors = [];
   const requiredFields = {title: 'string',  description: 'string',  difficulty: 'string',  category: 'string', timeLimit: 'number' };
-
-  for (const [field, type] of Object.entries(requiredFields)) {
-    if (!data[field]) {
-      errors.push(`${field} is required`);
-    } else if (typeof data[field] !== type) {
-      errors.push(`${field} must be a ${type}`);
-    }
-  }
   for (const [field, type] of Object.entries(requiredFields)) {
     if (!data[field]) {
       errors.push(`${field} is required`);
@@ -170,6 +162,17 @@ exports.createFullQuiz = async (req, res) => {
       [title, description, difficulty, category, timeLimit]
     );
     const quizId = result.insertId;
+    // 🔐 Get formateur ID from token
+    const token = req.headers.authorization?.split(' ')[1];
+    const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const creatorId = decoded.id;
+
+    // 🔗 Link quiz to formateur in formateur_quizzes
+    await conn.query(
+      'INSERT INTO formateur_quizzes (formateur_id, quiz_id) VALUES (?, ?)',
+      [creatorId, quizId]
+    );
+
 
     // Insert questions and options
     for (const question of questions) {
@@ -206,5 +209,19 @@ exports.createFullQuiz = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to create quiz with questions', error: error.message });
   } finally {
     if (conn) conn.release();
+  }
+  
+};
+
+exports.getQuizzesByFormateur = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const formateurId = decoded.id;
+
+    const quizzes = await Quiz.getByFormateurId(formateurId);
+    res.json({ success: true, data: quizzes });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Erreur serveur', error: error.message });
   }
 };

@@ -7,7 +7,7 @@ import ChallengeModal from './ChallengeModal';
 import { generateChallengeCode } from '../utils/generatedCode';
 import { getQuizzes } from '../services/quizService';
 
-
+ 
 export default function MainQuiz() {
     const [showChallengeModal, setShowChallengeModal] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
@@ -337,14 +337,13 @@ export default function MainQuiz() {
                                                     </div>
                                                 </div>
                                                 <div className="quiz-card__actions">
-  <Link to={`quiz/${quiz.id}`} className="quiz-card__button">
-    Commencer le Quiz
-  </Link>
-  <button className="quiz-challenge-btn" onClick={() => handleCreateChallenge(quiz.id)}>
-    ⚔️ Défier un ami
-  </button>
-</div>
-
+                                                    <Link to={`quiz/${quiz.id}`} className="quiz-card__button">
+                                                        Commencer le Quiz
+                                                    </Link>
+                                                    <button className="quiz-challenge-btn" onClick={() => handleCreateChallenge(quiz.id)}>
+                                                        ⚔️ Défier un ami
+                                                    </button>
+                                                    </div>
                                             </div>
                                         ))}
                                     </div>

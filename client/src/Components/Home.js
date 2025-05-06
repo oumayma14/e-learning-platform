@@ -19,7 +19,6 @@ export const Home = () => {
                                 Découvrez QuizPoP ! Créez, participez, gagnez et remontez dans les classements. 
                                 Développez vos compétences et participez à des défis dès aujourd'hui !
                             </p>
-                            <Button className="hm_btn">Commencer</Button>
                         </div>
                     </Col>
                     <Col xs={12} md={6} xl={5}>
