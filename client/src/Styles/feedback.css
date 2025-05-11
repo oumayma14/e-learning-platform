@@ -1,0 +1,82 @@
+.feedback-popup-container {
+    display: flex !important;
+    justify-content: space-around !important;
+    gap: 20px !important;
+    margin-bottom: 15px !important;
+    background-color: #ffffff !important;
+    padding: 15px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15) !important;
+}
+
+/* Button Styles */
+.feedback-popup-button {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 5px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 80px !important;
+    height: 100px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Selected State */
+.feedback-popup-button-selected {
+    background-color: #fe6363 !important;
+    border-radius: 10px !important;
+    color: #ffffff !important;
+    transform: scale(1.1) !important;
+}
+
+/* Image Styles */
+.feedback-popup-image {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    margin-bottom: 5px !important;
+    transition: transform 0.3s ease !important;
+}
+
+/* Label Styles */
+.feedback-popup-label {
+    font-size: 14px !important;
+    color: #515151 !important;
+}
+
+/* Modal Title */
+.feedback-popup-title {
+    text-align: center !important;
+    font-weight: bold !important;
+    color: #515151 !important;
+}
+
+/* Footer */
+.feedback-popup-footer {
+    justify-content: center !important;
+}
+
+/* Close and Submit Button Styles */
+.feedback-close-btn {
+    background-color: #515151 !important;
+    border-color: #515151 !important;
+    color: #ffffff !important;
+}
+
+.feedback-submit-btn {
+    background-color: #fe6363 !important;
+    border-color: #be4d4d !important;
+    color: #ffffff !important;
+}
+
+.feedback-close-btn:hover {
+    background-color: #333333 !important;
+    border-color: #333333 !important;
+}
+
+.feedback-submit-btn:hover {
+    background-color: #be4d4d !important;
+    border-color: #fe6363 !important;
+}

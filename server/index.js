@@ -9,6 +9,9 @@ const pool = require('./config/db');
 const progressRoutes = require("./routes/progressRoutes");
 const challengeRouutes = require("./routes/challengeRoutes");
 const formateurRoutes = require('./routes/formateur.routes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
+const recommendationRoutes = require('./routes/recommendationRoutes');
+
 
 const app = express();
 
@@ -51,7 +54,8 @@ app.use('/api/quizzes', quizRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/challenges', challengeRouutes);
 app.use('/api/formateur', formateurRoutes);
-
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/recommendations', recommendationRoutes);
 // ======================
 // 4. Database Health Check
 // ======================

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { QUIZ_API_URL } from '../services/quizService';
 import Slider from "react-slick";
 import "../Styles/Topquiz.css";
 import { Link } from "react-router-dom";
+import { fetchTopQuizzes } from "../services/topQuizService";
 
 export const Topquiz = () => {
     const [quizzes, setQuizzes] = useState([]);
@@ -10,40 +10,19 @@ export const Topquiz = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchQuizzes = async () => {
+        const loadQuizzes = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(QUIZ_API_URL);
-
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.success && result.data) {
-                    const quizzes = result.data.map(quiz => ({
-                        id: quiz.id,
-                        title: quiz.title,
-                        description: quiz.description,
-                        difficulty: quiz.difficulty,
-                        category: quiz.category,
-                        featured: Math.random() > 0.8 // 20% chance d’être en vedette
-                    }));
-
-                    setQuizzes(quizzes);
-                } else {
-                    throw new Error(result.message || 'Échec du chargement des quiz');
-                }
+                const data = await fetchTopQuizzes();
+                setQuizzes(data);
             } catch (err) {
-                console.error('Erreur de chargement des quiz :', err);
-                setError(err.message);
+                setError(err.message || "Erreur de connexion");
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchQuizzes();
+        loadQuizzes();
     }, []);
 
     const ReadMore = ({ text = "", maxLength = 80 }) => {

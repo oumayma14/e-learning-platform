@@ -12,9 +12,6 @@ const UserNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const expand = 'md';
-  console.log('user navbar =>', JSON.stringify(user, null, 2));
-  console.log('User fetched from database =>', user);
-
 
   const navLinks = [
     { path: '/dashboard', label: 'Accueil', exact: true, icon: <FaBook className="nav-icon" /> },
@@ -29,54 +26,35 @@ const UserNavbar = () => {
       icon: <FaChartLine className="nav-icon" />,
       badge: user?.stats?.newAchievements,
     },
-    {
-      path: '/classement',
-      label: 'Classements',
-      icon: <FaTrophy className="nav-icon" />,
-      subItems: [
-        { path: '/classement/global', label: 'Global' },
-        { path: '/classement/defis', label: 'Défis en cours' },
-        { path: '/classement/amis', label: 'Entre amis' },
-      ],
-    },
-    {
-      path: '/forum',
-      label: 'Communauté',
-      icon: <FaComments className="nav-icon" />,
-      subItems: [
-        { path: '/forum/discussions', label: 'Discussions' },
-        { path: '/forum/messagerie', label: 'Messagerie' },
-        { path: '/forum/experiences', label: 'Expériences' },
-      ],
-    },
   ];
 
   const handleLogout = () => {
     logout();
-    navigate('/'); // Redirect to the homepage
+    navigate('/'); 
   };
 
   return (
-    <Navbar key={expand} expand={expand} className="bg-body-tertiary mb-3" sticky="top">
+    <Navbar key={expand} expand={expand} sticky="top" style={{ backgroundColor: '#fe6363', color: '#ffffff' }}>
       <Container fluid>
-      <Navbar.Brand as={Link} to="/dashboard">
-      <img
-        src={logo}
-        alt="QuizPop Logo"
-        height="40"
-        width='auto'
-        className="d-inline-block align-top"
-      />
-    </Navbar.Brand>
+        <Navbar.Brand as={Link} to="/dashboard" style={{ color: '#ffffff' }}>
+          <img
+            src={logo}
+            alt="QuizPop Logo"
+            height="40"
+            width='auto'
+            className="d-inline-block align-top"
+          />
+        </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
+        <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} style={{ backgroundColor: '#ffffff', color: '#fe6363' }} />
         <Navbar.Offcanvas
           id={`offcanvasNavbar-expand-${expand}`}
           aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
           placement="end"
+          style={{ backgroundColor: '#ffffff', color: '#515151' }}
         >
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
+            <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`} style={{ color: '#515151' }}>
               Menu
             </Offcanvas.Title>
           </Offcanvas.Header>
@@ -94,6 +72,7 @@ const UserNavbar = () => {
                     }
                     id={`offcanvasNavbarDropdown-${link.label}`}
                     className="nav-dropdown"
+                    style={{ color: '#515151' }}
                   >
                     {link.subItems.map((sub) => (
                       <NavDropdown.Item
@@ -101,6 +80,7 @@ const UserNavbar = () => {
                         to={sub.path}
                         key={sub.path}
                         active={location.pathname === sub.path}
+                        style={{ backgroundColor: '#ffffff', color: '#515151' }}
                       >
                         {sub.label}
                       </NavDropdown.Item>
@@ -113,11 +93,12 @@ const UserNavbar = () => {
                     end={link.exact}
                     key={link.path}
                     className={({ isActive }) => (isActive ? 'active' : '')}
+                    style={{ color: '#ffffff' }}
                   >
                     {link.icon}
                     <span>{link.label}</span>
                     {link.badge && (
-                      <Badge pill className="ms-2 new-badge">
+                      <Badge pill className="ms-2 new-badge" bg="dark" style={{ backgroundColor: '#be4d4d', color: '#ffffff' }}>
                         Nouveau!
                       </Badge>
                     )}
@@ -130,12 +111,12 @@ const UserNavbar = () => {
               <DarkMode />
               {user ? (
                 <>
-                  <div className="user-score" style={{color: 'white'}}>
+                  <div className="user-score" style={{ color: '#ffffff' }}>
                     <FaTrophy className="nav-icon" />
-                    <strong >{user.score}</strong> pts
+                    <strong>{user.score}</strong> pts
                   </div>
 
-                <UserProfile />
+                  <UserProfile />
                 </>
               ) : (
                 null

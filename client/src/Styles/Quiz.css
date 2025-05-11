@@ -758,3 +758,11 @@
 [data-theme="dark"] .uq-timer-value.low-time {
   color: #ff6b6b;
 }
+.feedback-popup .btn {
+    margin: 10px;
+    transition: transform 0.2s ease;
+}
+
+.feedback-popup .btn:hover {
+    transform: scale(1.2);
+}

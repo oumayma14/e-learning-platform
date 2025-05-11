@@ -1,15 +1,14 @@
-import { Container, Row, Col } from "react-bootstrap";
-import quiz from "../assets/quiz.png";
-import { Button } from "react-bootstrap";
-import "../Styles/HomeNav.css";
-import ParticlesComponent from "./ParticlesComponent";
-import { Link } from "react-router-dom";
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import quiz from '../assets/quiz.png';
+import ParticlesComponent from './ParticlesComponent';
+import { Link } from 'react-router-dom';
+import '../Styles/HomeNav.css';
 
 /**Styles */
 
 export const Home = () => {
     return (
-        <div className="home" id="acceuil">
+        <div className="home" id="acceuil" >
             <ParticlesComponent id="tsparticles" />
             <Container className="mt-5">
                 <Row className="align-items-center" id="content">
@@ -22,20 +21,20 @@ export const Home = () => {
                         </div>
                     </Col>
                     <Col xs={12} md={6} xl={5}>
-                        <img src={quiz} alt="Header Img" className="img-fluid"/>
+                        <img src={quiz} alt="Header Img" className="img-fluid" />
                     </Col>
                 </Row>
 
                 {/* Fixed Contact Button Alignment */}
                 <Row className="justify-content-center mt-3">
                     <Col xs="auto">
-                        <Link to="/contact"><Button className="hm_btn cn text-light">Contactez-nous</Button></Link>
-                        
+                        <Link to="/contact">
+                            <Button style={{ backgroundColor: '#fe6363', borderColor: '#fe6363', color: '#ffffff' }} className="hm_btn cn">
+                                Contactez-nous
+                            </Button>
+                        </Link>
                     </Col>
                 </Row>
-
-                {/* Fixed SVG Warning */}
-              
             </Container>
         </div>
     );

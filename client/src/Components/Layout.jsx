@@ -8,8 +8,7 @@ export const Layout = ({ children }) => {
         .layout-wrapper {
           display: flex !important;
           flex-direction: column !important;
-          min-height: 100% !important;
-          width: 100vw !important;
+          min-height: 100vh !important;
           margin: 0 !important;
           padding: 0 !important;
           overflow-x: hidden !important;
@@ -17,7 +16,6 @@ export const Layout = ({ children }) => {
 
         .layout-main {
           flex: 1 !important;
-          width: 100vw !important;
           margin-top: 0 !important;
           padding-top: 0 !important;
         }

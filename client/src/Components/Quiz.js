@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getQuizById, submitQuizScore } from '../services/quizService';
 import { useAuth } from '../context/AuthContext';
+import FeedbackPopup from './FeedbackPopup';
 import '../Styles/Quiz.css';
 
 function Quiz() {
@@ -14,8 +15,8 @@ function Quiz() {
   const [quizTimeLeft, setQuizTimeLeft] = useState(0);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [scoreSent, setScoreSent] = useState(false);
-  const [celebration, setCelebration] = useState(false);
-  const [motivationalMessage, setMotivationalMessage] = useState('');
+  const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
+
 
   const { user, setUser } = useAuth();
   const { id } = useParams();
@@ -107,19 +108,23 @@ function Quiz() {
 
   const finalizeScore = async () => {
     try {
-      const multiplier = getDifficultyMultiplier(quiz.difficulty);
-      const finalScore = Math.round(score * multiplier);
+        const multiplier = getDifficultyMultiplier(quiz.difficulty);
+        const finalScore = Math.round(score * multiplier);
 
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user || !user.username) return;
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || !user.username) return;
 
-      await submitQuizScore(id, user.username, finalScore);
-      const updatedUser = { ...user, score: (user.score || 0) + finalScore };
-      setUser(updatedUser);
+        await submitQuizScore(id, user.username, finalScore);
+        const updatedUser = { ...user, score: (user.score || 0) + finalScore };
+        setUser(updatedUser);
+
+        // Show feedback popup
+        setShowFeedbackPopup(true);
     } catch (error) {
-      console.error('Erreur lors de l\'envoi du score:', error.message);
+        console.error('Erreur lors de l\'envoi du score:', error.message);
     }
-  };
+};
+
 
   const getDifficultyMultiplier = (difficulty) => {
     if (difficulty === 'Intermédiaire') return 1.1;
@@ -214,6 +219,13 @@ function Quiz() {
           </div>
         </>
       )}
+      <FeedbackPopup 
+        show={showFeedbackPopup} 
+        quizId={id} 
+        userId={user.username} 
+        onClose={() => setShowFeedbackPopup(false)} 
+    />
+
     </div>
   );
 }

@@ -1,4 +1,6 @@
 const pool = require('../config/db');
+const util = require('util');
+pool.query = util.promisify(pool.query);
 
 class Quiz {
     static async getAll(timeFormat = 'seconds') {
@@ -142,6 +144,84 @@ class Quiz {
           throw error;
         }
       }
+      static async getPopularQuizzes(limit = 5) {
+        try {
+            const rows = await pool.query(
+                `SELECT q.*, COUNT(f.id) as feedback_count, AVG(f.compound_score) as average_score 
+                FROM quizzes q 
+                LEFT JOIN feedback f ON q.id = f.quiz_id 
+                GROUP BY q.id 
+                ORDER BY feedback_count DESC, average_score DESC, q.created_at DESC 
+                LIMIT ?`,
+                [limit]
+            );
+            return rows;
+        } catch (error) {
+            console.error("Error fetching popular quizzes:", error);
+            throw error;
+        }
+    }
+
+    static async getRecommendedQuizzes(user_id) {
+        try {
+            // Get positive feedback from user
+            const positiveFeedback = await pool.query(
+                `SELECT quiz_id FROM feedback WHERE user_id = ? AND sentiment = 'positive' ORDER BY compound_score DESC LIMIT 5`,
+                [user_id]
+            );
+            const quizIds = positiveFeedback.map(fb => fb.quiz_id);
+            
+            if (quizIds.length === 0) {
+                // If no positive feedback, return popular quizzes
+                return await this.getPopularQuizzes();
+            }
+
+            // Fetch similar quizzes
+            const placeholders = quizIds.map(() => '?').join(',');
+            const rows = await pool.query(
+                `SELECT * FROM quizzes WHERE id IN (${placeholders}) ORDER BY created_at DESC LIMIT 5`,
+                quizIds
+            );
+            return rows;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async getSimilarQuizzes(quizIds) {
+        try {
+            const rows = await pool.query(
+                `SELECT * FROM quizzes 
+                WHERE category IN (SELECT category FROM quizzes WHERE id IN (?))
+                AND id NOT IN (?)
+                ORDER BY created_at DESC 
+                LIMIT 5`,
+                [quizIds, quizIds]
+            );
+            return rows;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async getQuizzesByCategories(categories, limit = 10) {
+        try {
+            if (!categories.length) return [];
+            const placeholders = categories.map(() => '?').join(',');
+            const rows = await pool.query(
+                `SELECT * FROM quizzes 
+                WHERE category IN (${placeholders}) 
+                ORDER BY RAND() 
+                LIMIT ?`,
+                [...categories, limit]
+            );
+            return rows;
+        } catch (error) {
+            console.error("Error fetching quizzes by categories:", error);
+            throw error;
+        }
+    }
+    
       
 }
 
