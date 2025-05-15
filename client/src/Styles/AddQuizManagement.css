@@ -1,0 +1,15 @@
+.quiz-details {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+}
+
+.quiz-details h5 {
+    margin-bottom: 10px;
+}
+
+.badge {
+    margin-left: 10px;
+}

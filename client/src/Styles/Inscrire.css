@@ -26,8 +26,8 @@ body {
   }
   .connect-container {
     max-width: min(900px, 90vw); /* Responsive max-width */
-    width: 100%;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 70%;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
     border-radius: 20px;
     overflow: hidden;
     display: flex;
@@ -50,6 +50,10 @@ body {
     justify-content: center;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+  }
+
+  .connect-left h2 {
+    color: #f8f9fa;
   }
   
   /* Right section - responsive */

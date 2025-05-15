@@ -100,13 +100,12 @@ header .nav-btn {
   flex-direction: column;
   margin-bottom: 0;
   padding-bottom: 0;
-  background-color: transparent; 
+  background-color: transparent; /* Light mode default */
 }
 
 [data-theme="dark"] .home {
-  background-color: rgba(0, 0, 0, 0.651); 
-  backdrop-filter: blur(1px); 
-  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.815); 
+  backdrop-filter: blur(2px); 
 }
 
 

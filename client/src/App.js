@@ -11,6 +11,7 @@ import { Contact } from './Components/Contact';
 import { AuthProvider } from './context/AuthContext';
 import FormateurAuth from './Components/FormateurAuth';
 import { FormateurContainer } from './Components/FormateurContainer';
+import AdminApp from './Components/AdminApp';
 function App() {
   return(
     <AuthProvider>
@@ -22,7 +23,8 @@ function App() {
         <Route path="/inscrire" element={<Inscrire />} />
         <Route path='/contact' element= {<Contact/>} />
         <Route path="/formateur" element={<FormateurAuth />} />
-      <Route path="/formateur/dashboard/*" element={<FormateurContainer />} />
+        <Route path="/formateur/dashboard/*" element={<FormateurContainer />} />
+        <Route path="/admin/*" element={<AdminApp/>} />
 
       </Routes>
       <Footer />

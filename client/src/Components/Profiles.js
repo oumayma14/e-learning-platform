@@ -44,8 +44,9 @@ function LeaderboardTable({ data, defaultAvatar }) {
   if (!data.length) return <p>Aucun utilisateur trouvé.</p>;
 
   return (
+    <>
+    <h1 className="leaderboard-title">Tableau de bord</h1>
     <div className="leaderboard-container">
-      <h1 className="leaderboard-title">Tableau de bord</h1>
       <table className="leaderboard-table">
         <thead>
           <tr>
@@ -78,5 +79,6 @@ function LeaderboardTable({ data, defaultAvatar }) {
         </tbody>
       </table>
     </div>
+    </>
   );
 }

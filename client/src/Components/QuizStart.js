@@ -2,8 +2,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import MainQuiz from './MainQuiz';
 import Quiz from './Quiz';
 import AddQuiz from './AddQuiz';
-import JoinChallenge
- from './JoinChallenge';
+import JoinChallenge from './JoinChallenge';
 export const QuizStart = () => {
 
   return (

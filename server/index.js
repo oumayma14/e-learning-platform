@@ -11,6 +11,9 @@ const challengeRouutes = require("./routes/challengeRoutes");
 const formateurRoutes = require('./routes/formateur.routes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const recommendationRoutes = require('./routes/recommendationRoutes');
+const adminRoutes = require('./routes/AdminRoutes');
+
+
 
 
 const app = express();
@@ -56,6 +59,8 @@ app.use('/api/challenges', challengeRouutes);
 app.use('/api/formateur', formateurRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/admin', adminRoutes);
+
 // ======================
 // 4. Database Health Check
 // ======================

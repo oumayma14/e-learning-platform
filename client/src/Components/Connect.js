@@ -112,11 +112,6 @@ export const Connect = () => {
             </Form.Group>
 
             <Form.Group className="d-flex justify-content-between mb-3">
-              <Form.Check 
-                type="checkbox" 
-                label="Se souvenir de moi" 
-                id="rememberMe"
-              />
               <Link to="/reset-password" className="text-decoration-none">
                 Mot de passe oublié ?
               </Link>
