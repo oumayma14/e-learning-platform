@@ -78,17 +78,26 @@ const deleteUser = (req,res) =>{
     });
 };
 
-//update user score 
-const updateUserScore = async(username, scoreToAdd) =>{
+// Update user score with quiz ID
+const updateUserScore = async (username, scoreToAdd, quizId) => {
     const [user] = await db.query('SELECT score FROM user WHERE username = ?', [username]);
     if (!user) {
         throw new Error('User not found');
     }
+
     const newScore = user.score + scoreToAdd;
+
+    // Update user total score
     await db.query('UPDATE user SET score = ? WHERE username = ?', [newScore, username]);
-    await db.query('INSERT INTO user_progress (username, score, created_at) VALUES (?, ?, NOW())', [username, scoreToAdd]);
+
+    // Add user progress with quiz ID
+    await db.query(
+        'INSERT INTO user_progress (username, score, created_at, quiz_id) VALUES (?, ?, NOW(), ?)', 
+        [username, scoreToAdd, quizId]
+    );
 
     return newScore; 
 };
+
 
 module.exports = {getAllUsers, getUsers, deleteUser, updateUser, updateUserScore};

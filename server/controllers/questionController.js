@@ -1,6 +1,7 @@
 const Question = require('../models/questionModel');
 const Quiz = require('../models/quizModel');
 
+
 exports.addQuestion = async (req, res) => {
     try {
         const quizId = req.params.quizId;
@@ -74,6 +75,82 @@ exports.getQuestions = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to get questions'
+        });
+    }
+};
+
+// Update a question
+exports.updateQuestion = async (req, res) => {
+    try {
+        const questionId = req.params.questionId;
+        const { questionText, questionType, questionOrder, correctShortAnswer, options } = req.body;
+        
+        // Fetch the existing question
+        const existingQuestion = await Question.getById(questionId);
+        if (!existingQuestion) {
+            return res.status(404).json({
+                success: false,
+                message: 'Question not found'
+            });
+        }
+
+        // Prepare the updated data
+        const updatedData = {
+            ...existingQuestion,
+            question_text: questionText || existingQuestion.question_text,
+            question_type: questionType || existingQuestion.question_type,
+            question_order: questionOrder !== undefined ? questionOrder : existingQuestion.question_order,
+            correct_short_answer: correctShortAnswer !== undefined ? correctShortAnswer : existingQuestion.correct_short_answer
+        };
+
+        // Update the question
+        await Question.update(questionId, updatedData);
+
+        // Update options if provided
+        if (options) {
+            await Question.updateOptions(questionId, options);
+        }
+
+        res.json({
+            success: true,
+            message: 'Question updated successfully'
+        });
+
+    } catch (error) {
+        console.error("Error updating question:", error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update question',
+            ...(process.env.NODE_ENV === 'development' && { detail: error.message })
+        });
+    }
+};
+
+// Delete a question
+exports.deleteQuestion = async (req, res) => {
+    try {
+        const questionId = req.params.questionId;
+
+        // Check if the question exists
+        const question = await Question.getById(questionId);
+        if (!question) {
+            return res.status(404).json({
+                success: false,
+                message: 'Question not found'
+            });
+        }
+
+        // Delete the question
+        await Question.delete(questionId);
+
+        res.status(204).end(); // No content
+
+    } catch (error) {
+        console.error("Error deleting question:", error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete question',
+            ...(process.env.NODE_ENV === 'development' && { detail: error.message })
         });
     }
 };

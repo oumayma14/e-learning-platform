@@ -5,6 +5,9 @@ import FormateurNavbar from './FormateurNavbar';
 import FormateurProfile from './FormateurProfile';
 import { Navigate } from 'react-router-dom';
 import { getStoredFormateur } from '../services/formateurService';
+import FormateurLeaderboard from './FormateurLeaderboard';
+import EditQuiz from './EditQuiz';
+
 
 export const FormateurContainer = () => {
     const formateur = getStoredFormateur();
@@ -20,6 +23,10 @@ export const FormateurContainer = () => {
                 <Route path="/" element={<FormateurDashboard />} />
                 <Route path="add-quiz" element={<FormateurAddQuiz />} />
                 <Route path="profile" element={<FormateurProfile />} />
+                <Route path="leaderboard/:quizId" element={<FormateurLeaderboard formateurId={formateur.id} />} />
+                <Route path="edit-quiz/:quizId" element={<EditQuiz />} />
+
+
             </Routes>
         </div>
     );

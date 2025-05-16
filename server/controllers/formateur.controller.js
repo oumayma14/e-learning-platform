@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const pool = require('../config/db'); // ✅ Add this line to import the database connection
 const {
   createFormateur,
   findFormateurByEmail,
@@ -81,3 +82,31 @@ exports.deleteFormateur = (req, res) => {
     res.json({ message: 'Formateur supprimé' });
   });
 };
+
+// LEADERBOARD
+exports.getLeaderboard = (req, res) => {
+  const formateurId = req.params.formateurId;
+  const quizId = req.params.quizId;
+  
+  const query = `
+      SELECT 
+          u.username,
+          up.score,
+          up.created_at
+      FROM quizzes q
+      JOIN user_progress up ON q.id = up.quiz_id
+      JOIN user u ON up.username = u.username
+      WHERE q.formateur_id = ? AND q.id = ?
+      ORDER BY up.score DESC, up.created_at ASC
+  `;
+
+  pool.query(query, [formateurId, quizId], (err, results) => {
+      if (err) {
+          console.error("Erreur récupération du classement :", err);
+          return res.status(500).json({ message: "Erreur serveur" });
+      }
+
+      res.json(results);
+  });
+};
+

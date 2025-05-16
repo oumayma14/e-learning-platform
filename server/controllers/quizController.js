@@ -94,32 +94,67 @@ exports.createQuiz = async (req, res) => {
 
 exports.updateQuiz = async (req, res) => {
   try {
-    const errors = validateQuizData(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Validation failed',
-        errors 
-      });
-    }
+      const quizId = req.params.id;
+      
+      // Fetch the existing quiz
+      const existingQuiz = await Quiz.getById(quizId);
+      if (!existingQuiz) {
+          return res.status(404).json({
+              success: false,
+              message: 'Quiz not found'
+          });
+      }
 
-    const updated = await Quiz.update(req.params.id, req.body);
-    if (!updated) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Quiz not found' 
+      // Prepare updated data, preserving the time limit if not explicitly updated
+      const updatedData = {
+          ...existingQuiz,
+          ...req.body
+      };
+
+      // Handle time limit conversion if it was included in the update
+      if (req.body.timeLimit !== undefined) {
+          if (req.body.timeUnit === 'minutes') {
+              updatedData.timeLimit = req.body.timeLimit * 60;
+          } else if (req.body.timeUnit === 'seconds' || !req.body.timeUnit) {
+              updatedData.timeLimit = req.body.timeLimit;
+          }
+
+          // Validate the time limit
+          if (!Number.isInteger(updatedData.timeLimit) || updatedData.timeLimit < 1 || updatedData.timeLimit > 7200) {
+              return res.status(400).json({
+                  success: false,
+                  message: 'Time limit must be an integer between 1 and 7200 seconds'
+              });
+          }
+      } else {
+          // Keep the current time limit if not included in the update
+          updatedData.timeLimit = existingQuiz.time_limit;
+      }
+
+      // Remove timeUnit from the final data (not a database column)
+      delete updatedData.timeUnit;
+
+      // Perform the update
+      const updated = await Quiz.update(quizId, updatedData);
+      if (!updated) {
+          return res.status(404).json({
+              success: false,
+              message: 'Quiz not found'
+          });
+      }
+
+      res.json({
+          success: true,
+          message: 'Quiz updated successfully'
       });
-    }
-    
-    res.json({ 
-      success: true, 
-      message: 'Quiz updated successfully' 
-    });
+
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Failed to update quiz' 
-    });
+      console.error("Error updating quiz:", error);
+      res.status(500).json({
+          success: false,
+          message: 'Failed to update quiz',
+          ...(process.env.NODE_ENV === 'development' && { detail: error.message })
+      });
   }
 };
 

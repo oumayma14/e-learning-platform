@@ -96,6 +96,44 @@ class Question {
       if (conn) conn.release();
     }
   }
+
+  static async getById(questionId) {
+    const rows = await pool.query('SELECT * FROM questions WHERE id = ?', [questionId]);
+    return rows[0] || null;
+}
+
+static async update(questionId, questionData) {
+    const { question_text, question_type, question_order, correct_short_answer } = questionData;
+    await pool.query(
+        `UPDATE questions SET 
+            question_text = ?, 
+            question_type = ?, 
+            question_order = ?, 
+            correct_short_answer = ?
+        WHERE id = ?`,
+        [question_text, question_type, question_order, correct_short_answer, questionId]
+    );
+}
+
+static async delete(questionId) {
+    await pool.query('DELETE FROM questions WHERE id = ?', [questionId]);
+}
+
+static async updateOptions(questionId, options) {
+    // Remove existing options
+    await pool.query('DELETE FROM options WHERE question_id = ?', [questionId]);
+
+    // Insert new options
+    const values = options.map((opt, index) => [questionId, opt.text, opt.isCorrect || false, index]);
+    const placeholders = values.map(() => '(?, ?, ?, ?)').join(', ');
+    const flatValues = values.flat();
+
+    await pool.query(
+        `INSERT INTO options (question_id, option_text, is_correct, option_order) VALUES ${placeholders}`,
+        flatValues
+    );
+}
+
 }
 
 module.exports = Question;
