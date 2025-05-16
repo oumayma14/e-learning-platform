@@ -13,6 +13,9 @@ const feedbackRoutes = require('./routes/feedbackRoutes');
 const recommendationRoutes = require('./routes/recommendationRoutes');
 const adminRoutes = require('./routes/AdminRoutes');
 const formateurVerificationRoutes = require('./routes/FormateurVerificationRoutes');
+const messagesRoutes = require('./routes/messages');
+const usersRoutes = require('./routes/userRoutes');
+
 
 const app = express();
 
@@ -59,6 +62,8 @@ app.use('/api/feedback', feedbackRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/verification', formateurVerificationRoutes);
+app.use('/api/messages', messagesRoutes);
+app.use('/api/users', usersRoutes); 
 
 // ======================
 // 4. Database Health Check

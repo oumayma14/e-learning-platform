@@ -100,4 +100,5 @@ const updateUserScore = async (username, scoreToAdd, quizId) => {
 };
 
 
+
 module.exports = {getAllUsers, getUsers, deleteUser, updateUser, updateUserScore};
