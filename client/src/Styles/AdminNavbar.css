@@ -1,0 +1,126 @@
+.admin-sidebar {
+    width: 250px;
+    background-color: #f0f0f0;
+    color: #dc3545;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: width 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.admin-sidebar.collapsed {
+    width: 80px;
+    padding: 20px 10px;
+}
+
+.sidebar-header {
+    color: #ffffff;
+    cursor: pointer;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.sidebar-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: opacity 0.3s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.sidebar-menu li {
+    margin: 15px 0;
+    width: 100%;
+}
+
+.sidebar-menu a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    gap: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.sidebar-menu a:hover {
+    color: #ffffff;
+    background-color: #495057;
+}
+
+.menu-icon {
+    font-size: 1.2rem;
+    width: 30px;
+    text-align: center;
+}
+
+.notification-badge {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    margin-left: auto;
+}
+
+.logout-button {
+    background-color: #dc3545;
+    color: #ffffff;
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.logout-button:hover {
+    background-color: #bd2130;
+}
+
+/* Collapsed Sidebar Styles */
+.admin-sidebar.collapsed .sidebar-title,
+.admin-sidebar.collapsed .logout-button {
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.admin-sidebar.collapsed .sidebar-menu a {
+    justify-content: center;
+}
+
+.admin-sidebar.collapsed .sidebar-menu a .menu-icon {
+    font-size: 1.2rem;
+    margin-right: 0;
+}
+
+.admin-sidebar.collapsed .sidebar-menu a .notification-badge {
+    margin-left: 0;
+}

@@ -28,6 +28,10 @@ const FormateurNavbar = () => {
           <li className="nav-item">
             <Link className="nav-link" to="/formateur/dashboard/add-quiz">Créer un Quiz</Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/formateur/dashboard/profile">Profil</Link>
+          </li>
+
         </ul>
         <button className="btn btn-outline-light" onClick={handleLogout}>Déconnexion</button>
       </div>
