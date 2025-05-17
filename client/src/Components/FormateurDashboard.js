@@ -110,7 +110,7 @@ const FormateurDashboard = () => {
                   <td>{quiz.title}</td>
                   <td>{quiz.category}</td>
                   <td>{quiz.difficulty}</td>
-                  <td>{quiz.time_limit} sec</td>
+                  <td>{Math.floor(quiz.time_limit / 60)} min</td>
                   <td>
                     <Button variant="info" onClick={() => handleViewLeaderboard(quiz.id)} style={{ marginRight: '0.5rem' }}>
                       Voir le leaderboard

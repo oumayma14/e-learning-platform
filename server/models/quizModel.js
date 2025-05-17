@@ -5,14 +5,13 @@ pool.query = util.promisify(pool.query);
 class Quiz {
     static async getAll(timeFormat = 'seconds') {
         try {
-            const rows = await pool.query('SELECT * FROM quizzes');
-            
-            // Convert time format if needed
-            return rows.map(quiz => this.formatQuizTime(quiz, timeFormat));
+          const rows = await pool.query('SELECT * FROM quizzes');
+          const formatted = rows.map(quiz => this.formatQuizTime(quiz, timeFormat));
+          return formatted;
         } catch (error) {
-            throw error;
+          throw error;
         }
-    }
+      }
 
     static async getById(id, timeFormat = 'seconds') {
         try {

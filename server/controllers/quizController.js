@@ -32,9 +32,12 @@ const validateQuizData = (data) => {
 
 exports.getAllQuizzes = async (req, res) => {
   try {
+    console.log('[1] Entering getAllQuizzes controller');
     const quizzes = await Quiz.getAll();
+    console.log('[2] Retrieved quizzes:', quizzes.length);
     res.json({ success: true, data: quizzes });
   } catch (error) {
+    console.error('[3] Controller error:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Failed to fetch quizzes',
@@ -42,6 +45,7 @@ exports.getAllQuizzes = async (req, res) => {
     });
   }
 };
+
 
 exports.getQuiz = async (req, res) => {
   try {
