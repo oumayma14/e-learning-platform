@@ -12,9 +12,9 @@ export const QUIZ_API_URL = `${URL}/quizzes`;
 export const getQuizzes = async () => {
   const response = await fetch(`${API_BASE_URL}/all`);
   if (!response.ok) {
-        throw new Error('Failed to fetch quizzes');
-    }
-    return await response.json();
+    throw new Error('Failed to fetch quizzes');
+  }
+  return await response.json();
 };
 
 export const getQuizById = async (id) => {

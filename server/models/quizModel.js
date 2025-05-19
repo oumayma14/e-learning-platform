@@ -146,11 +146,11 @@ class Quiz {
       static async getPopularQuizzes(limit = 5) {
         try {
             const rows = await pool.query(
-                `SELECT q.*, COUNT(f.id) as feedback_count, AVG(f.compound_score) as average_score 
+                `SELECT q.*, AVG(f.compound_score) as average_score 
                 FROM quizzes q 
                 LEFT JOIN feedback f ON q.id = f.quiz_id 
                 GROUP BY q.id 
-                ORDER BY feedback_count DESC, average_score DESC, q.created_at DESC 
+                ORDER BY average_score DESC 
                 LIMIT ?`,
                 [limit]
             );
@@ -160,6 +160,7 @@ class Quiz {
             throw error;
         }
     }
+    
 
     static async getRecommendedQuizzes(user_id) {
         try {

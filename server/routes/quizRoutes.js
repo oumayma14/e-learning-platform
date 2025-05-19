@@ -7,7 +7,7 @@ const authenticateToken = require('../middlewares/authenticateToken');
 
 
 // Quiz routes
-router.get('/', quizController.getAllQuizzes);
+router.get('/all', quizController.getAllQuizzes);
 router.get('/:id', quizController.getQuiz);
 router.post('/', quizController.createQuiz);
 router.put('/:id', quizController.updateQuiz);
