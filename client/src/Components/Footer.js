@@ -1,5 +1,4 @@
 import "../Styles/Footer.css";
-
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import linkedinIcon from '../assets/linkedin.png';
@@ -30,6 +29,8 @@ export const Footer = () => {
                         <a href="/#a-propos-de-nous">À propos de nous</a>
                         <a href="/#FAQ">FAQ</a>
                         <a href="/contact">Contact</a>
+                        <a href="/formateur">Formateur</a>
+                        <a href="/admin/login">Admin</a>
                     </Col>
                 </Row>
             </Container>

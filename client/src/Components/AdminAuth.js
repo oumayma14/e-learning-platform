@@ -28,8 +28,7 @@ const AdminAuth = ({ isLogin = false }) => {
                 localStorage.setItem('admin_token', response.data.token);
                 navigate('/admin/dashboard');
             } else {
-                alert('Admin registered successfully. You can now log in.');
-                navigate('/admin/login');
+                alert('L\'administrateur s\'est inscrit avec succès. Vous pouvez maintenant vous connecter.');                navigate('/admin/login');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -48,36 +47,36 @@ const AdminAuth = ({ isLogin = false }) => {
                     <Form onSubmit={handleSubmit}>
                         {!isLogin && (
                             <Form.Group className="mb-3">
-                                <Form.Label>Full Name</Form.Label>
-                                <Form.Control type="text" name="full_name" placeholder="Enter full name" onChange={handleChange} required />
+                                <Form.Label>Nom</Form.Label>
+                                <Form.Control type="text" name="full_name" placeholder="Saisir le nom complet" onChange={handleChange} required />
                             </Form.Group>
                         )}
                         <Form.Group className="mb-3">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control type="text" name="username" placeholder="Enter username" onChange={handleChange} required />
+                            <Form.Label>Nom d'utilisateur</Form.Label>
+                            <Form.Control type="text" name="username" placeholder="Saisir le nom d'utilisateur" onChange={handleChange} required />
                         </Form.Group>
                         {!isLogin && (
                             <Form.Group className="mb-3">
                                 <Form.Label>Email</Form.Label>
-                                <Form.Control type="email" name="email" placeholder="Enter email" onChange={handleChange} required />
+                                <Form.Control type="email" name="email" placeholder="Saisir email" onChange={handleChange} required />
                             </Form.Group>
                         )}
                         <Form.Group className="mb-3">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" name="password" placeholder="Enter password" onChange={handleChange} required />
+                            <Form.Label>Mot de passe</Form.Label>
+                            <Form.Control type="password" name="password" placeholder="Saisir mot de passe" onChange={handleChange} required />
                         </Form.Group>
                         <Button type="submit" variant="primary" className="w-100 mb-3">
-                            {isLogin ? 'Login' : 'Register'}
+                            {isLogin ?'Connexion' : 'Inscription' }
                         </Button>
                     </Form>
                     <div className="text-center">
                         {isLogin ? (
                             <p>
-                                Don't have an account? <Link to="/admin/register">Register here</Link>
+                                Vous n'avez pas de compte ? <Link to="/admin/register">S'inscrire ici</Link>
                             </p>
                         ) : (
                             <p>
-                                Already have an account? <Link to="/admin/login">Login here</Link>
+                                Vous avez déjà un compte ? <Link to="/admin/login">Se connecter ici</Link>
                             </p>
                         )}
                     </div>

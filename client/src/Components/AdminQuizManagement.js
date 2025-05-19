@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, Button, Pagination, Container, Collapse, Form, Row, Col, Modal } from 'react-bootstrap';
 import '../Styles/AddQuizManagement.css';
+import { createFullQuiz } from '../services/quizService';
+
 
 const AdminQuizManagement = () => {
     const [quizzes, setQuizzes] = useState([]);
