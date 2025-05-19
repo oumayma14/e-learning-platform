@@ -79,52 +79,6 @@ exports.getQuestions = async (req, res) => {
     }
 };
 
-// Update a question
-exports.updateQuestion = async (req, res) => {
-    try {
-        const questionId = req.params.questionId;
-        const { questionText, questionType, questionOrder, correctShortAnswer, options } = req.body;
-        
-        // Fetch the existing question
-        const existingQuestion = await Question.getById(questionId);
-        if (!existingQuestion) {
-            return res.status(404).json({
-                success: false,
-                message: 'Question not found'
-            });
-        }
-
-        // Prepare the updated data
-        const updatedData = {
-            ...existingQuestion,
-            question_text: questionText || existingQuestion.question_text,
-            question_type: questionType || existingQuestion.question_type,
-            question_order: questionOrder !== undefined ? questionOrder : existingQuestion.question_order,
-            correct_short_answer: correctShortAnswer !== undefined ? correctShortAnswer : existingQuestion.correct_short_answer
-        };
-
-        // Update the question
-        await Question.update(questionId, updatedData);
-
-        // Update options if provided
-        if (options) {
-            await Question.updateOptions(questionId, options);
-        }
-
-        res.json({
-            success: true,
-            message: 'Question updated successfully'
-        });
-
-    } catch (error) {
-        console.error("Error updating question:", error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to update question',
-            ...(process.env.NODE_ENV === 'development' && { detail: error.message })
-        });
-    }
-};
 
 // Delete a question
 exports.deleteQuestion = async (req, res) => {
@@ -150,6 +104,121 @@ exports.deleteQuestion = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to delete question',
+            ...(process.env.NODE_ENV === 'development' && { detail: error.message })
+        });
+    }
+};
+// questionController.js
+exports.updateQuestions = async (req, res) => {
+    try {
+        const quizId = req.params.quizId;
+        const { questions } = req.body;
+
+        // ✅ Update or create questions
+        for (const question of questions) {
+            const { id, question_text, question_type, question_order, correct_short_answer, time_limit, options } = question;
+
+            let questionId = id;
+
+            if (id) {
+                // ✅ Update existing question
+                await Question.update(id, {
+                    question_text,
+                    question_type,
+                    question_order,
+                    correct_short_answer,
+                    time_limit
+                });
+            } else {
+                // ✅ Create new question
+                questionId = await Question.create(quizId, {
+                    questionText: question_text,
+                    questionType: question_type,
+                    questionOrder: question_order,
+                    correctShortAnswer: correct_short_answer,
+                    timeLimit: time_limit
+                });
+            }
+
+            // ✅ Update or create options
+            if (options && options.length > 0) {
+                await Question.updateOptions(questionId, options);
+            }
+        }
+
+        res.json({
+            success: true,
+            message: 'Questions and options updated successfully'
+        });
+    } catch (error) {
+        console.error("Error updating questions:", error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update questions and options',
+            detail: error.message
+        });
+    }
+};
+// questionController.js
+
+exports.deleteQuestion = async (req, res) => {
+    try {
+        const questionId = req.params.questionId;
+
+        // ✅ Check if the question exists
+        const question = await Question.getById(questionId);
+        if (!question) {
+            return res.status(404).json({
+                success: false,
+                message: 'Question not found'
+            });
+        }
+
+        // ✅ Delete the question and associated options
+        const deleted = await Question.delete(questionId);
+
+        if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: 'Failed to delete question'
+            });
+        }
+
+        res.status(204).end(); // No content
+
+    } catch (error) {
+        console.error("Error deleting question:", error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete question',
+            ...(process.env.NODE_ENV === 'development' && { detail: error.message })
+        });
+    }
+};
+
+
+// ✅ Add this function for deleting options
+exports.deleteOption = async (req, res) => {
+    try {
+        const optionId = req.params.optionId;
+
+        // ✅ Delete the option
+        const deleted = await Question.deleteOption(optionId);
+
+        if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: 'Option not found'
+            });
+        }
+
+        res.status(204).end(); // No content
+
+    } catch (error) {
+        console.error("Error deleting option:", error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete option',
             ...(process.env.NODE_ENV === 'development' && { detail: error.message })
         });
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Form, Button, Container, Modal, Table } from 'react-bootstrap';
+import { Form, Button, Container, Table } from 'react-bootstrap';
 
 const EditQuiz = () => {
   const { quizId } = useParams();
@@ -16,34 +16,29 @@ const EditQuiz = () => {
   });
   const [loading, setLoading] = useState(true);
 
+  // ✅ Load quiz data on mount
   useEffect(() => {
     const loadQuiz = async () => {
       try {
-        console.log("Fetching quiz data...");
         const token = localStorage.getItem('formateurToken');
         const response = await axios.get(`http://localhost:3002/api/quizzes/${quizId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log("API Response:", response.data);
-
         const quiz = response.data.data || {};
 
         // Ensure questions and options are correctly structured
-        if (!quiz.questions) {
-          console.warn("No questions found in the quiz data.");
-          quiz.questions = [];
-        } else {
-          console.log("Questions found:", quiz.questions);
+        if (quiz.questions) {
           quiz.questions = quiz.questions.map(question => ({
             ...question,
             options: question.options || []
           }));
+        } else {
+          quiz.questions = [];
         }
 
         setQuizData(quiz);
         setLoading(false);
-        console.log("Quiz data successfully loaded:", quiz);
 
       } catch (error) {
         console.error("Error loading quiz data:", error);
@@ -55,60 +50,82 @@ const EditQuiz = () => {
     loadQuiz();
   }, [quizId]);
 
+  // ✅ Handle changes to quiz info (title, description, difficulty, category)
   const handleQuizInfoChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Updating quiz info: ${name} = ${value}`);
     setQuizData({ ...quizData, [name]: value });
   };
 
+  // ✅ Handle changes to the time limit
   const handleTimeLimitChange = (e) => {
     const value = parseInt(e.target.value) || 0;
-    console.log(`Updating time limit: ${value}`);
     setQuizData(prev => ({ ...prev, timeLimit: value }));
   };
 
+  // ✅ Handle changes to individual questions
   const handleQuestionChange = (qIndex, field, value) => {
-    console.log(`Updating question ${qIndex + 1} - ${field}: ${value}`);
     const updatedQuestions = [...quizData.questions];
     updatedQuestions[qIndex][field] = value;
     setQuizData({ ...quizData, questions: updatedQuestions });
   };
 
+  // ✅ Handle changes to individual options
   const handleOptionChange = (qIndex, oIndex, field, value) => {
-    console.log(`Updating option ${oIndex + 1} of question ${qIndex + 1} - ${field}: ${value}`);
     const updatedQuestions = [...quizData.questions];
     const options = updatedQuestions[qIndex].options;
     options[oIndex][field] = value;
     setQuizData({ ...quizData, questions: updatedQuestions });
   };
 
+  // ✅ Add a new question
   const addQuestion = () => {
-    console.log("Adding a new question...");
     setQuizData({
       ...quizData,
       questions: [
         ...quizData.questions,
         {
-          questionText: '',
-          questionType: 'unique',
+          question_text: '',
+          question_type: 'unique',
+          correct_short_answer: '',
+          question_order: quizData.questions.length + 1,
           options: [
-            { text: '', isCorrect: true },
-            { text: '', isCorrect: false }
-          ],
-          correctShortAnswer: ''
+            { option_text: '', is_correct: false },
+            { option_text: '', is_correct: false }
+          ]
         }
       ]
     });
   };
 
+  // ✅ Delete a question
   const deleteQuestion = (qIndex) => {
-    console.log(`Deleting question ${qIndex + 1}...`);
-    const updatedQuestions = quizData.questions.filter((_, index) => index !== qIndex);
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    const updatedQuestions = [...quizData.questions];
+    const questionToDelete = updatedQuestions[qIndex];
+
+    if (questionToDelete.id) {
+      try {
+        const token = localStorage.getItem('formateurToken');
+        axios.delete(`http://localhost:3002/api/quizzes/questions/${questionToDelete.id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).then(() => {
+          // ✅ Remove the question from the local state
+          updatedQuestions.splice(qIndex, 1);
+          setQuizData({ ...quizData, questions: updatedQuestions });
+        });
+      } catch (error) {
+        console.error("Error deleting question:", error);
+        alert("Erreur lors de la suppression de la question.");
+        return;
+      }
+    } else {
+      // ✅ Just remove the question from the state if it doesn't have an ID
+      updatedQuestions.splice(qIndex, 1);
+      setQuizData({ ...quizData, questions: updatedQuestions });
+    }
   };
 
+  // ✅ Add an option to a question
   const addOption = (qIndex) => {
-    console.log(`Adding option to question ${qIndex + 1}...`);
     const updatedQuestions = [...quizData.questions];
     const question = updatedQuestions[qIndex];
 
@@ -117,32 +134,84 @@ const EditQuiz = () => {
       return;
     }
 
-    question.options.push({ text: '', isCorrect: false });
+    question.options.push({ option_text: '', is_correct: false });
     setQuizData({ ...quizData, questions: updatedQuestions });
   };
 
+  // ✅ Delete an option from a question
   const deleteOption = (qIndex, oIndex) => {
-    console.log(`Deleting option ${oIndex + 1} from question ${qIndex + 1}...`);
     const updatedQuestions = [...quizData.questions];
-    const options = updatedQuestions[qIndex].options;
+    const question = updatedQuestions[qIndex];
+    const optionToDelete = question.options[oIndex];
 
-    if (options.length <= 2) {
+    if (question.options.length <= 2) {
       alert("Chaque question doit avoir au moins deux options");
       return;
     }
 
-    options.splice(oIndex, 1);
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    if (optionToDelete.id) {
+      try {
+        const token = localStorage.getItem('formateurToken');
+        axios.delete(`http://localhost:3002/api/quizzes/option/${optionToDelete.id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).then(() => {
+          // ✅ Remove the option from the local state
+          question.options.splice(oIndex, 1);
+          setQuizData({ ...quizData, questions: updatedQuestions });
+        });
+      } catch (error) {
+        console.error("Error deleting option:", error);
+        alert("Erreur lors de la suppression de l'option.");
+        return;
+      }
+    } else {
+      // ✅ Just remove the option from the state if it doesn't have an ID
+      question.options.splice(oIndex, 1);
+      setQuizData({ ...quizData, questions: updatedQuestions });
+    }
   };
 
+  // ✅ Save the updated quiz and questions
   const handleSave = async () => {
     try {
-      console.log("Saving quiz data:", quizData);
       const token = localStorage.getItem('formateurToken');
-      await axios.put(`http://localhost:3002/api/quizzes/${quizId}`, quizData, {
+
+      // ✅ Update the main quiz info
+      const quizInfo = {
+        title: quizData.title,
+        description: quizData.description,
+        difficulty: quizData.difficulty,
+        category: quizData.category,
+        timeLimit: quizData.timeLimit,
+      };
+
+      await axios.put(`http://localhost:3002/api/quizzes/${quizId}`, quizInfo, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert("Quiz mis à jour avec succès.");
+
+      // ✅ Update the questions and options
+      const questionsPayload = {
+        questions: quizData.questions.map(question => ({
+          id: question.id,
+          question_text: question.question_text,
+          question_type: question.question_type,
+          question_order: question.question_order || 0,
+          correct_short_answer: question.correct_short_answer || '',
+          time_limit: question.time_limit || 60,
+          options: question.options.map(option => ({
+            id: option.id,
+            option_text: option.option_text,
+            is_correct: option.is_correct,
+            option_order: option.option_order || 0
+          }))
+        }))
+      };
+
+      await axios.put(`http://localhost:3002/api/quizzes/${quizId}/questions`, questionsPayload, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      alert("Quiz et questions mis à jour avec succès.");
       navigate('/formateur/dashboard');
     } catch (error) {
       console.error("Error saving quiz data:", error);
@@ -158,106 +227,46 @@ const EditQuiz = () => {
     <Container>
       <h2>Modifier le Quiz</h2>
 
-      {/* Quiz Info */}
-      <Form.Group>
-        <Form.Label>Titre</Form.Label>
-        <Form.Control type="text" name="title" value={quizData.title} onChange={handleQuizInfoChange} />
-      </Form.Group>
-
-      <Form.Group>
-        <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" name="description" value={quizData.description} onChange={handleQuizInfoChange} />
-      </Form.Group>
-
-      <Form.Group>
-        <Form.Label>Difficulté</Form.Label>
-        <Form.Control as="select" name="difficulty" value={quizData.difficulty} onChange={handleQuizInfoChange}>
-          <option value="">Sélectionner une difficulté</option>
-          {['Débutant', 'Intermédiaire', 'Avancé'].map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </Form.Control>
-      </Form.Group>
-
-      <Form.Group>
-        <Form.Label>Catégorie</Form.Label>
-        <Form.Control as="select" name="category" value={quizData.category} onChange={handleQuizInfoChange}>
-          <option value="">Sélectionner une catégorie</option>
-          {[
-            'Géographie', 'Histoire', 'Science', 'Technologie', 'Art', 
-            'Musique', 'Cinéma', 'Littérature', 'Sport', 'Divertissement',
-            'Culture générale', 'Mathématiques', 'Langues', 'Cuisine'
-          ].map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </Form.Control>
-      </Form.Group>
-
-      <Form.Group>
-        <Form.Label>Limite de temps (en secondes)</Form.Label>
-        <Form.Control type="number" value={quizData.timeLimit} onChange={handleTimeLimitChange} />
-      </Form.Group>
-
-
       {/* Questions Table */}
-      <h3>Questions et Réponses</h3>
       <Table striped bordered hover responsive>
-  <thead>
-    <tr>
-      <th>Question</th>
-      <th>Réponses</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-  {quizData.questions.map((question, qIndex) => (
-    <tr key={qIndex}>
-        <td>
-            <Form.Control
-                type="text"
-                value={question.question_text || ''}
-                onChange={(e) => handleQuestionChange(qIndex, 'question_text', e.target.value)}
-            />
-        </td>
-        <td>
-        {question.options && question.options.length > 0 ? (
-        question.options.map((option, oIndex) => (
-            <div key={oIndex} className="option-row">
-                <Form.Check
-                    type={question.question_type === 'multiple' ? 'checkbox' : 'radio'}
-                    checked={option.is_correct === 1}
-                    onChange={() => handleOptionChange(qIndex, oIndex, 'is_correct', option.is_correct === 1 ? 0 : 1)}
-                />
+        <tbody>
+          {quizData.questions.map((question, qIndex) => (
+            <tr key={qIndex}>
+              <td>
                 <Form.Control
-                    type="text"
-                    value={option.option_text || ''}
-                    onChange={(e) => handleOptionChange(qIndex, oIndex, 'option_text', e.target.value)}
+                  type="text"
+                  value={question.question_text || ''}
+                  onChange={(e) => handleQuestionChange(qIndex, 'question_text', e.target.value)}
                 />
-                <Button variant="danger" onClick={() => deleteOption(qIndex, oIndex)} style={{ marginLeft: '5px' }}>
-                    ×
-                </Button>
-            </div>
-        ))
-    ) : (
-        <p>Aucune option trouvée</p>
-    )}
+                {question.options.map((option, oIndex) => (
+                  <div key={oIndex} style={{ marginLeft: '15px', display: 'flex', alignItems: 'center' }}>
+                    <Form.Control
+                      type="text"
+                      value={option.option_text || ''}
+                      onChange={(e) => handleOptionChange(qIndex, oIndex, 'option_text', e.target.value)}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      checked={option.is_correct || false}
+                      onChange={(e) => handleOptionChange(qIndex, oIndex, 'is_correct', e.target.checked)}
+                    />
+                    <Button variant="danger" size="sm" onClick={() => deleteOption(qIndex, oIndex)} style={{ marginLeft: '10px' }}>
+                      ×
+                    </Button>
+                  </div>
+                ))}
+                <Button variant="secondary" onClick={() => addOption(qIndex)}>+ Ajouter Option</Button>
+              </td>
+              <td>
+                <Button variant="danger" onClick={() => deleteQuestion(qIndex)}>Supprimer</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
 
-            <Button variant="secondary" onClick={() => addOption(qIndex)} style={{ marginTop: '5px' }}>
-                + Ajouter Option
-            </Button>
-        </td>
-        <td>
-            <Button variant="danger" onClick={() => deleteQuestion(qIndex)}>Supprimer</Button>
-        </td>
-    </tr>
-))}
-
-  </tbody>
-</Table>
-
-
-      <Button variant="success" onClick={addQuestion} style={{ marginTop: '20px' }}>+ Ajouter Question</Button>
-      <Button variant="primary" onClick={handleSave} style={{ marginTop: '20px', marginLeft: '10px' }}>Enregistrer</Button>
+      <Button variant="success" onClick={addQuestion}>+ Ajouter Question</Button>
+      <Button variant="primary" onClick={handleSave} style={{ marginLeft: '10px' }}>Enregistrer</Button>
     </Container>
   );
 };

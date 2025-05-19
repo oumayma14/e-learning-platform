@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const pool = require('../config/db'); // ✅ Add this line to import the database connection
+const pool = require('../config/db'); 
 const {
   createFormateur,
   findFormateurByEmail,
@@ -97,6 +97,7 @@ exports.getLeaderboard = (req, res) => {
       JOIN user_progress up ON q.id = up.quiz_id
       JOIN user u ON up.username = u.username
       WHERE q.formateur_id = ? AND q.id = ?
+      GROUP BY u.username
       ORDER BY up.score DESC, up.created_at ASC
   `;
 

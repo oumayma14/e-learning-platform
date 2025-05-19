@@ -7,18 +7,27 @@ const authenticateToken = require('../middlewares/authenticateToken');
 
 
 // Quiz routes
-router.get('/all', quizController.getAllQuizzes);
+router.get('/', quizController.getAllQuizzes);
 router.get('/:id', quizController.getQuiz);
 router.post('/', quizController.createQuiz);
 router.put('/:id', quizController.updateQuiz);
 router.delete('/:id', quizController.deleteQuiz);
 router.get('/formateur/quizzes', authenticateToken, quizController.getQuizzesByFormateur);
+// quizRoutes.js
+// ✅ Quiz routes
+router.put('/:id', authenticateToken, quizController.updateQuiz);
+
+// ✅ Question routes
+router.put('/:quizId/questions', authenticateToken, questionController.updateQuestions);
 
 // Question routes
 router.post('/:quizId/questions', questionController.addQuestion);
 router.get('/:quizId/questions', questionController.getQuestions);
-router.put('/question/:questionId', authenticateToken, questionController.updateQuestion);
+// ✅ Route for deleting questions (already present)
 router.delete('/question/:questionId', authenticateToken, questionController.deleteQuestion);
+// ✅ Add this for deleting options
+router.delete('/option/:optionId', authenticateToken, questionController.deleteOption);
+
 router.post('/full', quizController.createFullQuiz);
 router.post('/:id/submit', async (req, res) => {
     const { username, score } = req.body;

@@ -29,7 +29,7 @@ const FormateurNavbar = () => {
             <Link className="nav-link" to="/formateur/dashboard/add-quiz">Créer un Quiz</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/formateur/dashboard/profile">Profil</Link>
+            <Link className="nav-link" to="/formateur/dashboard/profile">Profile</Link>
           </li>
 
         </ul>
