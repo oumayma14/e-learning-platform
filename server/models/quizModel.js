@@ -150,6 +150,7 @@ class Quiz {
                 FROM quizzes q 
                 LEFT JOIN feedback f ON q.id = f.quiz_id 
                 GROUP BY q.id 
+                HAVING average_score > 0
                 ORDER BY average_score DESC 
                 LIMIT ?`,
                 [limit]
@@ -160,6 +161,7 @@ class Quiz {
             throw error;
         }
     }
+    
     
 
     static async getRecommendedQuizzes(user_id) {
