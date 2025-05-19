@@ -152,21 +152,13 @@ function Quiz() {
 
       <p className="uq-quiz-title">{quiz.title}</p>
 
-      {/* Celebration stars if good score */}
-      {score >= quiz.questions.length * 10 * 0.7 && (
-        <div className="uq-stars">
-          <div className="uq-star"></div>
-          <div className="uq-star"></div>
-          <div className="uq-star"></div>
-        </div>
-      )}
 
       <div className="uq-score-display">
         <h3>Ton score final : {score}</h3>
       </div>
 
       <button className="uq-return-btn" onClick={() => navigate('/dashboard/catalogue/quiz-start')}>
-        Rejouer ou Explorer plus de quiz
+      Explorer plus de quiz
       </button>
     </div>
   </div>

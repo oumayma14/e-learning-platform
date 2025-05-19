@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card, Button, Container } from 'react-bootstrap';
+import { Leaderboard } from "./Leaderboard";
+
 
 const AdminUserScoreChart = () => {
     const [scores, setScores] = useState([]);
@@ -51,6 +53,7 @@ const AdminUserScoreChart = () => {
                     <Button variant="primary" href="/admin/dashboard">Retour au tableau de bord</Button>
                 </div>
             </Card>
+            <Leaderboard />
         </Container>
     );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import axios from 'axios';
 import '../Styles/feedback.css';
-import { submitFeedback } from '../services/feedbackService';
 import happy from "../assets/happy.jpg";
 import veryhappy from "../assets/veryhappy.jpg";
 import neutre from "../assets/neutre.jpg";
@@ -14,11 +14,11 @@ const FeedbackPopup = ({ show, quizId, userId, onClose }) => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const emojiOptions = [
-        { image: verysad, value: 'very_negative', label: 'Terrible', className: 'emoji-very-bad', text: "Je n'ai vraiment pas aimé ce quiz." },
-        { image: sad, value: 'negative', label: 'Mauvais', className: 'emoji-bad', text: "Le quiz n'était pas génial. Je ne l'ai pas apprécié." },
-        { image: neutre, value: 'neutral', label: 'Neutre', className: 'emoji-neutral', text: "Le quiz était moyen. Pas trop mauvais, pas trop bon." },
-        { image: happy, value: 'positive', label: 'Bon', className: 'emoji-good', text: "J'ai aimé le quiz. C'était bien." },
-        { image: veryhappy, value: 'very_positive', label: 'Excellent', className: 'emoji-amazing', text: "J'ai adoré ce quiz ! C'était incroyable et amusant !" }
+        { image: verysad, value: 'very bad', label: 'Très Mauvais', text: "C'était horrible, je n'ai pas du tout aimé ce quiz." },
+        { image: sad, value: 'bad', label: 'Mauvais', text: "Le quiz n'était pas très bon, je ne l'ai pas apprécié." },
+        { image: neutre, value: 'neutral', label: 'Neutre', text: "Le quiz était moyen. Pas trop mauvais, pas trop bon." },
+        { image: happy, value: 'good', label: 'Bon', text: "J'ai aimé le quiz. C'était bien." },
+        { image: veryhappy, value: 'very good', label: 'Excellent', text: "J'ai adoré ce quiz ! C'était incroyable et amusant !" }
     ];
 
     const handleFeedbackSubmit = async () => {
@@ -26,9 +26,15 @@ const FeedbackPopup = ({ show, quizId, userId, onClose }) => {
 
         try {
             const selectedOption = emojiOptions.find(option => option.value === selectedEmoji);
-            const response = await submitFeedback(userId, quizId, selectedOption.text);
 
-            if (response.success) {
+            // Direct backend call without feedbackService
+            const response = await axios.post('http://localhost:3002/api/feedback', {
+                user_id: userId,
+                quiz_id: quizId,
+                feedback_text: selectedOption.text
+            });
+
+            if (response.data.success) {
                 setSubmitted(true);
                 setTimeout(() => {
                     setSubmitted(false);

@@ -1,35 +1,53 @@
+// controllers/feedbackController.js
 const Feedback = require('../models/Feedback');
-const Quiz = require('../models/quizModel');
 const vader = require('vader-sentiment');
 const natural = require('natural');
 
+// controllers/feedbackController.js
 const analyzeSentiment = (text) => {
     const vaderScores = vader.SentimentIntensityAnalyzer.polarity_scores(text);
-    const overallSentiment = vaderScores.compound >= 0.05
-        ? 'positive'
-        : vaderScores.compound <= -0.05
-        ? 'negative'
-        : 'neutral';
+    const compound = vaderScores.compound;
 
+    // Map compound scores to custom sentiment labels
+    let sentiment = 'neutral';
+    if (compound >= 0.6) {
+        sentiment = 'very good';
+    } else if (compound >= 0.2) {
+        sentiment = 'good';
+    } else if (compound <= -0.2 && compound > -0.6) {
+        sentiment = 'bad';
+    } else if (compound <= -0.6) {
+        sentiment = 'very bad';
+    }
+
+    // Additional check for strong positive words
     const tokenizer = new natural.WordTokenizer();
     const words = tokenizer.tokenize(text.toLowerCase());
-    const positiveWords = ['great', 'awesome', 'amazing', 'fantastic', 'love', 'fun'];
-    const negativeWords = ['bad', 'terrible', 'worst', 'boring', 'hate', 'disappointing'];
+    const positiveWords = ['great', 'awesome', 'amazing', 'fantastic', 'love', 'fun', 'excellent', 'wonderful', 'perfect', 'incredible', 'spectacular', 'outstanding', 'brilliant', 'magnificent', 'remarkable'];
+    const negativeWords = ['bad', 'terrible', 'worst', 'boring', 'hate', 'disappointing', 'awful', 'horrible', 'disgusting', 'pathetic', 'miserable', 'painful', 'regret', 'disastrous'];
 
     const positiveMatches = words.filter(word => positiveWords.includes(word)).length;
     const negativeMatches = words.filter(word => negativeWords.includes(word)).length;
 
+    // Boost the sentiment if there are many positive words
+    if (positiveMatches >= 2 && compound >= 0.4) {
+        sentiment = 'very good';
+    } else if (negativeMatches >= 2 && compound <= -0.4) {
+        sentiment = 'very bad';
+    }
+
     const emotion = positiveMatches > negativeMatches ? 'happy' : negativeMatches > positiveMatches ? 'frustrated' : 'neutral';
 
     return {
-        sentiment: overallSentiment,
+        sentiment,
         positive_score: vaderScores.pos,
         neutral_score: vaderScores.neu,
         negative_score: vaderScores.neg,
-        compound_score: vaderScores.compound,
+        compound_score: compound,
         emotion
     };
 };
+
 
 exports.createFeedback = async (req, res) => {
     try {
@@ -42,19 +60,8 @@ exports.createFeedback = async (req, res) => {
             });
         }
 
-        // Get quiz category for better recommendations
-        const quiz = await Quiz.getById(quiz_id);
-        if (!quiz) {
-            return res.status(404).json({
-                success: false,
-                message: "Quiz not found"
-            });
-        }
-
-        // Perform Sentiment Analysis
         const sentimentData = analyzeSentiment(feedback_text);
 
-        // Save feedback to database
         const feedbackId = await Feedback.createFeedback({
             user_id,
             quiz_id,

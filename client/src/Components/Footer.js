@@ -1,4 +1,5 @@
 import "../Styles/Footer.css";
+
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import linkedinIcon from '../assets/linkedin.png';

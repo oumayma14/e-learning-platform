@@ -142,6 +142,11 @@ const AdminQuizManagement = () => {
                     </Col>
                 </Row>
             </Form>
+            <Button 
+        style={{ marginBottom: '1.5rem', backgroundColor: '#be4d4d', borderColor: '#be4d4d', padding: '0.6rem 1.2rem' }}
+      >
+        + Créer un Quiz
+      </Button>
 
             <Table striped bordered hover>
                 <thead>

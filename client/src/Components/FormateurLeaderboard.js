@@ -71,7 +71,7 @@ const FormateurLeaderboard = ({ formateurId }) => {
     if (error) return <Alert variant="danger" className="mt-5">{error}</Alert>;
 
     return (
-        <Container className="leaderboard-container">
+        <Container className="leaderboard-container" style={{marginTop:'5%'}}>
             <h2 className="text-center mb-4">Formateur Leaderboard</h2>
 
             {feedback && <Alert variant="info">{feedback}</Alert>}
@@ -101,15 +101,15 @@ const FormateurLeaderboard = ({ formateurId }) => {
 
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Send Email to {selectedUser}</Modal.Title>
+                    <Modal.Title>Envoyer un email à  {selectedUser}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group controlId="subject">
-                            <Form.Label>Subject</Form.Label>
+                            <Form.Label>Sujet</Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Enter the subject"
+                                placeholder="Insérer le sujet"
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
                                 required
@@ -121,7 +121,7 @@ const FormateurLeaderboard = ({ formateurId }) => {
                             <Form.Control
                                 as="textarea"
                                 rows={5}
-                                placeholder="Enter your message"
+                                placeholder="Insérer votre message"
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 required
@@ -131,10 +131,10 @@ const FormateurLeaderboard = ({ formateurId }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Cancel
+                        Annuler
                     </Button>
                     <Button variant="primary" onClick={handleSendEmail}>
-                        Send Email
+                        Envoyer l'Email
                     </Button>
                 </Modal.Footer>
             </Modal>
