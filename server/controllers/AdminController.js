@@ -82,7 +82,7 @@ class AdminController {
         const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
         // Fetch total quiz count for pagination
-        const countQuery = `SELECT COUNT(*) AS count FROM quizzes q ${whereClause}`;
+        const countQuery = `SELECT COUNT(*) AS count FROM quizze q ${whereClause}`;
         pool.query(countQuery, params, (countError, countRows) => {
             if (countError) {
                 console.error('Error counting quizzes:', countError.message);
@@ -96,7 +96,7 @@ class AdminController {
             const quizQuery = `
                 SELECT 
                     q.id AS quiz_id, q.title, q.description, q.difficulty, q.category, q.time_limit
-                FROM quizzes q
+                FROM quizze q
                 ${whereClause}
                 ORDER BY q.id
                 LIMIT ? OFFSET ?
@@ -121,8 +121,8 @@ class AdminController {
                     SELECT 
                         qu.quiz_id, qu.id AS question_id, qu.question_text, qu.question_order, qu.question_type, qu.correct_short_answer,
                         o.id AS option_id, o.option_text, o.is_correct, o.option_order
-                    FROM questions qu
-                    LEFT JOIN options o ON qu.id = o.question_id
+                    FROM quiz_questions qu
+                    LEFT JOIN quiz_options o ON qu.id = o.question_id
                     WHERE qu.quiz_id IN (?)
                     ORDER BY qu.quiz_id, qu.question_order, o.option_order
                 `;
@@ -182,7 +182,7 @@ class AdminController {
     // controllers/AdminController.js
 static async getCategories(req, res) {
     try {
-        pool.query(`SELECT DISTINCT category FROM quizzes ORDER BY category`, (error, rows) => {
+        pool.query(`SELECT DISTINCT category FROM quizze ORDER BY category`, (error, rows) => {
             if (error) {
                 console.error('Error fetching categories:', error.message);
                 return res.status(500).json({ message: 'Error fetching categories' });
@@ -215,7 +215,7 @@ static async getCategories(req, res) {
      // Get all user scores for the admin dashboard
      static async getAllUserScores(req, res) {
         try {
-            const query = `SELECT username, score FROM user`;
+            const query = `SELECT username, score FROM learners`;
             pool.query(query, (error, results) => {
                 if (error) {
                     console.error('Error fetching scores:', error.message);
@@ -231,9 +231,9 @@ static async getCategories(req, res) {
 
     static getPlatformStats(req, res) {
         try {
-            const usersQuery = 'SELECT COUNT(*) AS users FROM user';
-        const trainersQuery = 'SELECT COUNT(*) AS trainers FROM formateurs';
-        const quizzesQuery = 'SELECT COUNT(*) AS quizzes FROM quizzes';
+        const usersQuery = 'SELECT COUNT(*) AS users FROM learners';
+        const trainersQuery = 'SELECT COUNT(*) AS trainers FROM trainers';
+        const quizzesQuery = 'SELECT COUNT(*) AS quizzes FROM quizze';
 
             pool.query(usersQuery, (userError, userResults) => {
                 if (userError) {
@@ -274,7 +274,7 @@ static async getQuizCountsByCategory(req, res) {
     try {
         const query = `
             SELECT category, COUNT(*) AS quiz_count 
-            FROM quizzes 
+            FROM quizze 
             GROUP BY category 
             ORDER BY category;
         `;

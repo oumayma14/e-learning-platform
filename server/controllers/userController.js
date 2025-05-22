@@ -5,7 +5,7 @@ db.query= util.promisify(db.query);
 
 // (leaderboard users)
 const getAllUsers = (req, res) => {
-    const query = 'SELECT username, score, image FROM user  ORDER BY score DESC LIMIT 10';
+    const query = 'SELECT username, score, image FROM learners  ORDER BY score DESC LIMIT 10';
     db.query(query, (err,results) => {
         if(err) {
             return res.status(500).json({error: 'DB query failed'});
@@ -18,7 +18,7 @@ const getAllUsers = (req, res) => {
 
 //Read
 const getUsers = (req,res) =>{
-    const SQL = "SELECT username, name, email, role , score FROM user";
+const SQL = "SELECT username, name, email, role , score FROM learners";
     db.query(SQL,(err,results)=>{
         if(err) return res.status(500).json({error:err});
         res.status(200).json(results);
@@ -33,7 +33,7 @@ const updateUser = async (req, res) => {
     const { name, email, role, score, password } = req.body; 
 
     try {
-        const getUserSQL = "SELECT * FROM user WHERE username = ?";
+        const getUserSQL = "SELECT * FROM learners WHERE username = ?";
         const userResults = await db.query(getUserSQL, [username]);
 
         if (userResults.length === 0) {
@@ -46,12 +46,12 @@ const updateUser = async (req, res) => {
         const updatedRole = role || existingUser.role;
         const updatedScore = score !== undefined ? parseInt(score, 10) : existingUser.score;
 
-        let updateSQL = "UPDATE user SET name = ?, email = ?, role = ?, score = ? WHERE username = ?";
+        let updateSQL = "UPDATE learners SET name = ?, email = ?, role = ?, score = ? WHERE username = ?";
         let queryParams = [updatedName, updatedEmail, updatedRole, updatedScore, username];
 
         if (password) { 
             const hashedPassword = await bcrypt.hash(password, 10);
-            updateSQL = "UPDATE user SET name = ?, email = ?, password = ?, role = ?, score = ? WHERE username = ?";
+            updateSQL = "UPDATE learners SET name = ?, email = ?, password = ?, role = ?, score = ? WHERE username = ?";
             queryParams = [updatedName, updatedEmail, hashedPassword, updatedRole, updatedScore, username];
         }
 
@@ -67,7 +67,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = (req,res) =>{
     const { username } = req.params;
-    const SQL = "DELETE FROM user WHERE username = ?";
+    const SQL = "DELETE FROM learners WHERE username = ?";
 
     db.query(SQL, [username], (err,result) =>{
         if(err) return res.status(500).json({error: err});
@@ -80,7 +80,7 @@ const deleteUser = (req,res) =>{
 
 // Update user score with quiz ID
 const updateUserScore = async (username, scoreToAdd, quizId) => {
-    const [user] = await db.query('SELECT score FROM user WHERE username = ?', [username]);
+    const [user] = await db.query('SELECT score FROM learners WHERE username = ?', [username]);
     if (!user) {
         throw new Error('User not found');
     }
@@ -88,11 +88,11 @@ const updateUserScore = async (username, scoreToAdd, quizId) => {
     const newScore = user.score + scoreToAdd;
 
     // Update user total score
-    await db.query('UPDATE user SET score = ? WHERE username = ?', [newScore, username]);
+    await db.query('UPDATE learners SET score = ? WHERE username = ?', [newScore, username]);
 
     // Add user progress with quiz ID
     await db.query(
-        'INSERT INTO user_progress (username, score, created_at, quiz_id) VALUES (?, ?, NOW(), ?)', 
+        'INSERT INTO learner_progress (username, score, created_at, quiz_id)VALUES (?, ?, NOW(), ?)', 
         [username, scoreToAdd, quizId]
     );
 

@@ -56,9 +56,9 @@ static async findByUsername(username) {
                     q.id AS quiz_id, q.title, q.description, q.difficulty, q.category, q.time_limit, 
                     qu.id AS question_id, qu.question_text, qu.question_order, qu.question_type, qu.correct_short_answer, qu.time_limit AS question_time_limit,
                     o.id AS option_id, o.option_text, o.is_correct, o.option_order
-                FROM quizzes q
-                LEFT JOIN questions qu ON q.id = qu.quiz_id
-                LEFT JOIN options o ON qu.id = o.question_id
+                FROM quizze q
+                LEFT JOIN quiz_questions qu ON q.id = qu.quiz_id
+                LEFT JOIN quiz_options o ON qu.id = o.question_id
                 ORDER BY q.id, qu.question_order, o.option_order
             `, (error, rows, fields) => {
                 if (error) {
@@ -71,7 +71,7 @@ static async findByUsername(username) {
     }
     static deleteQuizById(quizId) {
         return new Promise((resolve, reject) => {
-            pool.query('DELETE FROM quizzes WHERE id = ?', [quizId], (error, result) => {
+            pool.query('DELETE FROM quizze WHERE id = ?', [quizId], (error, result) => {
                 if (error) {
                     console.error('Error deleting quiz:', error.message);
                     return reject(error);

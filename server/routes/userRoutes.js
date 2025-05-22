@@ -13,7 +13,7 @@ router.get('/leaderboard', getAllUsers); //show leaderboard users
 router.get('/:username', async (req, res) => {
     try {
         const { username } = req.params;
-        const result = await db.query('SELECT email FROM user WHERE username = ?', [username]);
+        const result = await db.query('SELECT email FROM learners WHERE username = ?', [username]);
 
         if (result.length === 0) {
             return res.status(404).json({ error: "User not found" });

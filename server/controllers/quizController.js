@@ -128,7 +128,7 @@ exports.createFullQuiz = async (req, res) => {
 
     // Insert quiz
     const result = await conn.query(
-      'INSERT INTO quizzes (title, description, difficulty, category, time_limit) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO quizze (title, description, difficulty, category, time_limit) VALUES (?, ?, ?, ?, ?)',
       [title, description, difficulty, category, timeLimit]
     );
     const quizId = result.insertId;
@@ -139,7 +139,7 @@ exports.createFullQuiz = async (req, res) => {
 
     // 🔗 Link quiz to formateur in formateur_quizzes
     await conn.query(
-      'INSERT INTO formateur_quizzes (formateur_id, quiz_id) VALUES (?, ?)',
+      'INSERT INTO trainer_quizzes (trainer_id, quiz_id) VALUES (?, ?)',
       [creatorId, quizId]
     );
 
@@ -149,7 +149,7 @@ exports.createFullQuiz = async (req, res) => {
       const { questionText, questionType, timeLimit, questionOrder, options, correctShortAnswer } = question;
 
       const questionResult = await conn.query(
-        'INSERT INTO questions (quiz_id, question_text, question_type, time_limit, question_order, correct_short_answer) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO quiz_questions (quiz_id, question_text, question_type, time_limit, question_order, correct_short_answer) VALUES (?, ?, ?, ?, ?, ?)',
         [quizId, questionText, questionType, timeLimit || null, questionOrder || 0, correctShortAnswer || null]
       );
       
@@ -166,7 +166,7 @@ exports.createFullQuiz = async (req, res) => {
         const flatValues = optionValues.flat();
 
         await conn.query(
-          `INSERT INTO options (question_id, option_text, is_correct, option_order) VALUES ${placeholders}`,
+          `INSERT INTO quiz_options (question_id, option_text, is_correct, option_order) VALUES ${placeholders}`,
           flatValues
         );
       }

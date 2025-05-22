@@ -12,7 +12,7 @@ class Question {
 
         // ✅ Corrected the INSERT statement
         const result = await conn.query(
-            `INSERT INTO questions 
+            `INSERT INTO quiz_questions 
             (quiz_id, question_text, question_type, question_order, correct_short_answer, time_limit) 
             VALUES (?, ?, ?, ?, ?, ?)`,
             [quizId, questionText, questionType, questionOrder || 0, correctShortAnswer || null, timeLimit || null]
@@ -51,7 +51,7 @@ static async addOptions(questionId, options) {
       const flatValues = values.flat();
 
       const result = await conn.query(
-          `INSERT INTO options 
+          `INSERT INTO quiz_options 
           (question_id, option_text, is_correct, option_order) 
           VALUES ${placeholders}`,
           flatValues
@@ -75,13 +75,13 @@ static async getByQuizId(quizId) {
       conn.query = require('util').promisify(conn.query);
 
       const questions = await conn.query(
-          'SELECT * FROM questions WHERE quiz_id = ? ORDER BY question_order',
+          'SELECT * FROM quiz_questions WHERE quiz_id = ? ORDER BY question_order',
           [quizId]
       );
 
       for (const question of questions) {
           const options = await conn.query(
-              'SELECT * FROM options WHERE question_id = ? ORDER BY option_order',
+              'SELECT * FROM quiz_options WHERE question_id = ? ORDER BY option_order',
               [question.id]
           );
           question.options = options;
@@ -95,7 +95,7 @@ static async getByQuizId(quizId) {
 
 
   static async getById(questionId) {
-    const rows = await pool.query('SELECT * FROM questions WHERE id = ?', [questionId]);
+    const rows = await pool.query('SELECT * FROM quiz_questions WHERE id = ?', [questionId]);
     return rows[0] || null;
 }
 
@@ -104,7 +104,7 @@ static async update(questionId, questionData) {
   
   // ✅ Ensure all fields are updated correctly
   await pool.query(
-      `UPDATE questions SET 
+      `UPDATE quiz_questions SET 
           question_text = ?, 
           question_type = ?, 
           question_order = ?, 
@@ -120,10 +120,10 @@ static async update(questionId, questionData) {
 static async delete(questionId) {
   try {
       // ✅ Delete all associated options first
-      await pool.query('DELETE FROM options WHERE question_id = ?', [questionId]);
+      await pool.query('DELETE FROM quiz_options WHERE question_id = ?', [questionId]);
       
       // ✅ Now delete the question itself
-      const result = await pool.query('DELETE FROM questions WHERE id = ?', [questionId]);
+      const result = await pool.query('DELETE FROM quiz_questions WHERE id = ?', [questionId]);
       
       return result.affectedRows > 0;
   } catch (error) {
@@ -136,7 +136,7 @@ static async delete(questionId) {
 static async deleteOption(optionId) {
   try {
       const result = await pool.query(
-          'DELETE FROM options WHERE id = ?',
+          'DELETE FROM quiz_options WHERE id = ?',
           [optionId]
       );
       return result.affectedRows > 0;
@@ -161,7 +161,7 @@ static async updateOptions(questionId, options) {
       // ✅ Update existing options
       for (const option of existingOptions) {
           await conn.query(
-              `UPDATE options SET 
+              `UPDATE quiz_options SET 
                   option_text = ?, 
                   is_correct = ?, 
                   option_order = ? 
@@ -183,7 +183,7 @@ static async updateOptions(questionId, options) {
           const flatValues = values.flat();
 
           await conn.query(
-              `INSERT INTO options (question_id, option_text, is_correct, option_order) 
+              `INSERT INTO quiz_options (question_id, option_text, is_correct, option_order) 
               VALUES ${placeholders}`,
               flatValues
           );

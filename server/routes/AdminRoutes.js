@@ -50,9 +50,9 @@ const verifyToken = (req, res, next) => {
 // Get all users (learners and formateurs)
 router.get('/users', verifyToken, async (req, res) => {
     try {
-        pool.query('SELECT username, name, email, score, image, "Apprenant" AS role FROM user', (err, users, fields) => {
+        pool.query('SELECT username, name, email, score, image, "Apprenant" AS role FROM learners', (err, users, fields) => {
             if (err) throw err;
-            pool.query('SELECT CAST(id AS CHAR) AS username, nom AS name, email, 0 AS score, NULL AS image, "Formateur" AS role FROM formateurs', (err, formateurs, fields) => {
+            pool.query('SELECT CAST(id AS CHAR) AS username, nom AS name, email, 0 AS score, NULL AS image, "Formateur" AS role FROM trainers', (err, formateurs, fields) => {
                 if (err) throw err;
                 const combinedUsers = [...(users || []), ...(formateurs || [])];
                 res.json({ users: combinedUsers });
@@ -68,9 +68,9 @@ router.get('/users', verifyToken, async (req, res) => {
 router.get('/users/:username', verifyToken, async (req, res) => {
     try {
         const { username } = req.params;
-        pool.query('SELECT username, name, email, score, image, "Apprenant" AS role FROM user WHERE username = ?', [username], (err, users, fields) => {
+        pool.query('SELECT username, name, email, score, image, "Apprenant" AS role FROM learners WHERE username = ?', [username], (err, users, fields) => {
             if (err) throw err;
-            pool.query('SELECT id AS username, nom AS name, email, 0 AS score, NULL AS image, "Formateur" AS role FROM formateurs WHERE id = ?', [username], (err, formateurs, fields) => {
+            pool.query('SELECT id AS username, nom AS name, email, 0 AS score, NULL AS image, "Formateur" AS role FROM trainers WHERE id = ?', [username], (err, formateurs, fields) => {
                 if (err) throw err;
                 const user = [...(users || []), ...(formateurs || [])];
                 if (user.length === 0) {
@@ -89,9 +89,9 @@ router.get('/users/:username', verifyToken, async (req, res) => {
 router.delete('/users/:username', verifyToken, async (req, res) => {
     try {
         const { username } = req.params;
-        pool.query('DELETE FROM user WHERE username = ?', [username], (err, userResult, fields) => {
+        pool.query('DELETE FROM learners WHERE username = ?', [username], (err, userResult, fields) => {
             if (err) throw err;
-            pool.query('DELETE FROM formateurs WHERE id = ?', [username], (err, formateurResult, fields) => {
+            pool.query('DELETE FROM trainers WHERE id = ?', [username], (err, formateurResult, fields) => {
                 if (err) throw err;
                 if (userResult.affectedRows === 0 && formateurResult.affectedRows === 0) {
                     return res.status(404).json({ message: "User not found" });
@@ -113,7 +113,7 @@ router.put('/users/:username', verifyToken, async (req, res) => {
 
         // Check if the user is an Apprenant
         pool.query(
-            'UPDATE user SET name = ?, email = ?, role = ? WHERE username = ?',
+            'UPDATE learners SET name = ?, email = ?, role = ? WHERE username = ?',
             [name, email, role, username],
             (err, result) => {
                 if (err) throw err;
@@ -121,7 +121,7 @@ router.put('/users/:username', verifyToken, async (req, res) => {
                 // If no rows were affected, check if it's a Formateur
                 if (result.affectedRows === 0) {
                     pool.query(
-                        'UPDATE formateurs SET nom = ?, email = ? WHERE id = ?',
+                        'UPDATE trainers SET nom = ?, email = ? WHERE id = ?',
                         [name, email, username],
                         (err, formateurResult) => {
                             if (err) throw err;

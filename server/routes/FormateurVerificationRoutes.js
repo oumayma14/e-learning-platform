@@ -12,7 +12,7 @@ router.post('/request', async (req, res) => {
 
         // Check if a pending request already exists
         const existingRequest = await pool.query(
-            'SELECT * FROM formateurverificationrequests WHERE formateur_id = ? AND status = "en attente"',
+            'SELECT * FROM trainer_verification_requests WHERE formateur_id = ? AND status = "en attente"',
             [formateur_id]
         );
 
@@ -22,7 +22,7 @@ router.post('/request', async (req, res) => {
 
         // Create a new verification request
         const result = await pool.query(
-            'INSERT INTO formateurverificationrequests (formateur_id, status, created_at, updated_at) VALUES (?, "en attente", NOW(), NOW())',
+            'INSERT INTO trainer_verification_requests (formateur_id, status, created_at, updated_at) VALUES (?, "en attente", NOW(), NOW())',
             [formateur_id]
         );
 
@@ -39,7 +39,7 @@ router.post('/request', async (req, res) => {
 // Admin views all verification requests
 router.get('/requests', async (req, res) => {
     try {
-        const requests = await pool.query('SELECT * FROM formateurverificationrequests ORDER BY created_at DESC');
+        const requests = await pool.query('SELECT * FROM trainer_verification_requests ORDER BY created_at DESC');
         res.status(200).json(requests);
     } catch (error) {
         console.error(error);
@@ -59,7 +59,7 @@ router.put('/decision/:id', async (req, res) => {
 
         // Update the verification request
         const result = await pool.query(
-            'UPDATE formateurverificationrequests SET status = ?, updated_at = NOW() WHERE id = ?',
+            'UPDATE trainer_verification_requests SET status = ?, updated_at = NOW() WHERE id = ?',
             [status, requestId]
         );
 
@@ -84,7 +84,7 @@ router.get('/status/:formateur_id', async (req, res) => {
 
         // Fetch the latest verification status
         const result = await pool.query(
-            'SELECT status FROM formateurverificationrequests WHERE formateur_id = ? ORDER BY created_at DESC LIMIT 1',
+            'SELECT status FROM trainer_verification_requests WHERE formateur_id = ? ORDER BY created_at DESC LIMIT 1',
             [formateurId]
         );
 

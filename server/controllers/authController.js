@@ -20,7 +20,7 @@ const register = async (req, res) => {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
-        const checkQuery = "SELECT * FROM user WHERE username = ? OR email = ?";
+        const checkQuery = "SELECT * FROM learners  WHERE username = ? OR email = ?";
         const existingUsers = await db.query(checkQuery, [username, email]);
 
         if (existingUsers.length > 0) {
@@ -29,7 +29,7 @@ const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const insertQuery = `
-            INSERT INTO user (username, name, email, password, role, image) 
+            INSERT INTO learners (username, name, email, password, role, image) 
             VALUES (?, ?, ?, ?, ?, ?)
         `;
         
@@ -53,7 +53,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-            const SQL = 'SELECT * FROM user WHERE email = ?';
+            const SQL = 'SELECT * FROM learners  WHERE email = ?';
             const results = await db.query(SQL, [email]);
 
             if (results.length === 0) {

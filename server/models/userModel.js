@@ -10,14 +10,14 @@ module.exports = {
    * Register a new user
    */
   async registerUser({ username, name, email, password, role, image }) {
-    const checkQuery = 'SELECT * FROM user WHERE username = ? OR email = ?';
+    const checkQuery = 'SELECT * FROM learners WHERE username = ? OR email = ?';
     const users = await db.query(checkQuery, [username, email]);
     if (users.length > 0) throw new Error('Username or email exists');
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const insertQuery = `
-      INSERT INTO user (username, name, email, password, role, image, score)
+      INSERT INTO learners (username, name, email, password, role, image, score)
       VALUES (?, ?, ?, ?, ?, ?, 0)
     `;
     await db.query(insertQuery, [username, name, email, hashedPassword, role, image]);
@@ -29,7 +29,7 @@ module.exports = {
    * Find user by email (for login)
    */
   async findUserByEmail(email) {
-    const query = 'SELECT * FROM user WHERE email = ?';
+    const query = 'SELECT * FROM learners WHERE email = ?';
     const users = await db.query(query, [email]);
     return users[0] || null;
   },
@@ -46,7 +46,7 @@ module.exports = {
    * Update user
    */
   async updateUser(username, updates) {
-    const [user] = await db.query('SELECT * FROM user WHERE username = ?', [username]);
+    const [user] = await db.query('SELECT * FROM learners WHERE username = ?', [username]);
     if (!user) throw new Error('User not found');
 
     const updatedUser = {
@@ -56,7 +56,7 @@ module.exports = {
       score: updates.score !== undefined ? updates.score : user.score
     };
 
-    let query = 'UPDATE user SET name=?, email=?, role=?, score=? WHERE username=?';
+    let query = 'UPDATE learners SET name=?, email=?, role=?, score=? WHERE username=?';
     let params = [updatedUser.name, updatedUser.email, updatedUser.role, updatedUser.score, username];
 
     if (updates.password) {
@@ -73,7 +73,7 @@ module.exports = {
    * Delete user
    */
   async deleteUser(username) {
-    const result = await db.query('DELETE FROM user WHERE username = ?', [username]);
+    const result = await db.query('DELETE FROM learners WHERE username = ?', [username]);
     if (result.affectedRows === 0) throw new Error('User not found');
     return true;
   },
@@ -82,7 +82,7 @@ module.exports = {
    * Get leaderboard
    */
   async getLeaderboard() {
-    const query = 'SELECT username, score, image FROM user ORDER BY score DESC LIMIT 10';
+    const query = 'SELECT username, score, image FROM learners ORDER BY score DESC LIMIT 10';
     return await db.query(query);
   },
 
@@ -90,7 +90,7 @@ module.exports = {
    * NEW: Get user by username (for current user endpoint)
    */
   async getUserByUsername(username) {
-    const query = 'SELECT username, name, email, role, image, score FROM user WHERE username = ?';
+    const query = 'SELECT username, name, email, role, image, score FROM learners WHERE username = ?';
     const users = await db.query(query, [username]);
     return users[0] || null;
   }

@@ -9,7 +9,7 @@ class Feedback {
     static async createFeedback({ user_id, quiz_id, feedback_text, sentiment, positive_score, neutral_score, negative_score, compound_score }) {
         try {
             const result = await db.query(
-                `INSERT INTO feedback (user_id, quiz_id, feedback_text, sentiment, positive_score, neutral_score, negative_score, compound_score) 
+                `INSERT INTO quiz_feedback (user_id, quiz_id, feedback_text, sentiment, positive_score, neutral_score, negative_score, compound_score) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [user_id, quiz_id, feedback_text, sentiment, positive_score, neutral_score, negative_score, compound_score]
             );
@@ -23,7 +23,7 @@ class Feedback {
     static async getPositiveFeedbackByUser(user_id) {
         try {
             const rows = await db.query(
-                `SELECT * FROM feedback WHERE user_id = ? AND sentiment = 'positive' ORDER BY compound_score DESC`,
+                `SELECT * FROM quiz_feedback WHERE user_id = ? AND sentiment = 'positive' ORDER BY compound_score DESC`,
                 [user_id]
             );
             return rows;
@@ -36,7 +36,7 @@ class Feedback {
     static async getNegativeFeedbackByUser(user_id) {
         try {
             const rows = await db.query(
-                `SELECT * FROM feedback WHERE user_id = ? AND sentiment = 'negative' ORDER BY compound_score ASC`,
+                `SELECT * FROM quiz_feedback WHERE user_id = ? AND sentiment = 'negative' ORDER BY compound_score ASC`,
                 [user_id]
             );
             return rows;
@@ -53,7 +53,7 @@ class Feedback {
                     sentiment, 
                     COUNT(*) as count, 
                     AVG(compound_score) as average_score 
-                FROM feedback 
+                FROM quiz_feedback 
                 WHERE user_id = ? 
                 GROUP BY sentiment`,
                 [user_id]
@@ -69,8 +69,8 @@ class Feedback {
         try {
             const rows = await db.query(
                 `SELECT f.*, q.category 
-                FROM feedback f 
-                JOIN quizzes q ON f.quiz_id = q.id 
+                FROM quiz_feedback f 
+                JOIN quizze q ON f.quiz_id = q.id 
                 WHERE f.user_id = ?`,
                 [user_id]
             );
@@ -84,7 +84,7 @@ class Feedback {
     static async getFeedbackByUser(user_id) {
         try {
             const rows = await db.query(
-                `SELECT * FROM feedback WHERE user_id = ? ORDER BY created_at DESC`,
+                `SELECT * FROM quiz_feedback WHERE user_id = ? ORDER BY created_at DESC`,
                 [user_id]
             );
             return rows;

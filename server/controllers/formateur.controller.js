@@ -93,7 +93,7 @@ exports.getLeaderboard = (req, res) => {
           u.username,
           up.score,
           up.created_at
-      FROM quizzes q
+      FROM quizze q
       JOIN user_progress up ON q.id = up.quiz_id
       JOIN user u ON up.username = u.username
       WHERE q.formateur_id = ? AND q.id = ?

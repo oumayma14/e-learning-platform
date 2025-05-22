@@ -12,6 +12,7 @@ const UserNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const expand = 'md';
+                console.log("USER FROM CONTEXT:", user);
 
   const navLinks = [
     { path: '/dashboard', label: 'Accueil', exact: true, icon: <FaBook className="nav-icon" /> },
